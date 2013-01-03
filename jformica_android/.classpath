@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/formicidae_core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jformica_core"/>
 	<classpathentry kind="lib" path="libs/ant_lib/antlib.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>

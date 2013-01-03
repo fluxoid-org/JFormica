@@ -1,1 +1,1 @@
-include 'formicidae_core', 'formicidae_jsr80', 'formicidae_android'
+include 'jformica_core', 'jformica_jsr80', 'jformica_android'

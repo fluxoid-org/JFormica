@@ -10,7 +10,7 @@ buildscript {
 
 
 rootDir.eachFile() { file-> 
-if (file.isDirectory() && file.getName().startsWith('formicidae')) { 
+if (file.isDirectory() && file.getName().startsWith('jformica')) { 
     logger.info('applying license to ' + file.getName() )
     project(':' + file.getName() ){
         apply plugin: 'license'

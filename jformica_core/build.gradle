@@ -5,4 +5,8 @@ task "create-dirs" << {
    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
 }
 
+dependencies {
+    testCompile "junit:junit:4.8.2"
+}
+
 

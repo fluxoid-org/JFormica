@@ -35,5 +35,5 @@
 
 
     dependencies {
-        compile project(':formicidae_core'), fileTree(dir: 'libs', include: '**/*.jar')
+        compile project(':jformica_core'), fileTree(dir: 'libs', include: '**/*.jar')
     }
