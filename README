@@ -1,5 +1,5 @@
 
-Formicidae is an ANT+ library for java. It is designed to take some of strain away from writing ant enabled applications.
+JFormica is an ANT+ library for java. It is designed to take some of strain away from writing ant enabled applications.
 
 Compatability: 
 
@@ -74,8 +74,8 @@ To compile either import each folder into eclipse or compile using gradle.
 
 General notes
 
-jsr80: you should copy a jar containing a javax.usb implementation to formicidae_jsr80/libs/jsr80
-android - you need to copy dynastreams antlib.jar to formicidae_android/libs
+jsr80: you should copy a jar containing a javax.usb implementation to jformica_jsr80/libs/jsr80
+android - you need to copy dynastreams antlib.jar to jformica_android/libs
  
 Gradle notes
 
