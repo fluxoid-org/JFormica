@@ -18,8 +18,8 @@
  */
 package org.cowboycoders.ant.messages;
 
-import com.dsi.ant.AntMesg;
 
+import org.cowboycoders.ant.defines.AntMesg;
 import org.cowboycoders.ant.messages.data.AcknowledgedDataMessage;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 import org.cowboycoders.ant.messages.data.BurstDataMessage;

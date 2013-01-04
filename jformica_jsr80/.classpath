@@ -6,7 +6,6 @@
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="/home/will/.gradle/caches/artifacts-14/filestore/junit/junit/4.8.2/jar/c94f54227b08100974c36170dcb53329435fe5ad/junit-4.8.2.jar" sourcepath="/home/will/.gradle/caches/artifacts-14/filestore/junit/junit/4.8.2/source/cccca612a66b8387c399be31d69daf000de2ac9e/junit-4.8.2-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jsr80/jsr80.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JFormica - core"/>
 	<classpathentry kind="output" path="bin"/>

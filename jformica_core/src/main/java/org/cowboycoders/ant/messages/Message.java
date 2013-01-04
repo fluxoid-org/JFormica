@@ -21,11 +21,12 @@
  */
 package org.cowboycoders.ant.messages;
 
-import com.dsi.ant.AntMesg;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.cowboycoders.ant.defines.AntMesg;
 
 /**
  * Encapsulation of an ANT message. Contains common functionality

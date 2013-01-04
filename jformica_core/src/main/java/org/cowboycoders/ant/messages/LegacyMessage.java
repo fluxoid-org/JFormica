@@ -19,12 +19,12 @@
 package org.cowboycoders.ant.messages;
 
 
-import com.dsi.ant.AntMesg;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.cowboycoders.ant.defines.AntMesg;
 import org.cowboycoders.ant.messages.Constants.DataElements;
 import org.cowboycoders.ant.utils.ByteMerger;
 

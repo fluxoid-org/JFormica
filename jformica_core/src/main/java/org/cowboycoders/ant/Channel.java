@@ -18,7 +18,6 @@
  */
 package org.cowboycoders.ant;
 
-import com.dsi.ant.AntDefine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +32,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
+import org.cowboycoders.ant.defines.AntDefine;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.events.EventMachine;
 import org.cowboycoders.ant.events.FixedSizeBuffer;

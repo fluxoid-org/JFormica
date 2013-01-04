@@ -32,7 +32,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.dsi.ant;
+package org.cowboycoders.ant.defines;
+
+import org.cowboycoders.ant.defines.AntDefine;
 
 /**
  * AntMesg contains definitions for ANT message IDs
