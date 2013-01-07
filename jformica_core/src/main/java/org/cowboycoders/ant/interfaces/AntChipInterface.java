@@ -46,7 +46,8 @@ public interface AntChipInterface {
   void registerStatusMessenger(BroadcastMessenger<AntStatusUpdate> statusMessenger);
   
   /**
-   * send a bytes array directly to the antchip
+   * send a bytes array directly to the antchip. You should not use this 
+   * method directly. Use {@link org.cowboycoders.ant.Node#send(org.cowboycoders.ant.messages.StandardMessage)}
    * @param message
    * @throws AntCommunicationException if message could not be sent
    */

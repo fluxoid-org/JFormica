@@ -141,7 +141,8 @@ public class Node extends BufferedNodeComponent {
   }
   
   /**
-   * Returns the antchip
+   * Returns the antchip. Note: you should never bypass the node and send messages
+   * using its send function. 
    * @return
    */
   public AntChipInterface getAntChip() {
