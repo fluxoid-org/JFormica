@@ -153,7 +153,7 @@ public class Node extends BufferedNodeComponent {
    * Listener for status updates from the ant chip
    * @param listener
    */
-  public synchronized void addStatusListener(BroadcastListener<AntStatusUpdate> listener) {
+  public synchronized void registerStatusListener(BroadcastListener<AntStatusUpdate> listener) {
     mStatusMessenger.addBroadcastListener(listener);
   }
   
@@ -181,7 +181,7 @@ public class Node extends BufferedNodeComponent {
   }
   
   public synchronized void start() throws AntError {
-    if (running) throw new AntError("already started");
+    if (running) return ;//throw new AntError("already started");
     evm.start();
     registerSelf(true);
     antChipInterface.start();
@@ -544,12 +544,20 @@ public class Node extends BufferedNodeComponent {
   }
 
   public synchronized void stop() {
-    if (!running) throw new AntError("already stopped");
+    if (!running) return; //throw new AntError("already stopped");
     registerChannels(false);
     registerSelf(false);
     evm.stop();
     antChipInterface.stop();
     running = false;
+  }
+  
+  public synchronized boolean isRunning() {
+    //sync with ant chip
+    if(!this.antChipInterface.isRunning()); {
+      stop();
+    }
+    return running;
   }
   
 

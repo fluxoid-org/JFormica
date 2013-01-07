@@ -21,41 +21,54 @@ package org.cowboycoders.ant.interfaces;
 import org.cowboycoders.ant.events.BroadcastMessenger;
 
 public interface AntChipInterface {
-  
+
   /**
    * Initialises chip ready for send/receiving
+   * 
    * @return true if successful or already started
    */
   boolean start();
-  
+
   /**
    * Shuts down ant chip or does nothing if already stopped
    */
   void stop();
-  
+
   /**
    * Adds a messenger to send received messages to
+   * 
    * @param rxMessenger to send messages to
    */
   void registerRxMesenger(BroadcastMessenger<byte[]> rxMessenger);
-  
+
   /**
    * Adds a messenger which will be informed when the chip status changes
+   * 
    * @param statusMessenger to send messages to
    */
-  void registerStatusMessenger(BroadcastMessenger<AntStatusUpdate> statusMessenger);
-  
+  void registerStatusMessenger(
+      BroadcastMessenger<AntStatusUpdate> statusMessenger);
+
   /**
-   * send a bytes array directly to the antchip. You should not use this 
-   * method directly. Use {@link org.cowboycoders.ant.Node#send(org.cowboycoders.ant.messages.StandardMessage)}
+   * send a bytes array directly to the antchip. You should not use this method
+   * directly. Use
+   * {@link org.cowboycoders.ant.Node#send(org.cowboycoders.ant.messages.StandardMessage)}
+   * 
    * @param message
    * @throws AntCommunicationException if message could not be sent
    */
-  void send(byte [] message) throws AntCommunicationException;
+  void send(byte[] message) throws AntCommunicationException;
   
+  /**
+   * Check the ant status
+   * @return the last ant status update 
+   */
+  AntStatusUpdate getStatus();
   
-  
-  
-  
+  /**
+   * Does the ant chip think its running?
+   * @return true if running, else false.
+   */
+  boolean isRunning();
 
 }

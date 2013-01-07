@@ -29,4 +29,5 @@ public enum DisableReason {
   OTHER_SHUTDOWN,
   AIRPLANE_MODE_ENABLED,
   INTERFACE_CLAIMED,
+  POWER_OFF, // the ant chip has been power off
 }

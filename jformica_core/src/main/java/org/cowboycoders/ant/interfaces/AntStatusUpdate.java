@@ -22,7 +22,7 @@ package org.cowboycoders.ant.interfaces;
 
 public class AntStatusUpdate {
   
-  public AntStatus status;
+  public AntStatus status = AntStatus.UNKNOWN;
   
   public Object optionalArg;
 

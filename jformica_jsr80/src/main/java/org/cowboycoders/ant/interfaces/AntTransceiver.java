@@ -581,6 +581,17 @@ public class AntTransceiver extends AbstractAntTransceiver {
     data[data.length -1] = getChecksum(nocheck);
     return data;
   }
+
+  @Override
+  public boolean isRunning() {
+    try {
+      lock.lock();
+      return running;
+    } finally {
+      lock.unlock();
+    }
+
+  }
   
 
 

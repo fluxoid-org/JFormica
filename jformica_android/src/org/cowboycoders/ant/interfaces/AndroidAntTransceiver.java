@@ -262,7 +262,7 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
           lock.lock();
                     
           waitForServiceConnected();
-          
+                    
           try {
             if(!(mAntReceiver.hasClaimedInterface() || mAntReceiver.claimInterface()))
             {
@@ -277,6 +277,7 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
                    
           Log.d(TAG, "service connected - claimed interface");
           mClaimedAntInterface = true;
+          
           
           if (mServiceConnected) {
             
@@ -293,6 +294,13 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
             // mClaimedAntInterface = mAntReceiver.hasClaimedInterface();
 
             waitForClaimedInterface();
+            
+            //try {
+             // mAntReceiver.enable();
+
+            //} catch (AntInterfaceException e) {
+             // throw new AntRadioPoweredOffException(e);
+           // }
 
             if (mClaimedAntInterface) {
               receiveAntRxMessages(true);
@@ -346,7 +354,13 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
   private void waitForAntInit() throws AntInterfaceException,
       InterruptedException, TimeoutException {
     if (!mAntReceiver.isEnabled()) {
+      try {
       waitForAntEnabled();
+      } catch (TimeoutException e) {
+        // the check on isEnabled in the demo must be subject to race condition
+        // or continually polled
+        throw new AntRadioPoweredOffException(e);
+      }
       waitForInititalReset();
       waitForRunningUpdate();
       waitForVersionResponse();
@@ -493,8 +507,8 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
 
   /** Receives all of the ANT status intents. */
   private final BroadcastReceiver mAntStatusReceiver = new BroadcastReceiver() {
-
-    public void onReceive(Context context, Intent intent) {
+    
+    private void processIntent(Context context, Intent intent) {
       String ANTAction = intent.getAction();
 
       Log.d(TAG, "enter onReceive: " + ANTAction);
@@ -648,10 +662,25 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
               Log.i(TAG, "Stopping service.");
 
               receiveAntRxMessages(false);
+              
+              boolean enabledPreShutdown = false;
+              
+              try {
+                enabledPreShutdown = mAntReceiver.isEnabled();
+              } catch (AntInterfaceException e) {
+                Log.e(TAG,"Error querying enabled status, assuming powered-down");
+              }
 
               shutDown();
-              broadcastStatus(AntStatus.DISABLED,
-                  DisableReason.INTERFACE_CLAIMED);
+              
+              if(!enabledPreShutdown) {
+                broadcastStatus(AntStatus.DISABLED,
+                    DisableReason.POWER_OFF);
+              } else {
+                broadcastStatus(AntStatus.DISABLED,
+                    DisableReason.INTERFACE_CLAIMED);  
+              }
+              
               // mContext.stopService(new Intent(mContext,
               // ANTPlusService.class));
 
@@ -663,7 +692,8 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
             }
           }
         } catch (AntInterfaceException e) {
-          throw new AntCommunicationException(e);
+          // we should be accepting all these intents
+          Log.e(TAG,e.toString());
         } finally {
           lock.unlock();
         }
@@ -701,6 +731,15 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
       }
       // if(mCallbackSink != null)
       // mCallbackSink.notifyAntStateChanged();
+    }
+
+    public void onReceive(Context context, Intent intent) {
+      try {
+        lock.lock();
+        processIntent(context, intent);
+      } finally {
+        lock.unlock();
+      }
     }
 
   };
@@ -1006,6 +1045,15 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
       lock.unlock();
     }
 
+  }
+  
+  public boolean isRunning() {
+    try {
+      lock.lock();
+      return mRunning;
+    } finally {
+      lock.unlock();
+    }
   }
 
 }

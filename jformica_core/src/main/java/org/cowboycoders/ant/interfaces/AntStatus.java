@@ -24,4 +24,5 @@ public enum AntStatus {
   DISABLED,
   DISABLING,
   RESET,
+  UNKNOWN,
 }

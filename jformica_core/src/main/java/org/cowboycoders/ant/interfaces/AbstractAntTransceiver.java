@@ -32,12 +32,19 @@ public abstract class AbstractAntTransceiver implements AntChipInterface  {
    * Messengers to inform when rxRecieved
    */
   private Set<BroadcastMessenger<byte[]>> mRxMessengers = Collections.newSetFromMap(new WeakHashMap<BroadcastMessenger<byte[]>,Boolean>());
+  
+
   /**
    * messengers to inform when chip status changes
    */
   private Set<BroadcastMessenger<AntStatusUpdate>> mStatusMessengers = Collections.newSetFromMap(new WeakHashMap<BroadcastMessenger<AntStatusUpdate>,Boolean>());
   
   private final Lock messengerLock = new ReentrantLock();
+  
+  /**
+   * Stores last status update
+   */
+  private AntStatusUpdate lastStatusUpdate = new AntStatusUpdate();
   
   /**
    * @return the mRxMessengers
@@ -140,5 +147,13 @@ public abstract class AbstractAntTransceiver implements AntChipInterface  {
      getMessengerLock().unlock();
     } 
    }
+  
+  /* (non-Javadoc)
+   * @see org.cowboycoders.ant.interfaces.AntChipInterface#getStatus()
+   */
+  @Override
+  public AntStatusUpdate getStatus() {
+    return lastStatusUpdate;
+  }
 
 }
