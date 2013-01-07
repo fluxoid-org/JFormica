@@ -25,18 +25,19 @@ import org.cowboycoders.ant.ChannelError;
 import org.cowboycoders.ant.NetworkKey;
 import org.cowboycoders.ant.Node;
 import org.cowboycoders.ant.events.BroadcastListener;
+import org.cowboycoders.ant.events.BroadcastMessenger;
 import org.cowboycoders.ant.interfaces.AndroidAntTransceiver;
 import org.cowboycoders.ant.interfaces.AntCommunicationException;
 import org.cowboycoders.ant.interfaces.AntRadioServiceNotInstalledException;
+import org.cowboycoders.ant.interfaces.AntStatus;
+import org.cowboycoders.ant.interfaces.AntStatusUpdate;
+import org.cowboycoders.ant.interfaces.DisableReason;
 import org.cowboycoders.ant.interfaces.ServiceAlreadyClaimedException;
 import org.cowboycoders.ant.messages.SlaveChannelType;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 
 import com.example.jformica_hrmexample.R;
 
-enum State {
-  CONNECTED, DISCONNECTED,
-}
 
 public class MainActivity extends Activity {
   public static String TAG = "Formica Hrm Ex";
@@ -50,22 +51,69 @@ public class MainActivity extends Activity {
   private State mState = State.DISCONNECTED;
   private boolean updateHrm = false;
   private ExecutorService executor = Executors.newSingleThreadExecutor();
+  private String connectString ;
+  private String disconnectString ;
+  private Button connectButton ;
+  
+  enum State {
+    CONNECTED, DISCONNECTED,
+  }
+
+  private  BroadcastListener<AntStatusUpdate>listener =
+      new BroadcastListener<AntStatusUpdate>() {
+
+    @Override
+    public void receiveMessage(AntStatusUpdate status) {
+      if (status.status == AntStatus.DISABLED) {
+        final DisableReason r = (DisableReason) status.optionalArg;
+        Log.w(TAG, "Disabled with reason: " + r.toString());
+        handler.post(new Runnable() {
+
+          @Override
+          public void run() {
+            if (r == DisableReason.POWER_OFF) {
+              showToast("Ant chip powered off", Toast.LENGTH_LONG);
+            }
+            if (r == DisableReason.INTERFACE_CLAIMED) {
+              showToast("Ant chip claimed by someone else", Toast.LENGTH_LONG);
+            }
+            disconnect();
+            
+            try {
+              mStateLock.lock();
+              mState = State.DISCONNECTED;
+            } finally {
+              mStateLock.unlock();
+            }
+          }
+          
+          
+        });
+      }
+      
+    }
+    
+  };
+  
 
   /** Called when the user clicks the Send button */
   public void onConnect(View view) {
-    final Button button = (Button) view;
-    final String connectString = getString(R.string.connect);
-    final String disconnectString = getString(R.string.disconnect);
     Thread t;
     State newState = null;
-    if ((button).getText().equals(connectString)) {
+    if ((connectButton).getText().equals(connectString)) {
       newState = State.CONNECTED;
       t = new Thread() {
+
 
         @Override
         public void run() {
           try {
             mAntLock.lock();
+            mStateLock.lock();
+            
+            //assume disconnected until we complete
+            MainActivity.this.mState = MainActivity.State.DISCONNECTED;
+            
             AndroidAntTransceiver antchip = new AndroidAntTransceiver(
                 MainActivity.this.getApplicationContext());
 
@@ -74,6 +122,8 @@ public class MainActivity extends Activity {
             NetworkKey key = new NetworkKey(0xB9, 0xA5, 0x21, 0xFB, 0xBD, 0x72,
                 0xC3, 0x45);
             key.setName("N:ANT+");
+            
+            node.registerStatusListener(MainActivity.this.listener);
 
             try {
 
@@ -115,7 +165,7 @@ public class MainActivity extends Activity {
               @Override
               public void run() {
                 Log.e(TAG, "connect");
-                button.setText(disconnectString);
+                connectButton.setText(disconnectString);
               }
 
             });
@@ -126,6 +176,8 @@ public class MainActivity extends Activity {
             } finally {
               mUpdateLock.unlock();
             }
+            
+            MainActivity.this.mState = MainActivity.State.CONNECTED;
 
           } catch (final AntRadioServiceNotInstalledException e) {
             handler.post(new Runnable() {
@@ -148,6 +200,7 @@ public class MainActivity extends Activity {
 
           } finally {
             mAntLock.unlock();
+            mStateLock.unlock();
           }
         }
 
@@ -168,6 +221,17 @@ public class MainActivity extends Activity {
             } catch (ChannelError e) {
               // ant probbaly not connected
               Log.e(TAG, e.toString());
+            } catch (final AntCommunicationException e) {
+              // must likely to occur if usb stick unplugged / 
+              //a force claim has occurred behind our backs
+              handler.post(new Runnable() {
+
+                @Override
+                public void run() {
+                  exceptionToToast(e);
+                }
+
+              });
             }
 
             node.freeChannel(channel);
@@ -188,19 +252,9 @@ public class MainActivity extends Activity {
 
               @Override
               public void run() {
-                TextView hrmView = (TextView) findViewById(R.id.hrmView);
-                try {
-                  mUpdateLock.lock();
-                  updateHrm = false;
-                  hrmView.setText(R.string.no_hrm);
-                } finally {
-                  mUpdateLock.unlock();
-                }
-
-                button.setText(connectString);
-                Log.e(TAG, "disconnect");
-
+                MainActivity.this.disconnect();
               }
+
 
             };
 
@@ -229,11 +283,29 @@ public class MainActivity extends Activity {
     }
 
   }
+  
+  private void disconnect() {
+    TextView hrmView = (TextView) findViewById(R.id.hrmView);
+    try {
+      mUpdateLock.lock();
+      updateHrm = false;
+      hrmView.setText(R.string.no_hrm);
+    } finally {
+      mUpdateLock.unlock();
+    }
+
+    connectButton.setText(connectString);
+    Log.e(TAG, "disconnect");
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    connectString =  getString(R.string.connect);
+    disconnectString = getString(R.string.disconnect);
+    connectButton = (Button) findViewById(R.id.connectButton);
+    
   }
 
   class Listener implements BroadcastListener<BroadcastDataMessage> {
