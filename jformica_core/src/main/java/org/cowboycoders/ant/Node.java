@@ -139,6 +139,30 @@ public class Node extends BufferedNodeComponent {
     evm = new EventMachine(antchip);
     mStatusMessenger.addBroadcastListener(new StatusListener());
   }
+  
+  /**
+   * Returns the antchip
+   * @return
+   */
+  public AntChipInterface getAntChip() {
+    return antChipInterface;
+  }
+  
+  /**
+   * Listener for status updates from the ant chip
+   * @param listener
+   */
+  public synchronized void addStatusListener(BroadcastListener<AntStatusUpdate> listener) {
+    mStatusMessenger.addBroadcastListener(listener);
+  }
+  
+  /**
+   * Remove listener for status updates from the ant chip
+   * @param listener
+   */
+  public synchronized void removeStatusListener(BroadcastListener<AntStatusUpdate> listener) {
+    mStatusMessenger.removeBroadcastListener(listener);
+  }
 
   /**
    * All capabilities
