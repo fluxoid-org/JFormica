@@ -25,7 +25,6 @@ import org.cowboycoders.ant.ChannelError;
 import org.cowboycoders.ant.NetworkKey;
 import org.cowboycoders.ant.Node;
 import org.cowboycoders.ant.events.BroadcastListener;
-import org.cowboycoders.ant.events.BroadcastMessenger;
 import org.cowboycoders.ant.interfaces.AndroidAntTransceiver;
 import org.cowboycoders.ant.interfaces.AntCommunicationException;
 import org.cowboycoders.ant.interfaces.AntRadioServiceNotInstalledException;
@@ -53,7 +52,6 @@ public class MainActivity extends Activity {
   private String connectString;
   private String disconnectString;
   private Button connectButton;
-  private boolean running = false;
 
   enum State {
     CONNECTED, DISCONNECTED,
@@ -97,14 +95,7 @@ public class MainActivity extends Activity {
   /** Called when the user clicks the Send button */
   public void onConnect(View view) {
     Thread t;
-    State newState = null;
     if ((connectButton).getText().equals(connectString)) {
-      newState = State.CONNECTED;
-      
-      if(running) {
-        return;
-      }
-      
       t = new Thread() {
 
         @Override
@@ -113,7 +104,10 @@ public class MainActivity extends Activity {
             Log.e(TAG, "connect");
             mAntLock.lock();
             mStateLock.lock();
-            running = true;
+            
+            if (mState == MainActivity.State.CONNECTED) {
+              return;
+            }
 
             // assume disconnected until we complete
             MainActivity.this.mState = MainActivity.State.DISCONNECTED;
@@ -250,7 +244,6 @@ public class MainActivity extends Activity {
             });
 
           } finally {
-            running = false;
             mAntLock.unlock();
             mStateLock.unlock();
           }
@@ -259,14 +252,16 @@ public class MainActivity extends Activity {
       };
 
     } else {
-      newState = State.DISCONNECTED;
       t = new Thread() {
         @Override
         public void run() {
           try {
             mAntLock.lock();
             mStateLock.lock();
-            running = true;
+            
+            if (mState == MainActivity.State.DISCONNECTED) {
+              return;
+            }
             Log.e(TAG, "disconnect");
 
             if (channel == null) { return; }
@@ -316,7 +311,7 @@ public class MainActivity extends Activity {
             
 
           } finally {
-            running = false;
+            mState = MainActivity.State.DISCONNECTED;
             mAntLock.unlock();
             mStateLock.unlock();
           }
@@ -326,18 +321,9 @@ public class MainActivity extends Activity {
 
     }
 
-    try {
-      mStateLock.lock();
-      // Ensure we don't enqueue two transitions to same state.
-      // Would occur if someone were to hammer to connect/disconnect button
-      // before the text changed
-      if (newState != mState) {
+
         executor.execute(t);
-        mState = newState;
-      }
-    } finally {
-      mStateLock.unlock();
-    }
+
 
   }
 

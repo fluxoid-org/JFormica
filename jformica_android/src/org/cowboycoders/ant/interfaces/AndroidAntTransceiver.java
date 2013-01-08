@@ -279,8 +279,8 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
             throw new AntCommunicationException("service not connected",e);
           }
                    
-          Log.d(TAG, "service connected - claimed interface");
-          mClaimedAntInterface = true;
+          //Log.d(TAG, "service connected - claimed interface");
+          //mClaimedAntInterface = true;
           
           
           if (mServiceConnected) {
@@ -365,9 +365,9 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
         // or continually polled
         throw new AntRadioPoweredOffException(e);
       }
-      waitForInititalReset();
+      //waitForInititalReset();
       waitForRunningUpdate();
-      waitForVersionResponse();
+      //waitForVersionResponse();
       waitForRadioQuiet();
     }
   }
@@ -649,7 +649,9 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
             mClaimedAntInterface = mAntReceiver.hasClaimedInterface();
           } catch (AntServiceNotConnectedException e) {
             Log.e(TAG, "Ant Service connection lost");
+            //is this causing issues?
             mClaimedAntInterface = false;
+            //mClaimedAntInterface = true;
           }
           if (mClaimedAntInterface) {
             Log.i(TAG, "onReceive: ANT Interface claimed");
@@ -738,12 +740,7 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
     }
 
     public void onReceive(Context context, Intent intent) {
-      try {
-        lock.lock();
         processIntent(context, intent);
-      } finally {
-        lock.unlock();
-      }
     }
 
   };
@@ -767,8 +764,10 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
           // mAntMessageReceiver should be registered any time we have
           // control of the ANT Interface
           receiveAntRxMessages(true);
+          mClaimedAntInterface = true;
 
         } else {
+          mClaimedAntInterface = false;
           // Need to claim the ANT Interface if it is available, now
           // the service is connected
           //mClaimedAntInterface = mAntReceiver.claimInterface();
