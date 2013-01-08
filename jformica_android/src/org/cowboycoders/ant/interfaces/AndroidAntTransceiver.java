@@ -239,8 +239,12 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
     if (AntInterface.hasAntSupport(mContext)) {
       
       // ensure service not already initialised
-      mAntReceiver.releaseService();
-      setRunning(false);
+     // mAntReceiver.releaseService();
+      try {this.shutDown();} catch (Exception e) {
+        Log.d(TAG,e.toString() +
+            " thrown whilst ensuring we were already shutdown");
+      }
+      //setRunning(false);
      
       mContext.registerReceiver(mAntStatusReceiver, statusIntentFilter);
 
@@ -472,7 +476,7 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
       while (true) {
         long oldTimestamp = (long) (System.nanoTime() / Math.pow(10, 6));
         while (!this.mReceivedMessage) {
-          final int timeout = 5;
+          final int timeout = 20;
           this.mReceivedMessageCondition.await(timeout, TimeUnit.MILLISECONDS);
           if ((System.nanoTime() / Math.pow(10, 6)) - oldTimestamp > timeout) { throw new TimeoutException(
               "Timeout waiting for running to be enabled"); }
@@ -936,7 +940,7 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
       Log.w(TAG, "Exception in AntChannelManager.shutDown", e);
     } catch (InterruptedException e) {
       throw new AntCommunicationException(
-          "Interuppted waiting for radio to go quiet ", e);
+          "Interrupted waiting for radio to go quiet ", e);
     } finally {
       lock.unlock();
     }

@@ -38,7 +38,6 @@ import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 
 import com.example.jformica_hrmexample.R;
 
-
 public class MainActivity extends Activity {
   public static String TAG = "Formica Hrm Ex";
 
@@ -51,16 +50,16 @@ public class MainActivity extends Activity {
   private State mState = State.DISCONNECTED;
   private boolean updateHrm = false;
   private ExecutorService executor = Executors.newSingleThreadExecutor();
-  private String connectString ;
-  private String disconnectString ;
-  private Button connectButton ;
-  
+  private String connectString;
+  private String disconnectString;
+  private Button connectButton;
+  private boolean running = false;
+
   enum State {
     CONNECTED, DISCONNECTED,
   }
 
-  private  BroadcastListener<AntStatusUpdate>listener =
-      new BroadcastListener<AntStatusUpdate>() {
+  private BroadcastListener<AntStatusUpdate> listener = new BroadcastListener<AntStatusUpdate>() {
 
     @Override
     public void receiveMessage(AntStatusUpdate status) {
@@ -73,12 +72,13 @@ public class MainActivity extends Activity {
           public void run() {
             if (r == DisableReason.POWER_OFF) {
               showToast("Ant chip powered off", Toast.LENGTH_LONG);
+              disconnect();
             }
-            if (r == DisableReason.INTERFACE_CLAIMED) {
+            else if (r == DisableReason.INTERFACE_CLAIMED) {
               showToast("Ant chip claimed by someone else", Toast.LENGTH_LONG);
+              disconnect();
             }
-            disconnect();
-            
+
             try {
               mStateLock.lock();
               mState = State.DISCONNECTED;
@@ -86,15 +86,13 @@ public class MainActivity extends Activity {
               mStateLock.unlock();
             }
           }
-          
-          
+
         });
       }
-      
+
     }
-    
+
   };
-  
 
   /** Called when the user clicks the Send button */
   public void onConnect(View view) {
@@ -102,18 +100,24 @@ public class MainActivity extends Activity {
     State newState = null;
     if ((connectButton).getText().equals(connectString)) {
       newState = State.CONNECTED;
+      
+      if(running) {
+        return;
+      }
+      
       t = new Thread() {
-
 
         @Override
         public void run() {
           try {
+            Log.e(TAG, "connect");
             mAntLock.lock();
             mStateLock.lock();
-            
-            //assume disconnected until we complete
+            running = true;
+
+            // assume disconnected until we complete
             MainActivity.this.mState = MainActivity.State.DISCONNECTED;
-            
+
             AndroidAntTransceiver antchip = new AndroidAntTransceiver(
                 MainActivity.this.getApplicationContext());
 
@@ -122,7 +126,7 @@ public class MainActivity extends Activity {
             NetworkKey key = new NetworkKey(0xB9, 0xA5, 0x21, 0xFB, 0xBD, 0x72,
                 0xC3, 0x45);
             key.setName("N:ANT+");
-            
+
             node.registerStatusListener(MainActivity.this.listener);
 
             try {
@@ -164,7 +168,6 @@ public class MainActivity extends Activity {
 
               @Override
               public void run() {
-                Log.e(TAG, "connect");
                 connectButton.setText(disconnectString);
               }
 
@@ -176,7 +179,7 @@ public class MainActivity extends Activity {
             } finally {
               mUpdateLock.unlock();
             }
-            
+
             MainActivity.this.mState = MainActivity.State.CONNECTED;
 
           } catch (final AntRadioServiceNotInstalledException e) {
@@ -184,6 +187,13 @@ public class MainActivity extends Activity {
               @Override
               public void run() {
                 exceptionToToast(e);
+                try {
+                  mStateLock.lock();
+                  mState = MainActivity.State.DISCONNECTED;
+                } finally {
+                  mStateLock.unlock();
+                }
+                disconnect();
               }
 
             });
@@ -194,11 +204,53 @@ public class MainActivity extends Activity {
               @Override
               public void run() {
                 exceptionToToast(e);
+                try {
+                  mStateLock.lock();
+                  mState = MainActivity.State.DISCONNECTED;
+                } finally {
+                  mStateLock.unlock();
+                }
+                disconnect();
+              }
+
+            });
+
+          } catch (final ChannelError e) {
+            handler.post(new Runnable() {
+
+              @Override
+              public void run() {
+                exceptionToToast(e);
+                try {
+                  mStateLock.lock();
+                  mState = MainActivity.State.DISCONNECTED;
+                } finally {
+                  mStateLock.unlock();
+                }
+                disconnect();
+              }
+
+            });
+
+          }catch (final AntError e) {
+            handler.post(new Runnable() {
+
+              @Override
+              public void run() {
+                exceptionToToast(e);
+                try {
+                  mStateLock.lock();
+                  mState = MainActivity.State.DISCONNECTED;
+                } finally {
+                  mStateLock.unlock();
+                }
+                disconnect();
               }
 
             });
 
           } finally {
+            running = false;
             mAntLock.unlock();
             mStateLock.unlock();
           }
@@ -213,6 +265,9 @@ public class MainActivity extends Activity {
         public void run() {
           try {
             mAntLock.lock();
+            mStateLock.lock();
+            running = true;
+            Log.e(TAG, "disconnect");
 
             if (channel == null) { return; }
 
@@ -222,8 +277,8 @@ public class MainActivity extends Activity {
               // ant probbaly not connected
               Log.e(TAG, e.toString());
             } catch (final AntCommunicationException e) {
-              // must likely to occur if usb stick unplugged / 
-              //a force claim has occurred behind our backs
+              // must likely to occur if usb stick unplugged /
+              // a force claim has occurred behind our backs
               handler.post(new Runnable() {
 
                 @Override
@@ -244,7 +299,7 @@ public class MainActivity extends Activity {
               // if already stopped throws an exception
               Log.e(TAG, e.toString());
             }
-
+            
             node = null;
             channel = null;
 
@@ -255,13 +310,15 @@ public class MainActivity extends Activity {
                 MainActivity.this.disconnect();
               }
 
-
             };
 
             handler.post(r);
+            
 
           } finally {
+            running = false;
             mAntLock.unlock();
+            mStateLock.unlock();
           }
 
         }
@@ -283,7 +340,7 @@ public class MainActivity extends Activity {
     }
 
   }
-  
+
   private void disconnect() {
     TextView hrmView = (TextView) findViewById(R.id.hrmView);
     try {
@@ -293,19 +350,28 @@ public class MainActivity extends Activity {
     } finally {
       mUpdateLock.unlock();
     }
+    
+    try{
+      mAntLock.lock();
+      if (node != null) {
+        node.stop();
+      }
+      
+    }finally {
+      mAntLock.unlock();
+    }
 
     connectButton.setText(connectString);
-    Log.e(TAG, "disconnect");
   }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    connectString =  getString(R.string.connect);
+    connectString = getString(R.string.connect);
     disconnectString = getString(R.string.disconnect);
     connectButton = (Button) findViewById(R.id.connectButton);
-    
+
   }
 
   class Listener implements BroadcastListener<BroadcastDataMessage> {
@@ -348,9 +414,12 @@ public class MainActivity extends Activity {
     super.onDestroy();
     if (node != null) {
       try {
+        mAntLock.unlock();
         node.stop();
       } catch (AntError e) {
         Log.e(TAG, e.toString());
+      } finally {
+        mAntLock.unlock();
       }
     }
 
@@ -362,6 +431,7 @@ public class MainActivity extends Activity {
     writer.append(e.toString());
     writer.append("\n\n");
     e.printStackTrace(new PrintWriter(writer));
+    Log.e(TAG,writer.getBuffer().toString());
     showToast(writer.getBuffer(), Toast.LENGTH_LONG);
   }
 
