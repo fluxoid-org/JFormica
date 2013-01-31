@@ -27,6 +27,7 @@ import org.cowboycoders.ant.messages.Message;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.utils.ArrayUtils;
 
 /**
  * Common functionality for all data messages
@@ -108,6 +109,16 @@ public abstract class DataMessage extends ChannelMessage {
     List <Byte> payload = getStandardPayload();
     payload = payload.subList(1, payload.size());
     return payload.toArray(new Byte[0]);
+  }
+  
+  /**
+   * Returns 'data' section of payload converted to ints.
+   * Takes into account that the bytes should be unsigned and
+   * thus negative byte values are mapped to positive ints.
+   * @return the payload as an int []
+   */
+  public int[] getUnsignedData() {
+    return ArrayUtils.unsignedBytesToInts(getData());
   }
   
 

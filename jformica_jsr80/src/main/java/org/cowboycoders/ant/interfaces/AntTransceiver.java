@@ -153,7 +153,6 @@ public class AntTransceiver extends AbstractAntTransceiver {
     
     this.device = device;
     
-    
   }
   
   private void logData(Level level, byte [] data, String tag) {
@@ -184,6 +183,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
             byte [] data = new byte[64];
             try {
               //inPipe.open();
+              LOGGER.finest("pre read");
               inPipe.syncSubmit(data);
             } finally  {
               //inPipe.close();
@@ -228,7 +228,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
         e.printStackTrace();
       } 
       
-      
+      LOGGER.finest(this.getClass().toString() + " killed");
     }
     
   }
@@ -299,6 +299,19 @@ public class AntTransceiver extends AbstractAntTransceiver {
         throw new AntCommunicationException("Endpoints not found");
       }
       
+      
+      //FIXME: without these two // don't seem to receive replies to first few messages
+      //StandardMessage msg = new ResetMessage();
+      //send(msg.encode());
+      // FIXME: if we don't write some garbage it doesn't response to first few
+      // messages
+      try {
+        write(new byte[128]);
+      } catch (UsbException e) {
+        LOGGER.finest("device wake up failed");
+      }
+      
+      
       inPipe = endpointIn.getUsbPipe();
       
       try {
@@ -311,17 +324,10 @@ public class AntTransceiver extends AbstractAntTransceiver {
             
       //SharedThreadPool.getThreadPool().execute(this.usbReader);
       
-      this.usbReader.start();
-      
-      
-      
+      this.usbReader.start();            
       
       running = true;
-      
-      //FIXME: without these two // don't seem to receive replies to first few messages
-      //StandardMessage msg = new ResetMessage();
-      //send(msg.encode());
-      //send(msg.encode());
+
       
     } catch (RuntimeException e) {
       e.printStackTrace();
@@ -526,10 +532,9 @@ public class AntTransceiver extends AbstractAntTransceiver {
     
     try {
       lock.lock();
-      if (!running) throw new AntCommunicationException("AntTransceiver not running. Use start()");
       pipe = endpointOut.getUsbPipe();
       if(!pipe.isOpen()) pipe.open();
-      
+      LOGGER.finest("pre submit");
       pipe.syncSubmit(data);
       logData(Level.FINER,data,"wrote");
     }
@@ -545,6 +550,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
   @Override
   public void send(byte[] message) throws AntCommunicationException {
     try {
+      if (!running) throw new AntCommunicationException("AntTransceiver not running. Use start()");
       write(addExtras(message));
     
     } catch (UsbNotActiveException e) {

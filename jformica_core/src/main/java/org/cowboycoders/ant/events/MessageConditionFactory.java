@@ -124,5 +124,32 @@ public class MessageConditionFactory {
   }
   
   
+  /**
+   * Chains conditions together - you should only use this once
+   * @param conditions to chain
+   * @return chained condition
+   */
+  public static MessageCondition newChainedCondition(final MessageCondition ... conditions) {
+    
+    MessageCondition condition = new MessageCondition () {
+      private int currentIndex = 0;
+      
+      @Override
+      public boolean test(StandardMessage msg) {
+        if (conditions[currentIndex].test(msg)) {
+          currentIndex++;
+          if (currentIndex >= conditions.length)  {
+            return true;
+          }
+        }
+        return false;
+      }
+      
+    };
+    
+    return condition;
+  }
+  
+  
 
 }

@@ -18,15 +18,42 @@
  */
 package org.cowboycoders.ant.utils;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+/**
+ * Utility class that contains methods to
+ * converts byte arrays to integers and back.
+ * 
+ * Could replace with a more generic implementation based on
+ * BigInteger {@see BigIntUtils}
+ * @author will
+ *
+ */
 public class ByteMerger {
   
   private ByteMerger() {
     
   }
+
+// Should I be using bigIntegers? See BigIntUtils
+//  public static BigInteger lsbMergeI(List<Byte> data) {
+//    byte [] bytes = new byte[data.size()];
+//    for (int i=0 ; i< data.size() ; i++) {
+//      bytes[i] = data.get(i);
+//    }
+//    BigInteger rtn = new BigInteger(bytes);
+//    return rtn;
+//  }
+//  
   
+  /**
+   * Least significant byte first
+   * @param list of bytes to merge into an Integer
+   * @return the merger of the bytes
+   */
   public static Integer lsbMerge(List<Byte> data) {
     Integer rtn = 0;
     byte count = 0;
@@ -37,6 +64,12 @@ public class ByteMerger {
     return rtn;
   }
   
+  /**
+   * Splits a list of bytes ordered with least significant byte first
+   * @param in integer to split
+   * @param numberOfBytes number of bytes to produce
+   * @return
+   */
   public static List<Byte> lsbSplit(Integer in, int numberOfBytes) {
     List<Byte> bytes = new ArrayList<Byte>();
     for (byte i = 0 ; i < numberOfBytes ; i++) {
@@ -45,6 +78,30 @@ public class ByteMerger {
     }
     return bytes;
   }
+  
+  /**
+   * Splits a list of bytes ordered with most significant byte first
+   * @param in integer to split
+   * @param numberOfBytes number of bytes to produce
+   * @return
+   */
+  public static List<Byte> msbSplit(Integer in, int numberOfBytes) {
+    List<Byte> rtn = lsbSplit(in,numberOfBytes);
+    Collections.reverse(rtn);
+    return rtn;
+  }
+  
+  /**
+   * Most significant byte first
+   * @param list of bytes to merge into an Integer
+   * @return the merger of the bytes
+   */
+  public static Integer msbMerge(List<Byte> data) {
+    List<Byte> clone = new ArrayList<Byte>(data);
+    Collections.reverse(clone);
+    return lsbMerge(clone);
+  }
+  
   
   
 }
