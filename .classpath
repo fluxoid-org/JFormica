@@ -10,5 +10,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/javax.usb"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/javax.usb-extra"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/usbtools"/>
+	<classpathentry kind="src" path="/Location"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

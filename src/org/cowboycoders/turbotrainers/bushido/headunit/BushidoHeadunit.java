@@ -40,7 +40,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
   
   public final static Logger LOGGER = Logger.getLogger(BushidoHeadunit.class .getName());
 
-  private static final long TIMEOUT_DISTANCE_UPDATED = TimeUnit.SECONDS.toNanos(1);
+  private static final long TIMEOUT_DISTANCE_UPDATED = TimeUnit.SECONDS.toNanos(5);
   
   public static final byte[] PACKET_ALIVE = BushidoHeadunit.padToDataLength(new int [] {0xac, 0x03, 0x02});
   
