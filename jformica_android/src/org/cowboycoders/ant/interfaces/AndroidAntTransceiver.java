@@ -381,7 +381,7 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
       InterruptedException {
     final long oldTimestamp = (long) (System.nanoTime() / Math.pow(10, 6));
     while (mServiceConnected == false) {
-      final int timeout = 1000;
+      final int timeout = 2000;
       notDisconnected.await(timeout, TimeUnit.MILLISECONDS);
       if ((System.nanoTime() / Math.pow(10, 6)) - oldTimestamp > timeout) { throw new TimeoutException(
           "Timeout waiting for connection"); }
