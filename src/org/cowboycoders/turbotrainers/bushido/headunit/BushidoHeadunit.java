@@ -89,8 +89,44 @@ public class BushidoHeadunit extends AntTurboTrainer {
   private Set<BushidoButtonPressListener> buttonPressListeners = Collections.newSetFromMap(new WeakHashMap<BushidoButtonPressListener,Boolean>());
   
   boolean distanceUpdated = false;
+  
+  private Lock requestPauseLock = new ReentrantLock();
+  private boolean requestPauseInProgess = false;
+  private Lock requestDataLock = new ReentrantLock();
+  private boolean requestDataInProgess = false;
+  private Runnable requestPauseCallback = new Runnable() {
+
+    @Override
+    public void run() {
+      try {
+        requestPauseLock.lock();
+        requestPauseInProgess = false;
+      } finally {
+        requestPauseLock.unlock();
+      } 
+      
+    }
+    
+  };
+  
+  private Runnable requestDataCallback = new Runnable() {
+
+    @Override
+    public void run() {
+      try {
+        requestDataLock.lock();
+        requestDataInProgess = false;
+      } finally {
+        requestDataLock.unlock();
+      }   
+      
+    }
+    
+  };
+
 
   private boolean respond = true;
+  
   
   public class BushidoUpdatesListener implements BushidoInternalListener {
     
@@ -107,22 +143,33 @@ public class BushidoHeadunit extends AntTurboTrainer {
     }
 
     @Override
-    public synchronized void onRequestData() {
+    public void onRequestData() {
+      
+      // subject to a race but we will respond to next request
+      try {
+        requestDataLock.lock();
+        if (requestDataInProgess) return;
+        requestDataInProgess = true;
+      } finally {
+        requestDataLock.unlock();
+      }
+      
       byte [] bytes = null;
       synchronized(data) {
         bytes = data.getDataPacket();
       }
-      channelSender.sendMessage(buildBroadcastMessage(bytes));
+      
+      channelSender.sendMessage(buildBroadcastMessage(bytes), requestDataCallback);
     }
 
     @Override
-    public synchronized void onRequestKeepAlive() {
+    public void onRequestKeepAlive() {
       // TODO Auto-generated method stub
       
     }
 
     @Override
-    public synchronized void onSpeedChange(final double speed) {
+    public void onSpeedChange(final double speed) {
       synchronized(data) {
         data.setSpeed(speed);
       }
@@ -139,7 +186,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
     }
 
     @Override
-    public synchronized void onPowerChange(final double power) {
+    public  void onPowerChange(final double power) {
       synchronized(data) {
         data.setPower(power);
       }
@@ -156,7 +203,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
     }
 
     @Override
-    public synchronized void onCadenceChange(final double cadence) {
+    public  void onCadenceChange(final double cadence) {
      synchronized(data) {
        data.setCadence(cadence);
      }
@@ -172,11 +219,13 @@ public class BushidoHeadunit extends AntTurboTrainer {
     }
 
     @Override
-    public synchronized void onDistanceChange(final double distance) {
+    public void onDistanceChange(final double distance) {
       synchronized(data) {
         data.setDistance(distance);
         distanceUpdated = true;
-        this.notifyAll();
+        synchronized(this) {
+          this.notifyAll();
+        }
       }
       synchronized (dataChangeListeners) {
         IterationUtils.operateOnAll(dataChangeListeners, new IterationOperator<TurboTrainerDataListener>() {
@@ -192,7 +241,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
     }
 
     @Override
-    public synchronized void onHeartRateChange(final double heartRate) {
+    public void onHeartRateChange(final double heartRate) {
       synchronized(data) {
         data.setHearRate(heartRate);
       }
@@ -209,8 +258,16 @@ public class BushidoHeadunit extends AntTurboTrainer {
 
     @Override
     public void onRequestPauseStatus() {
+      try {
+        requestPauseLock.lock();
+        if (requestPauseInProgess) return;
+        requestPauseInProgess = true;
+      } finally {
+        requestPauseLock.unlock();
+      }
+      
         BroadcastDataMessage msg = buildBroadcastMessage(PACKET_ALIVE);
-        channelSender.sendMessage(msg);
+        channelSender.sendMessage(msg, requestPauseCallback);
     }
     
 
@@ -371,7 +428,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
     channelMessageSender = new ChannelMessageSender() {
 
       @Override
-      public void sendMessage(final ChannelMessage msg) {
+      public void sendMessage(final ChannelMessage msg, final Runnable callback) {
         channelExecutorService.execute(new Runnable() {
 
           @Override
@@ -379,7 +436,12 @@ public class BushidoHeadunit extends AntTurboTrainer {
             
             try {
               responseLock.lock();
-                if (!respond) return;
+                if (!respond) {
+                  if (callback != null) {
+                    callback.run();
+                  }
+                  return;
+                }
             } finally {
               responseLock.unlock();
             }
@@ -388,9 +450,19 @@ public class BushidoHeadunit extends AntTurboTrainer {
               channel.sendAndWaitForAck(msg, CONDITION_CHANNEL_TX, 10L, TimeUnit.SECONDS, null, null);
             } catch (Exception e) {
               LOGGER.severe("Message send failed");
-            } 
+            }
+            
+            if(callback != null) {
+              callback.run();
+            }
             
           }});
+        
+      }
+
+      @Override
+      public void sendMessage(ChannelMessage msg) {
+        sendMessage(msg,null);
         
       }
       
