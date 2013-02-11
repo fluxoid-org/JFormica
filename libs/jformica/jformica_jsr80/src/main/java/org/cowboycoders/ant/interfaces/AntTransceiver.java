@@ -550,7 +550,6 @@ public class AntTransceiver extends AbstractAntTransceiver {
     }
     finally {
       if (pipe != null) {
-    	pipe.abortAllSubmissions();
         pipe.close();
       }
       lock.unlock();
