@@ -109,9 +109,16 @@ public class AntTransceiver extends AbstractAntTransceiver {
   UsbPipe inPipe = null;
 
   private UsbReader usbReader;
+
+  //private int deviceNumber;
   
   public AntTransceiver(int deviceNumber) {
+    //this.deviceNumber = deviceNumber;
+    doInit(deviceNumber);
     
+  }
+
+  private void doInit(int deviceNumber) {
     UsbServices usbServices = null;
     UsbHub rootHub;
 
@@ -152,7 +159,6 @@ public class AntTransceiver extends AbstractAntTransceiver {
     UsbDevice device = devices.get(deviceNumber);
     
     this.device = device;
-    
   }
   
   private void logData(Level level, byte [] data, String tag) {
@@ -271,7 +277,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
       lock.lock();
       //already started
       if(running) return true;
-      
+            
       
       if (!device.isConfigured()) {
         throw new AntCommunicationException("Ant stick not configured by OS");
@@ -319,6 +325,8 @@ public class AntTransceiver extends AbstractAntTransceiver {
       } catch (UsbException e) {
         throw new AntCommunicationException("Error opening inPipe");
       }
+      
+      readEndpoint = true;
       
       this.usbReader = new UsbReader();
             
@@ -504,6 +512,8 @@ public class AntTransceiver extends AbstractAntTransceiver {
         
         _interface.release();
         
+        
+        
 
       //} finally {
        // interfaceLock.unlock();
@@ -540,6 +550,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
     }
     finally {
       if (pipe != null) {
+    	pipe.abortAllSubmissions();
         pipe.close();
       }
       lock.unlock();

@@ -97,8 +97,9 @@ public class BigIntUtils {
   }
   
   /**
-   * Discards more significant bytes. Use before getByteArray for 
-   * known unsigned numbers to clip to data type length.
+   * Used on BigIntegers known to fit into x number of bytes.
+   * 
+   * Discards more significant bytes. 
    * 
    * {@link BigIntUtils#NUMBER_OF_BYTES_BYTE}
    * {@link BigIntUtils#NUMBER_OF_BYTES_SHORT}
@@ -111,22 +112,61 @@ public class BigIntUtils {
    */
   public static BigInteger clip(BigInteger bi, int numberOfBytes) {
     byte [] unclipped = bi.toByteArray();
+    if (unclipped.length <= numberOfBytes) {
+      //byte [] reversed = Arrays.copyOf(unclipped, numberOfBytes);
+      //unclipped = ByteUtils.reverseArray(reversed);
+      return bi;
+    }
     byte [] constructionBytes = Arrays.copyOfRange(unclipped, 
         unclipped.length  -numberOfBytes , unclipped.length);
     return new BigInteger(constructionBytes);
   }
+//  
+//  /**
+//   * Somewhat useless
+//   * Discards less significant bytes
+//   * @param bi the @{code BigInteger} to truncate
+//   * @param numberOfBytes number of bytes to truncate to
+//   * @return a new BigInteger
+//   */
+//  public static BigInteger truncate(BigInteger bi, int numberOfBytes) {
+//    byte [] unclipped = bi.toByteArray();
+//    if (unclipped.length <= numberOfBytes) {
+//      return bi;
+//    }
+//    byte [] constructionBytes = Arrays.copyOfRange(unclipped, 
+//        0 , numberOfBytes);
+//    return new BigInteger(constructionBytes);
+//  }
+//  
+  /**
+   * Big endian
+   * @param bi
+   * @param numberOfBytes
+   */
+  public static byte [] clipToByteArray(BigInteger bi, int numberOfBytes) {
+    BigInteger clipped = clip(bi,numberOfBytes);
+    byte [] rtn = clipped.toByteArray();
+    if (rtn.length == numberOfBytes) {
+      return rtn;
+    }
+    rtn = Arrays.copyOf(rtn, numberOfBytes);
+    return ByteUtils.reverseArray(rtn);
+  }
   
   /**
-   * Discards less significant bytes
-   * @param bi the @{code BigInteger} to truncate
-   * @param numberOfBytes number of bytes to truncate to
-   * @return a new BigInteger
+   * Little endian
+   * @param bi
+   * @param numberOfBytes
    */
-  public static BigInteger truncate(BigInteger bi, int numberOfBytes) {
-    byte [] unclipped = bi.toByteArray();
-    byte [] constructionBytes = Arrays.copyOfRange(unclipped, 
-        0 , numberOfBytes);
-    return new BigInteger(constructionBytes);
+  public static byte [] clipToByteArrayLittleEndian(BigInteger bi, int numberOfBytes) {
+    BigInteger clipped = clip(bi,numberOfBytes);
+    byte [] rtn = clipped.toByteArray();
+    if (rtn.length == numberOfBytes) {
+      return ByteUtils.reverseArray(rtn);
+    }
+    rtn = Arrays.copyOf(rtn, numberOfBytes);
+    return rtn;
   }
   
 

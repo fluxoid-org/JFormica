@@ -19,9 +19,12 @@
 package org.cowboycoders.ant;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -32,6 +35,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.logging.Logger;
 
+import org.cowboycoders.ant.AntLogger.Direction;
+import org.cowboycoders.ant.AntLogger.LogDataContainer;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.events.BroadcastMessenger;
 import org.cowboycoders.ant.events.EventMachine;
@@ -76,6 +81,7 @@ public class Node extends BufferedNodeComponent {
   
   
   public final static Logger LOGGER = Logger.getLogger(EventMachine.class .getName()); 
+  private Set<AntLogger> antLoggers = Collections.newSetFromMap(new WeakHashMap<AntLogger,Boolean>());
   
   private boolean running = false;
   private EventMachine evm;
@@ -116,6 +122,7 @@ public class Node extends BufferedNodeComponent {
 
     @Override
     public void receiveMessage(StandardMessage message) {
+      logMessage(Direction.RECEIVED,message);
       if (message instanceof StartupMessage) {
         if (!weReset) {
         // we don't actually get a reset intent if we send a raw message
@@ -537,9 +544,25 @@ public class Node extends BufferedNodeComponent {
     reset(true);
   }
   
+  private void logMessage(AntLogger.Direction direction, StandardMessage msg) {
+    synchronized (antLoggers) {
+      for (AntLogger logger : antLoggers) {
+        try {
+          LogDataContainer data = new LogDataContainer(direction,msg);
+          logger.log(data);
+        } catch (Exception e) {
+          // don't bring us down for the sake of logging
+          LOGGER.severe("error logging data");
+        }
+      }
+    }
+  }
+  
   public synchronized MessageMetaWrapper<StandardMessage> send(StandardMessage msg) {
     LOGGER.finer("sent: " + msg.toString() + " to chip" );
     antChipInterface.send(msg.encode());
+    // now that we have sent, inform the loggers
+    logMessage(Direction.SENT,msg);
     return new MessageMetaWrapper<StandardMessage>(msg);
   }
 
@@ -558,6 +581,19 @@ public class Node extends BufferedNodeComponent {
       stop();
     }
     return running;
+  }
+  
+  public void registerAntLogger(AntLogger logger) {
+    synchronized(antLoggers) {
+      antLoggers.add(logger);
+    }
+    
+  }
+
+  public void unregisterAntLogger(AntLogger logger) {
+    synchronized(antLoggers) {
+      antLoggers.remove(logger);
+    }
   }
   
 
