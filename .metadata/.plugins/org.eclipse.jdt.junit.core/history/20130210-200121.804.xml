@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testrun name="BushidoTest" project="TurboTrainers" tests="1" started="0" failures="0" errors="1" ignored="0">
+  <testsuite name="BushidoTest" incomplete="true">
+    <error>java.lang.ExceptionInInitializerError
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:27)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:236)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:467)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:683)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:390)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:197)
+Caused by: org.cowboycoders.ant.interfaces.AntCommunicationException: javax.usb.UsbException: Properties file javax.usb.properties not found.
+	at org.cowboycoders.ant.interfaces.AntTransceiver.doInit(AntTransceiver.java:131)
+	at org.cowboycoders.ant.interfaces.AntTransceiver.&lt;init&gt;(AntTransceiver.java:117)
+	at BushidoTest.&lt;clinit&gt;(BushidoTest.java:52)
+	... 16 more
+Caused by: javax.usb.UsbException: Properties file javax.usb.properties not found.
+	at javax.usb.UsbHostManager.setupProperties(Unknown Source)
+	at javax.usb.UsbHostManager.getProperties(Unknown Source)
+	at javax.usb.UsbHostManager.createUsbServices(Unknown Source)
+	at javax.usb.UsbHostManager.getUsbServices(Unknown Source)
+	at org.cowboycoders.ant.interfaces.AntTransceiver.doInit(AntTransceiver.java:126)
+	... 18 more
+
+java.lang.NoClassDefFoundError: Could not initialize class BushidoTest
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:37)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:236)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:467)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:683)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:390)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:197)
+
+</error>
+    <testcase name="testBushido" classname="BushidoTest" incomplete="true"/>
+  </testsuite>
+</testrun>
