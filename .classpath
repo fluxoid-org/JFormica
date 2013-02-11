@@ -7,6 +7,9 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/JFormica - core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JFormica - JSR80"/>
 	<classpathentry kind="src" path="/Location"/>
-	<classpathentry kind="lib" path="resources"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/javalibusb1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/javax.usb"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/javax.usb-extra"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/usbtools"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
