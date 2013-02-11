@@ -1,0 +1,1 @@
+include 'jformica_core', 'jformica_jsr80', 'jformica_android' , 'jformica_examples'
