@@ -1,5 +1,5 @@
 
-Add this as your eclipse workspace or import all projects.
+File -> import -> General -> existing projects into workspace -> choose this folder
 
 I've included a linux x86_64 javax usb implementation. You may need to recompile/ use an alternative implementation.
 

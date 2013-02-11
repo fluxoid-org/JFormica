@@ -1,13 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="javax.usb.UsbDevice"/>
-<fullyQualifiedTypeName name="javax.usb.UsbDeviceDescriptor"/>
-<fullyQualifiedTypeName name="javax.usb.UsbHub"/>
-<fullyQualifiedTypeName name="java.util.List"/>
-<fullyQualifiedTypeName name="javax.usb.UsbHostManager"/>
-<fullyQualifiedTypeName name="javax.usb.UsbServices"/>
-<fullyQualifiedTypeName name="javax.usb.UsbException"/>
-<fullyQualifiedTypeName name="de.ailis.usb4java.jni.USB_Bus"/>
-<fullyQualifiedTypeName name="de.ailis.usb4java.jni.USB_Device"/>
-<fullyQualifiedTypeName name="de.ailis.usb4java.jni.USB_Device_Descriptor"/>
-</qualifiedTypeNameHistroy>
+<qualifiedTypeNameHistroy/>
