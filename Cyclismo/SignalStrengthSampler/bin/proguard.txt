@@ -1,0 +1,9 @@
+# view AndroidManifest.xml #generated:33
+-keep class org.cowboycoders.cyclisimo.signalstrength.RecordingStateReceiver { <init>(...); }
+
+# view AndroidManifest.xml #generated:24
+-keep class org.cowboycoders.cyclisimo.signalstrength.SignalStrengthPreferences { <init>(...); }
+
+# view AndroidManifest.xml #generated:41
+-keep class org.cowboycoders.cyclisimo.signalstrength.SignalStrengthService { <init>(...); }
+
