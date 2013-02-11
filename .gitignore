@@ -28,3 +28,7 @@ local.properties
 .buildpath
 
 jarlist.cache
+
+*.jar
+
+
