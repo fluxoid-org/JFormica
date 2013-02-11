@@ -17,25 +17,19 @@
 *    You should have received a copy of the GNU General Public License
 *    along with Cyclismo.  If not, see <http://www.gnu.org/licenses/>.
 */
-package org.cowboycoders.turbotrainers.bushido;
+package org.cowboycoders.ant.temp;
 
-public class BushidoUtils {
-  private BushidoUtils() {
-    
-  }
-  
-  // GENERATE FREQUENTLY MODIFED PACKETS
+import java.math.BigInteger;
 
-  public static byte[] getDc01Prototype() {
-    //DC01 Packet prototype
-    byte[] dc01Packet = {(byte)0xdc, 0x01, 0x00, 0x00, 0x00, 0x4d, 0x00, 0x00};
-    return dc01Packet;
-  }
+public class BushidoBrakeHacking {
   
-  public static byte [] getDc02Prototype() {
-    byte[] dc02Packet ={ (byte) 0xdc, 0x02, 0x00, (byte) 0x99, 0x00, 0x00,
-      0x00, 0x00 };
-    return dc02Packet;
+  
+  public static void main(String [] args) {
+    BigInteger bi = new BigInteger(new byte[] {(byte) 0xfe,(byte) 0x00});
+    BigInteger bi2 = new BigInteger(new byte[] {0,(byte) 0x12,(byte) 0xff});
+    System.out.println(bi.longValue());
+    System.out.println(bi2.longValue());
   }
+
 
 }

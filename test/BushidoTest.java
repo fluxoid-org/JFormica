@@ -1,3 +1,22 @@
+/*
+*    Copyright (c) 2013, Will Szumski
+*    Copyright (c) 2013, Doug Szumski
+*
+*    This file is part of Cyclismo.
+*
+*    Cyclismo is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    Cyclismo is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with Cyclismo.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 import static org.junit.Assert.*;
 
@@ -28,6 +47,7 @@ import org.cowboycoders.ant.messages.commands.ResetMessage;
 import org.cowboycoders.ant.messages.data.AcknowledgedDataMessage;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 import org.cowboycoders.ant.messages.responses.CapabilityResponse;
+import org.cowboycoders.ant.utils.AntLoggerImpl;
 import org.cowboycoders.ant.utils.ArrayUtils;
 import org.cowboycoders.ant.utils.ByteMerger;
 import org.cowboycoders.ant.utils.ByteUtils;
@@ -144,9 +164,12 @@ public class BushidoTest {
 
   BushidoHeadunit b;
   
+  AntLoggerImpl antLogger = new AntLoggerImpl();
+  
   @Test
   public void testBushido() throws InterruptedException, TimeoutException {
     Node n = new Node(BushidoTest.antchip);
+    n.registerAntLogger(antLogger);
     b = new BushidoHeadunit(n);
     b.registerButtonPressListener(buttonPressListener);
     b.registerDataListener(dataListener);

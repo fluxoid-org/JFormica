@@ -1,3 +1,22 @@
+/*
+*    Copyright (c) 2013, Will Szumski
+*    Copyright (c) 2013, Doug Szumski
+*
+*    This file is part of Cyclismo.
+*
+*    Cyclismo is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    Cyclismo is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with Cyclismo.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package org.cowboycoders.turbotrainers.bushido.headunit;
 
 import java.util.ArrayList;
@@ -12,6 +31,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
+import org.cowboycoders.ant.AntLogger;
 import org.cowboycoders.ant.Channel;
 import org.cowboycoders.ant.NetworkKey;
 import org.cowboycoders.ant.Node;
@@ -20,6 +40,7 @@ import org.cowboycoders.ant.events.MessageCondition;
 import org.cowboycoders.ant.events.MessageConditionFactory;
 import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.MessageId;
+import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.SlaveChannelType;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.data.AcknowledgedDataMessage;
@@ -88,6 +109,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
    */
   private Set<BushidoButtonPressListener> buttonPressListeners = Collections.newSetFromMap(new WeakHashMap<BushidoButtonPressListener,Boolean>());
   
+  
   boolean distanceUpdated = false;
   
   private Lock requestPauseLock = new ReentrantLock();
@@ -95,7 +117,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
   private Lock requestDataLock = new ReentrantLock();
   private boolean requestDataInProgess = false;
   private Runnable requestPauseCallback = new Runnable() {
-
+    
     @Override
     public void run() {
       try {
@@ -145,7 +167,8 @@ public class BushidoHeadunit extends AntTurboTrainer {
     @Override
     public void onRequestData() {
       
-      // subject to a race but we will respond to next request
+      // We don't want thread's queueing up waiting to be serviced.
+      // Subject to a race but we will respond to next request.
       try {
         requestDataLock.lock();
         if (requestDataInProgess) return;
@@ -630,6 +653,11 @@ public class BushidoHeadunit extends AntTurboTrainer {
       dataChangeListeners.remove(listener);
     }
   }
+  
+  public MessageMetaWrapper<StandardMessage> send(ChannelMessage msg) {
+    
+    return channel.send(msg);
+  }
 
   @Override
   public boolean supportsSpeed() {
@@ -650,5 +678,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
   public boolean supportsHeartRate() {
     return true;
   }
+
+
 
 }
