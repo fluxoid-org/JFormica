@@ -7,6 +7,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/JFormica - core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JFormica - JSR80"/>
 	<classpathentry kind="src" path="/Location"/>
-	<classpathentry kind="lib" path="resources"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

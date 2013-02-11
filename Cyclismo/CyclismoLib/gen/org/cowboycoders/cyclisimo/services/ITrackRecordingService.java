@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /home/will/code/cyclismo/Cyclismo/CyclismoLib/src/org/cowboycoders/cyclisimo/services/ITrackRecordingService.aidl
+ * Original file: /home/will/code/CyclismoProject/Cyclismo/CyclismoLib/src/org/cowboycoders/cyclisimo/services/ITrackRecordingService.aidl
  */
 package org.cowboycoders.cyclisimo.services;
 /**
