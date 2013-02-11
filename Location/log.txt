@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2013-01-09T01:56:32</date>
+  <millis>1357696592624</millis>
+  <sequence>0</sequence>
+  <logger>class org.cowboycoders.location.PolyLineUtils</logger>
+  <level>FINER</level>
+  <class>org.cowboycoders.location.PolyLineUtils</class>
+  <method>getValue</method>
+  <thread>10</thread>
+  <message>currentbyte: 16</message>
+</record>
+<record>
+  <date>2013-01-09T01:56:32</date>
+  <millis>1357696592628</millis>
+  <sequence>1</sequence>
+  <logger>class org.cowboycoders.location.PolyLineUtils</logger>
+  <level>FINER</level>
+  <class>org.cowboycoders.location.PolyLineUtils</class>
+  <method>getValue</method>
+  <thread>10</thread>
+  <message>currentbyte: 16</message>
+</record>
+<record>
+  <date>2013-01-09T01:56:32</date>
+  <millis>1357696592629</millis>
+  <sequence>2</sequence>
+  <logger>class org.cowboycoders.location.PolyLineUtils</logger>
+  <level>FINER</level>
+  <class>org.cowboycoders.location.PolyLineUtils</class>
+  <method>getValue</method>
+  <thread>10</thread>
+  <message>currentbyte: 16</message>
+</record>
+<record>
+  <date>2013-01-09T01:56:32</date>
+  <millis>1357696592629</millis>
+  <sequence>3</sequence>
+  <logger>class org.cowboycoders.location.PolyLineUtils</logger>
+  <level>FINER</level>
+  <class>org.cowboycoders.location.PolyLineUtils</class>
+  <method>getValue</method>
+  <thread>10</thread>
+  <message>currentbyte: 16</message>
+</record>
+</log>
