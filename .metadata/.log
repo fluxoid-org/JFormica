@@ -462,3 +462,145 @@ org.eclipse.core.internal.resources.ResourceException: Resource '/google-play-se
 
 !ENTRY org.eclipse.jdt.core 4 0 2013-02-11 00:47:24.035
 !MESSAGE Invalid ZIP archive: /home/will/code/cyclismo/jformica/jformica_android/libs/antlib.jar
+
+!ENTRY org.eclipse.jdt.core 4 4 2013-02-11 01:25:12.295
+!MESSAGE Exception while reading /JFormica - Android/.classpath
+!STACK 1
+org.eclipse.core.runtime.CoreException: File not found: /home/will/code/cyclismo/jformica/jformica_android/.classpath.
+	at org.eclipse.core.internal.filesystem.Policy.error(Policy.java:55)
+	at org.eclipse.core.internal.filesystem.local.LocalFile.openInputStream(LocalFile.java:371)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.read(FileSystemResourceManager.java:797)
+	at org.eclipse.core.internal.resources.File.getContents(File.java:289)
+	at org.eclipse.jdt.internal.core.util.Util.getResourceContentsAsByteArray(Util.java:1132)
+	at org.eclipse.jdt.internal.core.JavaProject.readFileEntriesWithException(JavaProject.java:2448)
+	at org.eclipse.jdt.internal.core.JavaProject.readFileEntries(JavaProject.java:2489)
+	at org.eclipse.jdt.internal.core.JavaProject.readRawClasspath(JavaProject.java:2527)
+	at com.android.ide.eclipse.adt.internal.project.BaseProjectHelper.getSourceClasspaths(BaseProjectHelper.java:82)
+	at com.android.ide.eclipse.adt.internal.project.BaseProjectHelper.getSourceClasspaths(BaseProjectHelper.java:100)
+	at com.android.ide.eclipse.adt.internal.project.LibraryClasspathContainerInitializer.allocateLibraryContainer(LibraryClasspathContainerInitializer.java:213)
+	at com.android.ide.eclipse.adt.internal.project.LibraryClasspathContainerInitializer.updateProjects(LibraryClasspathContainerInitializer.java:81)
+	at com.android.ide.eclipse.adt.internal.sdk.Sdk$3$1.run(Sdk.java:1202)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: java.io.FileNotFoundException: /home/will/code/cyclismo/jformica/jformica_android/.classpath (No such file or directory)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:137)
+	at org.eclipse.core.internal.filesystem.local.LocalFile.openInputStream(LocalFile.java:362)
+	... 12 more
+!SUBENTRY 1 org.eclipse.core.filesystem 4 271 2013-02-11 01:25:12.296
+!MESSAGE File not found: /home/will/code/cyclismo/jformica/jformica_android/.classpath.
+!STACK 0
+java.io.FileNotFoundException: /home/will/code/cyclismo/jformica/jformica_android/.classpath (No such file or directory)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:137)
+	at org.eclipse.core.internal.filesystem.local.LocalFile.openInputStream(LocalFile.java:362)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.read(FileSystemResourceManager.java:797)
+	at org.eclipse.core.internal.resources.File.getContents(File.java:289)
+	at org.eclipse.jdt.internal.core.util.Util.getResourceContentsAsByteArray(Util.java:1132)
+	at org.eclipse.jdt.internal.core.JavaProject.readFileEntriesWithException(JavaProject.java:2448)
+	at org.eclipse.jdt.internal.core.JavaProject.readFileEntries(JavaProject.java:2489)
+	at org.eclipse.jdt.internal.core.JavaProject.readRawClasspath(JavaProject.java:2527)
+	at com.android.ide.eclipse.adt.internal.project.BaseProjectHelper.getSourceClasspaths(BaseProjectHelper.java:82)
+	at com.android.ide.eclipse.adt.internal.project.BaseProjectHelper.getSourceClasspaths(BaseProjectHelper.java:100)
+	at com.android.ide.eclipse.adt.internal.project.LibraryClasspathContainerInitializer.allocateLibraryContainer(LibraryClasspathContainerInitializer.java:213)
+	at com.android.ide.eclipse.adt.internal.project.LibraryClasspathContainerInitializer.updateProjects(LibraryClasspathContainerInitializer.java:81)
+	at com.android.ide.eclipse.adt.internal.sdk.Sdk$3$1.run(Sdk.java:1202)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY org.eclipse.core.jobs 4 2 2013-02-11 01:25:12.296
+!MESSAGE An internal error occurred during: "Android Library Update".
+!STACK 0
+java.lang.IllegalArgumentException: Path must include project and resource name: /JFormica - Android
+	at org.eclipse.core.runtime.Assert.isLegal(Assert.java:63)
+	at org.eclipse.core.internal.resources.Workspace.newResource(Workspace.java:2163)
+	at org.eclipse.core.internal.resources.Container.getFolder(Container.java:222)
+	at com.android.ide.eclipse.adt.internal.project.LibraryClasspathContainerInitializer.allocateLibraryContainer(LibraryClasspathContainerInitializer.java:217)
+	at com.android.ide.eclipse.adt.internal.project.LibraryClasspathContainerInitializer.updateProjects(LibraryClasspathContainerInitializer.java:81)
+	at com.android.ide.eclipse.adt.internal.sdk.Sdk$3$1.run(Sdk.java:1202)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SESSION 2013-02-11 01:42:19.353 -----------------------------------------------
+eclipse.buildId=R3_7_1
+java.version=1.6.0_24
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_GB
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY org.eclipse.mylyn.tasks.ui 2 0 2013-02-11 01:49:31.103
+!MESSAGE No search provider was registed. Tasks search is not available.
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-11 01:50:32.511
+!MESSAGE 
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Resource '/Cyclismo/res' does not exist.
+	at org.eclipse.core.internal.resources.Resource.checkExists(Resource.java:320)
+	at org.eclipse.core.internal.resources.Resource.checkAccessible(Resource.java:194)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:266)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:249)
+	at com.android.ide.eclipse.adt.internal.sdk.Sdk$6.run(Sdk.java:1312)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SUBENTRY 1 org.eclipse.core.resources 4 368 2013-02-11 01:50:32.512
+!MESSAGE Resource '/Cyclismo/res' does not exist.
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-11 01:50:32.512
+!MESSAGE 
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Resource '/CyclismoLib/res' does not exist.
+	at org.eclipse.core.internal.resources.Resource.checkExists(Resource.java:320)
+	at org.eclipse.core.internal.resources.Resource.checkAccessible(Resource.java:194)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:266)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:249)
+	at com.android.ide.eclipse.adt.internal.sdk.Sdk$6.run(Sdk.java:1312)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SUBENTRY 1 org.eclipse.core.resources 4 368 2013-02-11 01:50:32.512
+!MESSAGE Resource '/CyclismoLib/res' does not exist.
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-11 01:50:32.512
+!MESSAGE 
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Resource '/CyclismoTest/res' does not exist.
+	at org.eclipse.core.internal.resources.Resource.checkExists(Resource.java:320)
+	at org.eclipse.core.internal.resources.Resource.checkAccessible(Resource.java:194)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:266)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:249)
+	at com.android.ide.eclipse.adt.internal.sdk.Sdk$6.run(Sdk.java:1312)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SUBENTRY 1 org.eclipse.core.resources 4 368 2013-02-11 01:50:32.512
+!MESSAGE Resource '/CyclismoTest/res' does not exist.
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-11 01:50:32.512
+!MESSAGE 
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Resource '/JFormica - Android/res' does not exist.
+	at org.eclipse.core.internal.resources.Resource.checkExists(Resource.java:320)
+	at org.eclipse.core.internal.resources.Resource.checkAccessible(Resource.java:194)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:266)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:249)
+	at com.android.ide.eclipse.adt.internal.sdk.Sdk$6.run(Sdk.java:1312)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SUBENTRY 1 org.eclipse.core.resources 4 368 2013-02-11 01:50:32.512
+!MESSAGE Resource '/JFormica - Android/res' does not exist.
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-11 01:50:32.513
+!MESSAGE 
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Resource '/aFileChooser/res' does not exist.
+	at org.eclipse.core.internal.resources.Resource.checkExists(Resource.java:320)
+	at org.eclipse.core.internal.resources.Resource.checkAccessible(Resource.java:194)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:266)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:249)
+	at com.android.ide.eclipse.adt.internal.sdk.Sdk$6.run(Sdk.java:1312)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SUBENTRY 1 org.eclipse.core.resources 4 368 2013-02-11 01:50:32.513
+!MESSAGE Resource '/aFileChooser/res' does not exist.
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-11 01:50:32.513
+!MESSAGE 
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Resource '/google-play-services_lib/res' does not exist.
+	at org.eclipse.core.internal.resources.Resource.checkExists(Resource.java:320)
+	at org.eclipse.core.internal.resources.Resource.checkAccessible(Resource.java:194)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:266)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:249)
+	at com.android.ide.eclipse.adt.internal.sdk.Sdk$6.run(Sdk.java:1312)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SUBENTRY 1 org.eclipse.core.resources 4 368 2013-02-11 01:50:32.514
+!MESSAGE Resource '/google-play-services_lib/res' does not exist.

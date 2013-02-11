@@ -6,7 +6,7 @@
 import os
 
 FILE_EXTENSION = "java"
-excludedir = ["..",".metadata",".git","third_party","."]
+excludedir = ["./.metadata","./.git","./libs"]
 
 def update_source(filename, oldcopyright, copyright):
     utfstr = chr(0xef)+chr(0xbb)+chr(0xbf)
@@ -32,7 +32,12 @@ def recursive_traversal(dir,  oldcopyright, copyright):
     print "listing "+dir
     for fn in fns:
         fullfn = os.path.join(dir,fn)
-        if (fullfn in excludedir):
+        skip = False
+        for exclude in excludedir: 
+            if fullfn.startswith(exclude):
+                skip = True
+                break
+        if skip:
             continue
         if (os.path.isdir(fullfn)):
             recursive_traversal(fullfn, oldcopyright, copyright)
