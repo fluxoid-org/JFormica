@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 import org.cowboycoders.turbotrainers.DataPacketProvider;
 import org.cowboycoders.turbotrainers.bushido.BushidoUtils;
 import org.cowboycoders.utils.LoopingListIterator;
-import org.cowboycoders.utils.TrapezoidIntegral;
+import org.cowboycoders.utils.TrapezoidIntegrator;
 
 /**
  * Model for current settings

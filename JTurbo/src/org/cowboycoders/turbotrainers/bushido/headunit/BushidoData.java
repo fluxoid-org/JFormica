@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 import org.cowboycoders.turbotrainers.DataPacketProvider;
 import org.cowboycoders.turbotrainers.bushido.BushidoUtils;
 import org.cowboycoders.utils.LoopingListIterator;
-import org.cowboycoders.utils.TrapezoidIntegral;
+import org.cowboycoders.utils.TrapezoidIntegrator;
 
 /**
  * Model for current settings
@@ -43,7 +43,7 @@ public class BushidoData {
   double power;
   
   // in m
-  TrapezoidIntegral integralSpeed = new TrapezoidIntegral();
+  TrapezoidIntegrator integralSpeed = new TrapezoidIntegrator();
  
   
   private List<DataPacketProvider> packetProviders = new ArrayList<DataPacketProvider>();
@@ -122,7 +122,9 @@ public class BushidoData {
 
   public void setSpeed(double speed) {
     this.speed = speed;
-    double timeStampSeconds = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime());
+    double timeStampSeconds = System.nanoTime() / (Math.pow(10, 9));
+    // this is losing precision
+    //double timeStampSeconds = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime());
     double speedMetresPerSecond = 1000 * speed / (60 * 60);
     integralSpeed.add(timeStampSeconds, speedMetresPerSecond);
   }
