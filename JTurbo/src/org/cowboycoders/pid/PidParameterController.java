@@ -1,23 +1,40 @@
 package org.cowboycoders.pid;
 
 public interface PidParameterController extends PidUpdateProvider {
-
+	
+	/**
+	 * gets last value
+	 * @return
+	 */
 	public abstract double getProportionalGain();
-
-	public abstract void setProportionalGain(double proportionalGain);
-
+	
+	/**
+	 * gets last value
+	 * @return
+	 */
 	public abstract double getIntegralGain();
-
-	public abstract void setIntegralGain(double integralGain);
-
+	
+	/**
+	 * gets last value
+	 * @return
+	 */
 	public abstract double getDerivativeGain();
+	
+	
+	/**
+	 * Swaps out the current gain controller
+	 * @param gainController the new controller
+	 * @return true, if swap successful, otherwise false.
+	 */
+	public boolean setGainController(GainController gainController);
 
-	public abstract void setDerivativeGain(double derivativeGain);
 	
 	@Override
 	public abstract void registerPidUpdateLister(PidUpdateListener listener);
 	
 	@Override
 	public abstract void unregisterPidUpdateLister(PidUpdateListener listener);
+	
+	
 
 }

@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import org.cowboycoders.ant.AntLogger;
 import org.cowboycoders.pid.PidParameterController;
 import org.cowboycoders.pid.PidUpdateListener;
+import org.cowboycoders.utils.Conversions;
 
 
 
@@ -40,13 +41,15 @@ public class SimplePidLogger implements PidUpdateListener {
   private static final String DIRECTORY_NAME = "logs";
   private static final String FILE_NAME = "pidlog"; 
   private static final Logger LOGGER = Logger.getLogger(SimplePidLogger.class.getSimpleName());
-  private static final String HEADINGS = "time //seconds;setpoint;procesValue;output;error";
+  private static final String HEADINGS = "time/seconds;setpoint;procesValue;output;error";
   private static final String PARAMETERS = "proportionalGain %e : integralGain: %e : DerivativeGain %e ";
   private Long timeOffset;
   
   private File directory;
   private File file;
   private boolean setupOk = false;
+private PidParameterController pidController;
+private boolean writeHeadings;
   
   public SimplePidLogger() {
     File directory = new File(DIRECTORY_NAME);
@@ -77,6 +80,13 @@ public synchronized void onPidUpdate(double setpoint, double processValue, doubl
     	LOGGER.warning("newLog not called");
         return;
       }
+    
+      if(writeHeadings) {
+    	  writeHeadings = false;
+    	  writeHeadings();
+      }
+    
+    
       if (timeOffset == null) {
     	  timeOffset = System.nanoTime();
       }
@@ -100,6 +110,13 @@ public synchronized void onPidUpdate(double setpoint, double processValue, doubl
 }
 
 public synchronized void newLog(PidParameterController pidController) {
+	//we need to write headings on next update as getters could refer to stale values
+	writeHeadings = true;
+	this.pidController = pidController;
+    setupOk = true;
+}
+
+private void writeHeadings() {
     StringBuilder outputText = new StringBuilder();
     outputText.append("\n");
     Formatter formatter = new Formatter(outputText);

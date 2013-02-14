@@ -3,6 +3,9 @@ package org.cowboycoders.turbotrainers.bushido.brake;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.cowboycoders.pid.GainController;
+import org.cowboycoders.pid.GainParameters;
+import org.cowboycoders.pid.OutputControlParameters;
 import org.cowboycoders.pid.OutputController;
 import org.cowboycoders.pid.PidController;
 import org.cowboycoders.pid.PidParameterController;
@@ -30,15 +33,12 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 	
 	private Lock speedUpdateLock = new ReentrantLock();
 
-	private double predictedSpeed; // km/h
+	private double predictedSpeed; // metres/s
 	
-	private double actualSpeed;
+	private double actualSpeed; // metres/s
 	
 	public BushidoBrakeSlopeController(BushidoData bushidoModel) {
 		this.bushidoDataModel = bushidoModel;
-		resistancePidController.setDerivativeGain(PID_DERIVATIVE_GAIN);
-		resistancePidController.setProportionalGain(PID_PROPORTIONAL_GAIN);
-		resistancePidController.setIntegralGain(PID_INTEGRAL_GAIN);
 	}
 	
 	private UpdateCallback powerModelUpdateCallback  = new UpdateCallback() {
@@ -46,7 +46,7 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 		@Override
 		public void onUpdate(Object newValue) {
 			double predictedSpeed = powerModel.updatePower((Double) newValue);
-			predictedSpeed = Conversions.METRES_PER_SECOND_TO_KM_PER_HOUR * predictedSpeed;
+			//predictedSpeed = Conversions.METRES_PER_SECOND_TO_KM_PER_HOUR * predictedSpeed;
 			setPredictedSpeed(predictedSpeed);
 		}
 		
@@ -85,11 +85,21 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 		
 	};
 	
-	private PidController resistancePidController = new PidController(actualSpeedProvider, resistanceOutputController);
+	private GainController resistanceGainController = new GainController() {
+
+		@Override
+		public GainParameters getGain(OutputControlParameters parameters) {
+			GainParameters defaultParameters = new GainParameters(PID_PROPORTIONAL_GAIN,PID_INTEGRAL_GAIN,PID_DERIVATIVE_GAIN);
+			return defaultParameters;
+		}
+		
+	};
+	
+	private PidController resistancePidController = new PidController(actualSpeedProvider, resistanceOutputController,resistanceGainController);
 
 	@Override
 	public void onSpeedChange(double speed) {
-		setActualSpeed(speed);
+		setActualSpeed(speed* Conversions.KM_PER_HOUR_TO_METRES_PER_SECOND);
 		resistancePidController.adjustSetpoint(getPredictedSpeed());
 	}
 

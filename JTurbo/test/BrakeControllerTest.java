@@ -53,6 +53,9 @@ import org.cowboycoders.ant.utils.ByteMerger;
 import org.cowboycoders.ant.utils.ByteUtils;
 import org.cowboycoders.ant.utils.ChannelMessageSender;
 import org.cowboycoders.ant.utils.SimplePidLogger;
+import org.cowboycoders.pid.GainController;
+import org.cowboycoders.pid.GainParameters;
+import org.cowboycoders.pid.OutputControlParameters;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.turbotrainers.bushido.brake.BushidoBrakeController;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoBroadcastDataListener;
@@ -159,6 +162,15 @@ public class BrakeControllerTest {
     n.stop();
   }
   
+  GainController gainController = new GainController() {
+
+	@Override
+	public GainParameters getGain(OutputControlParameters parameters) {
+		return new GainParameters(1,0.5,0);
+	}
+	  
+  };
+  
   @Test
   public void testBrakeSlopeCOntroller() throws InterruptedException, TimeoutException {
     Node n = new Node(BrakeControllerTest.antchip);
@@ -168,9 +180,7 @@ public class BrakeControllerTest {
     b.registerDataListener(dataListener);
     b.startConnection();
     b.getPidParamaterController().registerPidUpdateLister(pidLogger);
-    b.getPidParamaterController().setIntegralGain(0);
-    b.getPidParamaterController().setDerivativeGain(0);
-    b.getPidParamaterController().setProportionalGain(10);
+    b.getPidParamaterController().setGainController(gainController);
     pidLogger.newLog(b.getPidParamaterController());
 
     Thread.sleep(60000);
