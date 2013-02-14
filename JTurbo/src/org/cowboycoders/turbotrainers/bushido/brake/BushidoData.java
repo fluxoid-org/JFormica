@@ -43,10 +43,10 @@ public class BushidoData {
   // limits upto and including
   private static final int RESISTANCE_LOW_LIMIT = -414;
   private static final int RESISTANCE_HIGH_LIMIT = 3327;
-  private static final double BALANCE_MAX = 100;
-  private static final double BALANCE_MIN = 0;
-  private static final double RESISTANCE_MAX = 100;
-  private static final double RESISTANCE_MIN = 0;
+  public static final double BALANCE_MAX = 100;
+  public static final double BALANCE_MIN = 0;
+  public static final double RESISTANCE_MAX = 100;
+  public static final double RESISTANCE_MIN = 0;
   
   double speed;
   double cadence;
