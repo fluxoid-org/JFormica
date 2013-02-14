@@ -51,7 +51,7 @@ import org.cowboycoders.ant.utils.AntLoggerImpl;
 import org.cowboycoders.ant.utils.ArrayUtils;
 import org.cowboycoders.ant.utils.ByteMerger;
 import org.cowboycoders.ant.utils.ByteUtils;
-import org.cowboycoders.turbotrainers.ChannelMessageSender;
+import org.cowboycoders.ant.utils.ChannelMessageSender;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoBroadcastDataListener;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor;

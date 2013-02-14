@@ -44,6 +44,8 @@ import org.cowboycoders.ant.messages.commands.ResetMessage;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
 import org.cowboycoders.ant.temp.BushidoBrakeModel.CalibrationState;
+import org.cowboycoders.ant.utils.ArrayUtils;
+import org.cowboycoders.ant.utils.ByteUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -324,7 +326,7 @@ public class BushidoBrakeTest {
     }
   };
   
-  @Test
+  //@Test
   public void test_calibration_val() throws InterruptedException, TimeoutException {
     
     model.setCalibrationValue(CALIBRATION_VALUE);
@@ -337,6 +339,59 @@ public class BushidoBrakeTest {
     sendData.start();
     
     changeSpeedOnly.start();
+    
+    //doSpeedUp();
+    
+    sendData.join();
+    
+    
+    
+  }
+  
+  private final BroadcastListener<BroadcastDataMessage> versionListener = new BroadcastListener<BroadcastDataMessage>() {
+
+	private  Byte[] PARTIAL_PACKET_REQUEST_VERSION = {(byte) 0xAc, 0x02};  
+	
+	@Override
+	public void receiveMessage(BroadcastDataMessage message) {
+		Byte [] data = message.getData();
+		if (ArrayUtils.arrayStartsWith(PARTIAL_PACKET_REQUEST_VERSION, data)) {
+	        synchronized(sendData) {
+	        		send = false;
+	            }
+			BroadcastDataMessage version = new BroadcastDataMessage();
+			// format a.b.c in this case a = 0xde , b =0xad, and c is made up of 0x02,0x03 combined (big endian, 2 bytes)
+			version.setData(new Byte[]{(byte) 0xad,0x02,(byte) 0xde,(byte) 0xad,0x02,0x03,0x00,0x00});
+			c.send(version);
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        synchronized(sendData) {
+        		send = true;
+            }
+		}
+	}
+	  
+  };
+  
+  @Test
+  public void test_calibration_soft_version() throws InterruptedException, TimeoutException {
+    
+    model.setCalibrationValue(CALIBRATION_VALUE);
+    model.setPower(200);
+    model.setCadence(50);
+    model.setBalance((byte) 50);
+    
+    doStartUp();
+    
+    c.registerRxListener(versionListener, BroadcastDataMessage.class);
+    
+    sendData.start();
+    
+    //changeSpeedOnly.start();
     
     //doSpeedUp();
     

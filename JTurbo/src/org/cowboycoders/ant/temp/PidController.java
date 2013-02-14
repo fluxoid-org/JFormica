@@ -105,6 +105,7 @@ public class PidController {
 		double dt = timeStamp - lastTimeStamp;
 		double previousError = getPreviousError();
 		double derivative = (error - previousError) / dt;
+		getErrorIntegrator().add(timeStamp, error);
 		double integral = getErrorIntegrator().getIntegral();
 		double output = Kp*error + Ki*integral + Kd* derivative;
 		setPreviousError(error);
