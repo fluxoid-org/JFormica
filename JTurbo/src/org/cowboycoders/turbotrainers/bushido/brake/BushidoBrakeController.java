@@ -38,7 +38,9 @@ import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 import org.cowboycoders.ant.utils.AntUtils;
 import org.cowboycoders.ant.utils.ChannelMessageSender;
 import org.cowboycoders.ant.utils.EnqueuedMessageSender;
+import org.cowboycoders.pid.PidParameterController;
 import org.cowboycoders.turbotrainers.AntTurboTrainer;
+import org.cowboycoders.turbotrainers.PowerModelManipulator;
 import org.cowboycoders.turbotrainers.TooFewAntChannelsAvailableException;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.utils.IterationOperator;
@@ -61,6 +63,7 @@ public class BushidoBrakeController extends AntTurboTrainer {
 
 	private Lock requestDataLock = new ReentrantLock();
 	private boolean requestDataInProgess = false;
+	private BushidoBrakeSlopeController slopeController; 
 
 	private Runnable requestDataCallback = new Runnable() {
 
@@ -324,6 +327,10 @@ public class BushidoBrakeController extends AntTurboTrainer {
 		BushidoBrakeBroadcastDataListener dataListener = new BushidoBrakeBroadcastDataListener(
 				updatesListener);
 		this.registerChannelRxListener(dataListener, BroadcastDataMessage.class);
+		
+		slopeController = new BushidoBrakeSlopeController(model);
+		
+		this.registerDataListener(slopeController);
 	}
 
 	public String requestVersion() {
@@ -381,6 +388,10 @@ public class BushidoBrakeController extends AntTurboTrainer {
 				unregisterRxListener(listener);
 			}
 		}
+		
+		this.unregisterDataListener(slopeController);
+		slopeController.stop();
+		
 		// disconnect();
 		channel.close();
 		channel.unassign();
@@ -407,6 +418,14 @@ public class BushidoBrakeController extends AntTurboTrainer {
 	@Override
 	public boolean supportsHeartRate() {
 		return false;
+	}
+	
+	public PowerModelManipulator getPowerModelManipulator() {
+		return slopeController.getPowerModelManipulator();
+	}
+	
+	public PidParameterController getPidParamaterController() {
+		return slopeController.getPidParameterController();
 	}
 
 }

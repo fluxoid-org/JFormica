@@ -11,9 +11,9 @@ public class PowerModel implements PowerModelManipulator {
 	double airDensity = 1.2234; // kg·m−3
 	double incrementalDragAreaSpokes = 0.0044;
 	double dragArea = 0.255 ;//57; //Coefficient of drag x frontal area
-	double gradientAsPercentage = 10.0;// 0.3;
+	double gradientAsPercentage = 0.00;// 0.3;
 	double coefficentRollingResistance = 0.0032;
-	double totalMass = 90.0;
+	double totalMass = 70.0;
 	//double kineticEnergy = 0.;
 	double momentOfInertiaWheels = 0.14; //kg m^2 for bike
 	double outsideRadiusTire = 0.311;

@@ -10,6 +10,7 @@ import org.cowboycoders.pid.ProcessVariableProvider;
 import org.cowboycoders.turbotrainers.PowerModel;
 import org.cowboycoders.turbotrainers.PowerModelManipulator;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
+import org.cowboycoders.utils.Conversions;
 import org.cowboycoders.utils.FixedPeriodUpdater;
 import org.cowboycoders.utils.UpdateCallback;
 
@@ -19,9 +20,9 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 	
 	private static final double PID_DERIVATIVE_GAIN = 2;
 	
-	private static final double PID_INTEGRAL_GAIN = 1;
+	private static final double PID_INTEGRAL_GAIN = 0.5;
 	
-	private static final double PID_PROPORTIONAL_GAIN = 1;
+	private static final double PID_PROPORTIONAL_GAIN = 0.5;
 	
 	private PowerModel powerModel = new PowerModel();
 	
@@ -29,7 +30,7 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 	
 	private Lock speedUpdateLock = new ReentrantLock();
 
-	private double predictedSpeed;
+	private double predictedSpeed; // km/h
 	
 	private double actualSpeed;
 	
@@ -45,6 +46,7 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 		@Override
 		public void onUpdate(Object newValue) {
 			double predictedSpeed = powerModel.updatePower((Double) newValue);
+			predictedSpeed = Conversions.METRES_PER_SECOND_TO_KM_PER_HOUR * predictedSpeed;
 			setPredictedSpeed(predictedSpeed);
 		}
 		
@@ -87,15 +89,15 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 
 	@Override
 	public void onSpeedChange(double speed) {
-		// only starts once
-		powerModelUpdater.start();
 		setActualSpeed(speed);
 		resistancePidController.adjustSetpoint(getPredictedSpeed());
 	}
 
 	@Override
 	public void onPowerChange(double power) {
-		// TODO Auto-generated method stub
+		powerModelUpdater.update(new Double (power));
+		// only starts once
+		powerModelUpdater.start();
 		
 	}
 

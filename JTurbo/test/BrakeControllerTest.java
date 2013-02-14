@@ -52,6 +52,7 @@ import org.cowboycoders.ant.utils.ArrayUtils;
 import org.cowboycoders.ant.utils.ByteMerger;
 import org.cowboycoders.ant.utils.ByteUtils;
 import org.cowboycoders.ant.utils.ChannelMessageSender;
+import org.cowboycoders.ant.utils.SimplePidLogger;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.turbotrainers.bushido.brake.BushidoBrakeController;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoBroadcastDataListener;
@@ -105,13 +106,13 @@ public class BrakeControllerTest {
 
     @Override
     public void onSpeedChange(double speed) {
-      System.out.println(speed);
+      System.out.println("speed: " +speed);
       
     }
 
     @Override
     public void onPowerChange(double power) {
-      // TODO Auto-generated method stub
+    	System.out.println("power: " + power);
       
     }
 
@@ -141,7 +142,7 @@ public class BrakeControllerTest {
   
   AntLoggerImpl antLogger = new AntLoggerImpl();
   
-  @Test
+  //@Test
   public void testRequestVersion() throws InterruptedException, TimeoutException {
     Node n = new Node(BrakeControllerTest.antchip);
     n.registerAntLogger(antLogger);
@@ -158,14 +159,27 @@ public class BrakeControllerTest {
     n.stop();
   }
   
-  //@Test
-  public void testByteShift() {
-    Byte [] data = new Byte [] {(byte) 255,(byte) 255,(byte) 255,(byte) 255,(byte) 255,(byte) 255,(byte) 255};
-    int [] unsignedData = ArrayUtils.unsignedBytesToInts(data);
-    double distance = ((long)unsignedData [2] << 24) + (unsignedData [3] << 16) + (unsignedData [4] << 8) + unsignedData [5];
-    System.out.println(distance);
-    assertTrue(distance > 0);
+  @Test
+  public void testBrakeSlopeCOntroller() throws InterruptedException, TimeoutException {
+    Node n = new Node(BrakeControllerTest.antchip);
+    n.registerAntLogger(antLogger);
+    SimplePidLogger pidLogger = new SimplePidLogger();
+    b = new BushidoBrakeController(n);
+    b.registerDataListener(dataListener);
+    b.startConnection();
+    b.getPidParamaterController().registerPidUpdateLister(pidLogger);
+    b.getPidParamaterController().setIntegralGain(0);
+    b.getPidParamaterController().setDerivativeGain(0);
+    b.getPidParamaterController().setProportionalGain(10);
+    pidLogger.newLog(b.getPidParamaterController());
+
+    Thread.sleep(60000);
+    
+    b.stop();
+    n.stop();
   }
+  
+  
   
   
 

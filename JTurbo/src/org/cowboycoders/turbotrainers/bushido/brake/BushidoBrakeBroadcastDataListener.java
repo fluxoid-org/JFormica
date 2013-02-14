@@ -69,10 +69,11 @@ public class BushidoBrakeBroadcastDataListener implements BroadcastListener<Broa
         	bushidoListener.onChangeRightPower(rightPower.doubleValue());
         }
         else if (arrayStartsWith(PARTIAL_PACKET_SPEED_CADENCE_BALANCE,data)) {
+        	// speed * 10
         	BigInteger speed = new BigInteger(new byte[] {data[1],data[2]});
         	int cadence = unsignedData[3];
         	int balance = unsignedData[4];
-        	bushidoListener.onSpeedChange(speed.doubleValue());
+        	bushidoListener.onSpeedChange(speed.doubleValue() / 10);
         	bushidoListener.onCadenceChange(cadence);
         	bushidoListener.onChangeBalance(balance);
         }
