@@ -68,10 +68,11 @@ public abstract class AntTurboTrainer implements TurboTrainerInterface {
 		return dataChangeListeners;
 	}
 
-	protected void setDataChangeListeners(
-			Set<TurboTrainerDataListener> dataChangeListeners) {
-		this.dataChangeListeners = dataChangeListeners;
-	}
+	// dangerous at moment as we are using dataChangeListeners directly
+//	protected void setDataChangeListeners(
+//			Set<TurboTrainerDataListener> dataChangeListeners) {
+//		this.dataChangeListeners = dataChangeListeners;
+//	}
 
 	@Override
 	public void unregisterDataListener(TurboTrainerDataListener listener) {

@@ -60,6 +60,8 @@ import org.cowboycoders.ant.utils.MiscUtils;
 
 
 public class Channel extends BufferedNodeComponent {
+	
+  public static final int SEARCH_TIMEOUT_NEVER = 255;
   
   public final static Logger LOGGER = Logger.getLogger(EventMachine.class .getName()); 
   
