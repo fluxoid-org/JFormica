@@ -1,5 +1,6 @@
 package org.cowboycoders.ant.temp;
 
+import org.cowboycoders.utils.Conversions;
 import org.cowboycoders.utils.TrapezoidIntegrator;
 
 public class PowerModel {
@@ -11,9 +12,9 @@ public class PowerModel {
 	double airDensity = 1.2234; // kg·m−3
 	double incrementalDragAreaSpokes = 0.0044;
 	double dragArea = 0.255 ;//57; //Coefficient of drag x frontal area
-	double gradientAsPercentage = 10.0;// 0.3;
+	double gradientAsPercentage = 00.0;// 0.3;
 	double coefficentRollingResistance = 0.0032;
-	double totalMass = 90.0;
+	double totalMass = 60.0;
 	//double kineticEnergy = 0.;
 	double momentOfInertiaWheels = 0.14; //kg m^2 for bike
 	double outsideRadiusTire = 0.311;
@@ -311,18 +312,20 @@ protected double getTimestamp() {
 }
 	
 	public static void main(String [] args) throws InterruptedException {
+		SimpleSpeedLogger logger = new SimpleSpeedLogger();
+		logger.newLog();
 		PowerModel pm = new PowerModel() {
 			double timestamp = System.nanoTime() / Math.pow(10, 9);
 			protected double getTimestamp() {
-				return timestamp += 1;
+				return timestamp += 0.5;
 			}
 		};
 		pm.setNegativeVelocityAllowed(false);
-		for (int i = 0 ; i< 1000 ; i++) {
-			System.out.println(pm.updatePower(400));
+		for (int i = 0 ; i< 65 ; i++) {
+			logger.onSpeedUpdate(pm.updatePower(400) * Conversions.METRES_PER_SECOND_TO_KM_PER_HOUR);
 		}
-		for (int i = 0 ; i< 10000 ; i++) {
-			System.out.println(pm.updatePower(0));
+		for (int i = 0 ; i< 200 ; i++) {
+			logger.onSpeedUpdate(pm.updatePower(0)* Conversions.METRES_PER_SECOND_TO_KM_PER_HOUR);
 		}
 
 	}

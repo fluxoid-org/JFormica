@@ -27,6 +27,8 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 	
 	private static final double PID_PROPORTIONAL_GAIN = 0.5;
 	
+	private static final int STARTING_RESISTANCE = 20; // %
+	
 	private PowerModel powerModel = new PowerModel();
 	
 	private BushidoData bushidoDataModel;
@@ -39,6 +41,7 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 	
 	public BushidoBrakeSlopeController(BushidoData bushidoModel) {
 		this.bushidoDataModel = bushidoModel;
+		bushidoDataModel.setResistance(STARTING_RESISTANCE);
 	}
 	
 	private UpdateCallback powerModelUpdateCallback  = new UpdateCallback() {

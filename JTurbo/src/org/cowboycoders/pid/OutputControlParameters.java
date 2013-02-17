@@ -27,44 +27,87 @@ public class OutputControlParameters {
 	}
 
 
-	protected Double getTotalElapsedTime() {
+	public Double getTotalElapsedTime() {
 		return totalElapsedTime;
 	}
 
 
-	protected Double getPreviousError() {
+	public void setTotalElapsedTime(Double totalElapsedTime) {
+		this.totalElapsedTime = totalElapsedTime;
+	}
+
+
+	public Double getPreviousError() {
 		return previousError;
 	}
 
 
-	protected Double getCurrentError() {
+	public void setPreviousError(Double previousError) {
+		this.previousError = previousError;
+	}
+
+
+	public Double getCurrentError() {
 		return currentError;
 	}
 
 
-	protected Double getTimeDelta() {
+	public void setCurrentError(Double currentError) {
+		this.currentError = currentError;
+	}
+
+
+	public Double getTimeDelta() {
 		return timeDelta;
 	}
 
 
-	protected Double getErrorIntegral() {
+	public void setTimeDelta(Double timeDelta) {
+		this.timeDelta = timeDelta;
+	}
+
+
+	public Double getErrorIntegral() {
 		return errorIntegral;
 	}
 
 
-	protected Double getErrorDerivative() {
+	public void setErrorIntegral(Double errorIntegral) {
+		this.errorIntegral = errorIntegral;
+	}
+
+
+	public Double getErrorDerivative() {
 		return errorDerivative;
 	}
 
 
-	protected Double getSetPoint() {
+	public void setErrorDerivative(Double errorDerivative) {
+		this.errorDerivative = errorDerivative;
+	}
+
+
+	public Double getSetPoint() {
 		return setPoint;
 	}
 
 
-	protected Double getProcessVariable() {
+	public void setSetPoint(Double setPoint) {
+		this.setPoint = setPoint;
+	}
+
+
+	public Double getProcessVariable() {
 		return processVariable;
 	}
+
+
+	public void setProcessVariable(Double processVariable) {
+		this.processVariable = processVariable;
+	}
+
+
+
 
 	
 }

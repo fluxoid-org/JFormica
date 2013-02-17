@@ -166,7 +166,10 @@ public class BrakeControllerTest {
 
 	@Override
 	public GainParameters getGain(OutputControlParameters parameters) {
-		return new GainParameters(1,0.5,0);
+		if (parameters.getSetPoint() < 7.4) {
+			return new GainParameters(2,0.5,0);
+		}
+		return new GainParameters(1,0.5,0.2);
 	}
 	  
   };

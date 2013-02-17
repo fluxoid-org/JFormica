@@ -183,7 +183,7 @@ public class BushidoTest {
     //b.getMessageSender().sendMessage(msg);
     //b.getMessageSender().sendMessage(msg);
     //b.getMessageSender().sendMessage(msg);
-    Thread.sleep(30000);
+    Thread.sleep(60000);
     b.stop();
     n.stop();
   }
