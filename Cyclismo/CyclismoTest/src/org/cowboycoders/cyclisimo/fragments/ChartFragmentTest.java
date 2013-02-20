@@ -35,16 +35,14 @@
 
 package org.cowboycoders.cyclisimo.fragments;
 
-import org.cowboycoders.cyclisimo.content.MyTracksLocation;
-import org.cowboycoders.cyclisimo.content.Sensor;
-import org.cowboycoders.cyclisimo.content.Sensor.SensorDataSet;
-
 import android.location.Location;
 import android.test.AndroidTestCase;
 
 import org.cowboycoders.cyclisimo.ChartView;
 import org.cowboycoders.cyclisimo.TrackStubUtils;
-import org.cowboycoders.cyclisimo.fragments.ChartFragment;
+import org.cowboycoders.cyclisimo.content.MyTracksLocation;
+import org.cowboycoders.cyclisimo.content.Sensor;
+import org.cowboycoders.cyclisimo.content.Sensor.SensorDataSet;
 import org.cowboycoders.cyclisimo.util.UnitConversions;
 
 /**

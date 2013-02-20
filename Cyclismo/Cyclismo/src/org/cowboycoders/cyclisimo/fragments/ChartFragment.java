@@ -826,6 +826,16 @@ private TrackDataListener courseTrackDataListener = new TrackDataListener() {
       data[6] = power;
     }
   }
+  
+  /**
+   * Non-overlay default {@link ChartFragment#fillDataPoint(Location, double[], TripStatisticsUpdater)}
+   * @param location
+   * @param data
+   */
+  @VisibleForTesting
+  void fillDataPoint(Location location, double data[]) {
+    this.fillDataPoint(location, data, tripStatisticsUpdater);
+  }
 
   @VisibleForTesting
   ChartView getChartView() {
@@ -856,4 +866,5 @@ private TrackDataListener courseTrackDataListener = new TrackDataListener() {
   void setChartByDistance(boolean value) {
     chartByDistance = value;
   }
+  
 }
