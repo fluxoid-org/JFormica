@@ -128,29 +128,51 @@ public class PidController implements PidParameterController {
 		this.derivativeGain = derivativeGain;
 	}
 
+	/**
+	 * Calculate the control signal using a positional PID controller
+	 * 
+	 * @param setpoint - target output, in this case power in Watts.
+	 */
 	public synchronized void adjustSetpoint(double setpoint) {
+		
+		// Get the current power value (process variable)
 		double pv = getProcessVariableProvider().getProcessVariable();
+		
+		// Calculate the difference between the current power value and
+		// the target power value (set point). This is the error term.
+		// FIXME Shouldn't this be the other way around???
 		double error = pv - setpoint;
+	
+		// Construct a timer (seconds)
 		if (startTimeOffset == null) {
 			startTimeOffset = System.nanoTime();
 		}
 		double timeStamp = (System.nanoTime() - startTimeOffset) / Math.pow(10, 9);
+		
+		// Handle the initial case when no previous error exists
 		if (lastTimeStamp == null) {
 			lastTimeStamp = timeStamp;
 			setPreviousError(error);
 			getErrorIntegrator().add(timeStamp,error);
-			// we need a pair to compute dt
 			return;
 		}
+		
 		OutputController outputController = getOutputController();
 		GainController gainController = getGainController();
 		
+		// Calculate the time elapsed since the last update
 		double dt = timeStamp - lastTimeStamp;
+		
+		// Calculate the derivative term from the previous error using 
+		// the finite difference method
 		double previousError = getPreviousError();
 		double derivative = (error - previousError) / dt;
+		
+		// Calculate the integral term
 		getErrorIntegrator().add(timeStamp, error);
 		double integral = getErrorIntegrator().getIntegral();
 		
+		// Step the timer forward
 		double elapsedTime = getElapsedTime() + dt;
 		setElapsedTime(elapsedTime);
 		
@@ -160,20 +182,20 @@ public class PidController implements PidParameterController {
 		
 		GainParameters gain = gainController.getGain(outputParameters);
 		
+		// Get the PID coefficients
 		double Kp = gain.getProportionalGain();
 		double Ki = gain.getIntegralGain();
 		double Kd = gain.getDerivativeGain();
 		double output = Kp*error + Ki*integral + Kd* derivative;
 		
-		// update a reference to the previous values
+		// Update a reference to the previous values
 		setProportionalGain(Kp);
 		setDerivativeGain(Kd);
 		setIntegralGain(Ki);
 		
 		setPreviousError(error);
 		
-		
-		//make sure we are within bounds
+		// Make sure that the control signal is within set bounds
 		if (output > outputController.getMaxOutput()) output = outputController.getMaxOutput();
 		else if (output < outputController.getMinOutput()) output = outputController.getMinOutput();
 		
