@@ -5,4 +5,8 @@ clean all projects and rebuild
 
 I've included a linux x86_64 javax usb implementation. You may need to recompile/ use an alternative implementation.
 
+Set environmental vars:
+ANDROID_SDK - location to your android sdk platforms directory eg /home/will/android-sdks/platforms
+CYCLISMO_ROOT - location of CyclismoProject git repo (or workspace if you copied directories)
+
 Build in eclipse
