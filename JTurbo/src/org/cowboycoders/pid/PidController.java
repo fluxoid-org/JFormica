@@ -140,8 +140,7 @@ public class PidController implements PidParameterController {
 		
 		// Calculate the difference between the current power value and
 		// the target power value (set point). This is the error term.
-		// FIXME Shouldn't this be the other way around???
-		double error = pv - setpoint;
+		double error = setpoint - pv;
 	
 		// Construct a timer (seconds)
 		if (startTimeOffset == null) {
