@@ -95,6 +95,7 @@ public interface TracksColumns extends BaseColumns {
   public static final String MAPID = "mapid"; // Google Maps id
   public static final String TABLEID = "tableid"; // Google Fusion Tables id
   public static final String ICON = "icon"; // track activity type icon
+  public static final String OWNER = "owner"; // user_id of owner
   
   public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" 
       + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
@@ -123,7 +124,8 @@ public interface TracksColumns extends BaseColumns {
       + MAXGRADE + " FLOAT, " 
       + MAPID + " STRING, " 
       + TABLEID + " STRING, " 
-      + ICON + " STRING" 
+      + ICON + " STRING, " 
+      + OWNER + " INTEGER REFERENCES " + UserInfoColumns.TABLE_NAME + " ON DELETE CASCADE ON UPDATE CASCADE"
       + ");";
 
   public static final String[] COLUMNS = {
@@ -153,7 +155,8 @@ public interface TracksColumns extends BaseColumns {
       MAXGRADE,
       MAPID,
       TABLEID,
-      ICON
+      ICON,
+      OWNER
   };
 
   public static final byte[] COLUMN_TYPES = {
@@ -183,6 +186,7 @@ public interface TracksColumns extends BaseColumns {
       ContentTypeIds.FLOAT_TYPE_ID, // max grade
       ContentTypeIds.STRING_TYPE_ID, // map id
       ContentTypeIds.STRING_TYPE_ID, // table id
-      ContentTypeIds.STRING_TYPE_ID // icon
+      ContentTypeIds.STRING_TYPE_ID, // icon
+      ContentTypeIds.LONG_TYPE_ID, // owner
     };
 }

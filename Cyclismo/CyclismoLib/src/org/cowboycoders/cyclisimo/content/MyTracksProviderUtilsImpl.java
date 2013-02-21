@@ -96,6 +96,7 @@ public class MyTracksProviderUtilsImpl implements MyTracksProviderUtils {
     int mapIdIndex = cursor.getColumnIndexOrThrow(TracksColumns.MAPID);
     int tableIdIndex = cursor.getColumnIndexOrThrow(TracksColumns.TABLEID);
     int iconIndex = cursor.getColumnIndexOrThrow(TracksColumns.ICON);
+    int ownerIndex = cursor.getColumnIndexOrThrow(TracksColumns.OWNER);
 
     Track track = new Track();
     TripStatistics tripStatistics = track.getTripStatistics();
@@ -169,6 +170,9 @@ public class MyTracksProviderUtilsImpl implements MyTracksProviderUtils {
     }
     if (!cursor.isNull(iconIndex)) {
       track.setIcon(cursor.getString(iconIndex));
+    }
+    if (!cursor.isNull(ownerIndex)) {
+      track.setOwner(cursor.getLong(ownerIndex));
     }
     return track;
   }
@@ -301,6 +305,7 @@ public class MyTracksProviderUtilsImpl implements MyTracksProviderUtils {
     values.put(TracksColumns.MAPID, track.getMapId());
     values.put(TracksColumns.TABLEID, track.getTableId());
     values.put(TracksColumns.ICON, track.getIcon());
+    values.put(TracksColumns.OWNER, track.getOwner());
     return values;
   }
 

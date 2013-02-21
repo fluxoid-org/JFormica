@@ -58,6 +58,7 @@ public class Track implements Parcelable {
   private String category = "";
   private long startId = -1;
   private long stopId = -1;
+  private long owner = -1L;
 
   // The number of location points (present even if the points themselves are
   // not loaded)
@@ -65,6 +66,7 @@ public class Track implements Parcelable {
   private String mapId = "";
   private String tableId = "";
   private String icon = "";
+
 
   private TripStatistics tripStatistics = new TripStatistics();
 
@@ -84,6 +86,7 @@ public class Track implements Parcelable {
     mapId = in.readString();
     tableId = in.readString();
     icon = in.readString();
+    owner = in.readLong();
 
     ClassLoader classLoader = getClass().getClassLoader();
     tripStatistics = in.readParcelable(classLoader);
@@ -111,6 +114,7 @@ public class Track implements Parcelable {
     dest.writeString(mapId);
     dest.writeString(tableId);
     dest.writeString(icon);
+    dest.writeLong(owner);
     dest.writeParcelable(tripStatistics, 0);
     for (int i = 0; i < numberOfPoints; ++i) {
       dest.writeParcelable(locations.get(i), 0);
@@ -228,4 +232,14 @@ public class Track implements Parcelable {
   public void setLocations(ArrayList<Location> locations) {
     this.locations = locations;
   }
+
+  public long getOwner() {
+    return owner;
+  }
+
+  public void setOwner(long owner) {
+    this.owner = owner;
+  }
+  
+  
 }

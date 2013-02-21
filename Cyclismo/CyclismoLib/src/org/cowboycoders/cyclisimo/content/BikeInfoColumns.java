@@ -40,16 +40,23 @@ public interface BikeInfoColumns extends BaseColumns {
   public static final String OWNER = "owner"; // user_id of owner
   
   
-  
   public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" 
       + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
       + NAME + " STRING, " 
       + SHARED + " BOOLEAN, "
-      + OWNER + " INTEGER, "
+      + OWNER + " INTEGER REFERENCES " + UserInfoColumns.TABLE_NAME + " ON DELETE CASCADE ON UPDATE CASCADE" + ", "
       + WEIGHT + " FLOAT"
-      + "FOREIGN KEY(" + OWNER +") REFERENCES " + UserInfoColumns.TABLE_NAME +"(" + UserInfoColumns._ID +") "
+      //+ "FOREIGN KEY(" + OWNER +") REFERENCES " + UserInfoColumns.TABLE_NAME +"(" + UserInfoColumns._ID +") "
       + ");";
+  
+//  public static final String CREATE_TRIGGER = "CREATE TRIGGER on_delete_user_update_bikes "
+//      + "AFTER DELETE ON " + UserInfoColumns.TABLE_NAME + " "
+//      + "BEGIN "
+//      +     "UPDATE " + TABLE_NAME + " SET " + SHARED + " = TRUE  WHERE " + OWNER + " = old."+ UserInfoColumns._ID  + "; "
+//      +     "UPDATE " + TABLE_NAME + " SET " + OWNER + " = NULL WHERE " + OWNER + " = old."+ UserInfoColumns._ID  + "; "
+//      + "END;";
 
+      
   public static final String[] COLUMNS = {
       _ID,
       NAME,

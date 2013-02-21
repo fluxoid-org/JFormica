@@ -35,11 +35,6 @@
 
 package org.cowboycoders.cyclisimo.content;
 
-import org.cowboycoders.cyclisimo.content.MyTracksProviderUtils;
-import org.cowboycoders.cyclisimo.content.TrackPointsColumns;
-import org.cowboycoders.cyclisimo.content.TracksColumns;
-import org.cowboycoders.cyclisimo.content.WaypointsColumns;
-import org.cowboycoders.cyclisimo.R;
 import com.google.common.annotations.VisibleForTesting;
 
 import android.content.ContentProvider;
@@ -59,6 +54,7 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.cowboycoders.cyclisimo.R;
 import org.cowboycoders.cyclisimo.util.PreferencesUtils;
 
 /**
@@ -71,8 +67,8 @@ public class MyTracksProvider extends ContentProvider {
 
   private static final String TAG = MyTracksProvider.class.getSimpleName();
   @VisibleForTesting
-  static final String DATABASE_NAME = "mytracks_turbo.db";
-  private static final int DATABASE_VERSION = 20;
+  static final String DATABASE_NAME = "cyclismo.db";
+  private static final int DATABASE_VERSION = 21;
 
   /**
    * Database helper for creating and upgrading the database.
@@ -91,15 +87,17 @@ public class MyTracksProvider extends ContentProvider {
   
     @Override
     public void onCreate(SQLiteDatabase db) {
+      db.execSQL(UserInfoColumns.CREATE_TABLE);
       db.execSQL(TrackPointsColumns.CREATE_TABLE);
       db.execSQL(TracksColumns.CREATE_TABLE);
       db.execSQL(WaypointsColumns.CREATE_TABLE);
+      db.execSQL(BikeInfoColumns.CREATE_TABLE);
     }
   
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
       Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
-      if (oldVersion < 17) {
+      if (oldVersion <= 20) {
         Log.w(TAG, "Deleting all old data.");
         db.execSQL("DROP TABLE IF EXISTS " + TrackPointsColumns.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TracksColumns.TABLE_NAME);
@@ -108,24 +106,25 @@ public class MyTracksProvider extends ContentProvider {
       } else {
         // Incremental upgrades. One if statement per DB version.
   
-        // Add track points SENSOR column
-        if (oldVersion <= 17) {
-          Log.w(TAG, "Upgrade DB: Adding sensor column.");
-          db.execSQL("ALTER TABLE " + TrackPointsColumns.TABLE_NAME + " ADD "
-              + TrackPointsColumns.SENSOR + " BLOB");
-        }
-        // Add tracks TABLEID column
-        if (oldVersion <= 18) {
-          Log.w(TAG, "Upgrade DB: Adding tableid column.");
-          db.execSQL("ALTER TABLE " + TracksColumns.TABLE_NAME + " ADD " + TracksColumns.TABLEID
-              + " STRING");
-        }
-        // Add tracks ICON column
-        if (oldVersion <= 19) {
-          Log.w(TAG, "Upgrade DB: Adding icon column.");
-          db.execSQL(
-              "ALTER TABLE " + TracksColumns.TABLE_NAME + " ADD " + TracksColumns.ICON + " STRING");
-        }
+//        // Add track points SENSOR column
+//        if (oldVersion <= 17) {
+//          Log.w(TAG, "Upgrade DB: Adding sensor column.");
+//          db.execSQL("ALTER TABLE " + TrackPointsColumns.TABLE_NAME + " ADD "
+//              + TrackPointsColumns.SENSOR + " BLOB");
+//        }
+//        // Add tracks TABLEID column
+//        if (oldVersion <= 18) {
+//          Log.w(TAG, "Upgrade DB: Adding tableid column.");
+//          db.execSQL("ALTER TABLE " + TracksColumns.TABLE_NAME + " ADD " + TracksColumns.TABLEID
+//              + " STRING");
+//        }
+//        // Add tracks ICON column
+//        if (oldVersion <= 19) {
+//          Log.w(TAG, "Upgrade DB: Adding icon column.");
+//          db.execSQL(
+//              "ALTER TABLE " + TracksColumns.TABLE_NAME + " ADD " + TracksColumns.ICON + " STRING");
+//        }
+        
       }
     }
   }
@@ -137,7 +136,7 @@ public class MyTracksProvider extends ContentProvider {
    */
   @VisibleForTesting
   enum UrlType {
-    TRACKPOINTS, TRACKPOINTS_ID, TRACKS, TRACKS_ID, WAYPOINTS, WAYPOINTS_ID
+    USER, USER_ID, TRACKPOINTS, TRACKPOINTS_ID, TRACKS, TRACKS_ID, WAYPOINTS, WAYPOINTS_ID, BIKE, BIKE_ID
   }
 
   private final UriMatcher uriMatcher;
@@ -145,6 +144,10 @@ public class MyTracksProvider extends ContentProvider {
 
   public MyTracksProvider() {
     uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+    uriMatcher.addURI(MyTracksProviderUtils.AUTHORITY, UserInfoColumns.TABLE_NAME,
+        UrlType.USER.ordinal());
+    uriMatcher.addURI(MyTracksProviderUtils.AUTHORITY, UserInfoColumns.TABLE_NAME + "/#",
+        UrlType.USER_ID.ordinal());
     uriMatcher.addURI(MyTracksProviderUtils.AUTHORITY, TrackPointsColumns.TABLE_NAME,
         UrlType.TRACKPOINTS.ordinal());
     uriMatcher.addURI(MyTracksProviderUtils.AUTHORITY, TrackPointsColumns.TABLE_NAME + "/#",
@@ -157,6 +160,11 @@ public class MyTracksProvider extends ContentProvider {
         MyTracksProviderUtils.AUTHORITY, WaypointsColumns.TABLE_NAME, UrlType.WAYPOINTS.ordinal());
     uriMatcher.addURI(MyTracksProviderUtils.AUTHORITY, WaypointsColumns.TABLE_NAME + "/#",
         UrlType.WAYPOINTS_ID.ordinal());
+    // bike
+    uriMatcher.addURI(
+        MyTracksProviderUtils.AUTHORITY, BikeInfoColumns.TABLE_NAME, UrlType.BIKE.ordinal());
+    uriMatcher.addURI(MyTracksProviderUtils.AUTHORITY, BikeInfoColumns.TABLE_NAME + "/#",
+        UrlType.BIKE_ID.ordinal());
   }
 
   @Override
@@ -201,6 +209,12 @@ public class MyTracksProvider extends ContentProvider {
       case WAYPOINTS:
         table = WaypointsColumns.TABLE_NAME;
         break;
+      case USER:
+        table = UserInfoColumns.TABLE_NAME;
+        break;
+      case BIKE:
+        table = BikeInfoColumns.TABLE_NAME;
+        break;
       default:
         throw new IllegalArgumentException("Unknown URL " + url);
     }
@@ -242,6 +256,14 @@ public class MyTracksProvider extends ContentProvider {
         return WaypointsColumns.CONTENT_TYPE;
       case WAYPOINTS_ID:
         return WaypointsColumns.CONTENT_ITEMTYPE;
+      case USER:
+         return UserInfoColumns.CONTENT_TYPE;
+      case USER_ID:
+         return UserInfoColumns.CONTENT_ITEMTYPE;
+      case BIKE:
+         return BikeInfoColumns.CONTENT_TYPE;
+      case BIKE_ID:
+          return BikeInfoColumns.CONTENT_ITEMTYPE;
       default:
         throw new IllegalArgumentException("Unknown URL " + url);
     }
@@ -324,6 +346,22 @@ public class MyTracksProvider extends ContentProvider {
         queryBuilder.setTables(WaypointsColumns.TABLE_NAME);
         queryBuilder.appendWhere("_id=" + url.getPathSegments().get(1));
         break;
+      case USER:
+        queryBuilder.setTables(UserInfoColumns.TABLE_NAME);
+        sortOrder = sort != null ? sort : UserInfoColumns.DEFAULT_SORT_ORDER;
+        break;
+      case USER_ID:
+        queryBuilder.setTables(UserInfoColumns.TABLE_NAME);
+        queryBuilder.appendWhere("_id=" + url.getPathSegments().get(1));
+        break;
+      case BIKE:
+        queryBuilder.setTables(BikeInfoColumns.TABLE_NAME);
+        sortOrder = sort != null ? sort : BikeInfoColumns.DEFAULT_SORT_ORDER;
+        break;
+      case BIKE_ID:
+        queryBuilder.setTables(BikeInfoColumns.TABLE_NAME);
+        queryBuilder.appendWhere("_id=" + url.getPathSegments().get(1));
+        break;
       default:
         throw new IllegalArgumentException("Unknown url " + url);
     }
@@ -370,6 +408,28 @@ public class MyTracksProvider extends ContentProvider {
       case WAYPOINTS_ID:
         table = WaypointsColumns.TABLE_NAME;
         whereClause = WaypointsColumns._ID + "=" + url.getPathSegments().get(1);
+        if (!TextUtils.isEmpty(where)) {
+          whereClause += " AND (" + where + ")";
+        }
+        break;
+      case USER:
+        table = UserInfoColumns.TABLE_NAME;
+        whereClause = where;
+        break;
+      case USER_ID:
+        table = UserInfoColumns.TABLE_NAME;
+        whereClause = UserInfoColumns._ID + "=" + url.getPathSegments().get(1);
+        if (!TextUtils.isEmpty(where)) {
+          whereClause += " AND (" + where + ")";
+        }
+        break;
+      case BIKE:
+        table = BikeInfoColumns.TABLE_NAME;
+        whereClause = where;
+        break;
+      case BIKE_ID:
+        table = BikeInfoColumns.TABLE_NAME;
+        whereClause = BikeInfoColumns._ID + "=" + url.getPathSegments().get(1);
         if (!TextUtils.isEmpty(where)) {
           whereClause += " AND (" + where + ")";
         }
@@ -425,9 +485,53 @@ public class MyTracksProvider extends ContentProvider {
         return insertTrack(url, contentValues);
       case WAYPOINTS:
         return insertWaypoint(url, contentValues);
+      case USER:
+        return insertUser(url,contentValues);
+      case BIKE:
+        return insertBike(url,contentValues);
       default:
         throw new IllegalArgumentException("Unknown url " + url);
     }
+  }
+  
+  /**
+   * Inserts a bike.
+   * 
+   * @param url the content url
+   * @param values the content values
+   */
+  private Uri insertBike(Uri url, ContentValues values) {
+    boolean hasName = values.containsKey(BikeInfoColumns.NAME);
+    if (!hasName) {
+      throw new IllegalArgumentException("Bike must have name");
+    }
+    long rowId = db.insert(BikeInfoColumns.TABLE_NAME, BikeInfoColumns._ID, values);
+    if (rowId >= 0) {
+      Uri uri = ContentUris.appendId(BikeInfoColumns.CONTENT_URI.buildUpon(), rowId).build();
+      getContext().getContentResolver().notifyChange(url, null, true);
+      return uri;
+    }
+    throw new SQLiteException("Failed to insert a bike " + url);
+  }
+  
+  /**
+   * Inserts a User.
+   * 
+   * @param url the content url
+   * @param values the content values
+   */
+  private Uri insertUser(Uri url, ContentValues values) {
+    boolean hasName = values.containsKey(UserInfoColumns.NAME);
+    if (!hasName) {
+      throw new IllegalArgumentException("User must have name");
+    }
+    long rowId = db.insert(UserInfoColumns.TABLE_NAME, UserInfoColumns._ID, values);
+    if (rowId >= 0) {
+      Uri uri = ContentUris.appendId(UserInfoColumns.CONTENT_URI.buildUpon(), rowId).build();
+      getContext().getContentResolver().notifyChange(url, null, true);
+      return uri;
+    }
+    throw new SQLiteException("Failed to insert a user " + url);
   }
 
   /**
