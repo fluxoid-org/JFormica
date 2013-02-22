@@ -37,7 +37,7 @@ import org.cowboycoders.ant.utils.ValidationUtils;
  *
  */
 public abstract class StandardMessage
-    implements MessageDecoratorable, Messageable {
+    implements MessageDecorator, Messageable {
     
   /**
    * The message being decorated
