@@ -40,7 +40,6 @@ import org.cowboycoders.ant.AntLogger.LogDataContainer;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.events.BroadcastMessenger;
 import org.cowboycoders.ant.events.EventMachine;
-import org.cowboycoders.ant.events.FixedSizeBuffer;
 import org.cowboycoders.ant.events.LockExchangeContainer;
 import org.cowboycoders.ant.events.LockExchanger;
 import org.cowboycoders.ant.events.MessageCondition;
@@ -59,6 +58,7 @@ import org.cowboycoders.ant.messages.responses.CapabilityResponse;
 import org.cowboycoders.ant.messages.responses.Capability;
 import org.cowboycoders.ant.messages.responses.ChannelResponse;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
+import org.cowboycoders.ant.utils.FixedSizeFifo;
 
 public class Node extends BufferedNodeComponent {
   

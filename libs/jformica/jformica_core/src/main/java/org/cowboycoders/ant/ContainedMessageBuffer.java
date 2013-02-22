@@ -18,12 +18,12 @@
  */
 package org.cowboycoders.ant;
 
-import org.cowboycoders.ant.events.FixedSizeBuffer;
 import org.cowboycoders.ant.events.MessageCondition;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.utils.Containable;
+import org.cowboycoders.ant.utils.FixedSizeLifo;
 
-public class ContainedMessageBuffer<T extends Containable<? extends StandardMessage>> extends FixedSizeBuffer<T> {
+public class ContainedMessageBuffer<T extends Containable<? extends StandardMessage>> extends FixedSizeLifo<T> {
 
   private MessageCondition condition;
 

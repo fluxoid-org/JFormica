@@ -38,6 +38,8 @@ import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.responses.ChannelResponse;
+import org.cowboycoders.ant.utils.FixedSizeFifo;
+import org.cowboycoders.ant.utils.FixedSizeQueue;
 import org.cowboycoders.ant.utils.SharedBuffer;
 
 
@@ -162,7 +164,7 @@ public class EventMachine  {
           public void updateBuffer(ChannelResponse msg, SharedBuffer<MessageMetaWrapper<ChannelResponse>> buffer) {
             Lock lock = buffer.getLock();
             Condition contentsChanged = buffer.getContentsChanged();
-            FixedSizeBuffer<MessageMetaWrapper<ChannelResponse>> fixedBuffer = 
+            FixedSizeQueue<MessageMetaWrapper<ChannelResponse>> fixedBuffer = 
                 buffer.getMsgBuffer();
             try {
               lock.lock();
@@ -198,7 +200,7 @@ public class EventMachine  {
         public void updateBuffer(StandardMessage msg, SharedBuffer<MessageMetaWrapper<StandardMessage>> buffer) {
           Lock lock = buffer.getLock();
           Condition contentsChanged = buffer.getContentsChanged();
-          FixedSizeBuffer<MessageMetaWrapper<StandardMessage>> fixedBuffer = 
+          FixedSizeQueue<MessageMetaWrapper<StandardMessage>> fixedBuffer = 
               buffer.getMsgBuffer();
           try {
             lock.lock();
@@ -269,7 +271,7 @@ public class EventMachine  {
     //tim = clearBuffer == null ? true : false;
     
     MessageMetaWrapper<V> message = null;
-    FixedSizeBuffer<MessageMetaWrapper<V>> buffer = sharedBuffer.getMsgBuffer();
+    FixedSizeQueue<MessageMetaWrapper<V>> buffer = sharedBuffer.getMsgBuffer();
     Condition bufferChanged = sharedBuffer.getContentsChanged();
     Lock msgLock = sharedBuffer.getLock();
     

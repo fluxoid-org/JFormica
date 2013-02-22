@@ -35,7 +35,6 @@ import java.util.logging.Logger;
 import org.cowboycoders.ant.defines.AntDefine;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.events.EventMachine;
-import org.cowboycoders.ant.events.FixedSizeBuffer;
 import org.cowboycoders.ant.events.MessageCondition;
 import org.cowboycoders.ant.events.MessageConditionFactory;
 import org.cowboycoders.ant.messages.ChannelMessage;
@@ -56,6 +55,8 @@ import org.cowboycoders.ant.messages.data.BurstDataMessage;
 import org.cowboycoders.ant.messages.responses.ChannelResponse;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
 import org.cowboycoders.ant.utils.BurstMessageSequenceGenerator;
+import org.cowboycoders.ant.utils.FixedSizeFifo;
+import org.cowboycoders.ant.utils.FixedSizeQueue;
 import org.cowboycoders.ant.utils.MiscUtils;
 
 
@@ -507,10 +508,9 @@ public class Channel extends BufferedNodeComponent {
     
   }
   
-  
   private void logBuffers() {
-    FixedSizeBuffer<MessageMetaWrapper<StandardMessage>> msgBuffer = this.getMsgBuffer().getMsgBuffer();
-    FixedSizeBuffer<MessageMetaWrapper<ChannelResponse>> ackBuffer = this.getAckBuffer().getMsgBuffer();
+    FixedSizeQueue<MessageMetaWrapper<StandardMessage>> msgBuffer = this.getMsgBuffer().getMsgBuffer();
+    FixedSizeQueue<MessageMetaWrapper<ChannelResponse>> ackBuffer = this.getAckBuffer().getMsgBuffer();
     LOGGER.finer("Log buffers: start");
     int count =0 ;
     for (MessageMetaWrapper<StandardMessage> wrapper : msgBuffer) {
