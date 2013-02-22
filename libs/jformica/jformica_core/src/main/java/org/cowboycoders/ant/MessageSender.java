@@ -21,11 +21,23 @@ package org.cowboycoders.ant;
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
 
-public interface MessageSender {
+interface MessageSender {
   
   /**
    * Should send the message
    * @param msg 
    */
   public MessageMetaWrapper<StandardMessage> send(StandardMessage msg);
+  
+  /**
+   * hook called after send
+   * @param msg
+   */
+  public void postSend(MessageMetaWrapper<StandardMessage> msg);
+  
+  /**
+   * Calls send then postSend with result
+   */
+  public void doSend(StandardMessage msg);
+
 }

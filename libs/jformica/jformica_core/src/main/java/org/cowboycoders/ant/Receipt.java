@@ -18,52 +18,41 @@
  */
 package org.cowboycoders.ant;
 
-import org.cowboycoders.ant.utils.TimestampContainer;
-import org.cowboycoders.ant.utils.TimestampQueryable;
+import java.util.LinkedList;
+
+import org.cowboycoders.ant.messages.MessageMetaWrapper;
+import org.cowboycoders.ant.messages.StandardMessage;
 
 public class Receipt {
-  
-  private long rxTimestamp;
-  private long txTimestamp;
-  
-  /**
-   * Compare this with object timestamp
-   * @return the current timestamp
-   */
-  public static long getCurrentTimestamp() {
-    return System.nanoTime();
-  }
 
-
-  public long getRxTimestamp() {
-    return rxTimestamp;
+  private LinkedList<MessageMetaWrapper<StandardMessage>> sentMessages = new LinkedList<MessageMetaWrapper<StandardMessage>>();
+  private LinkedList<MessageMetaWrapper<StandardMessage>> receivedMessages = new LinkedList<MessageMetaWrapper<StandardMessage>>();
+  
+  public void addRecieved(MessageMetaWrapper<StandardMessage> msg) {
+	  receivedMessages.add(msg);
   }
   
-  public long getTxTimestamp() {
-    return txTimestamp;
-  }
-
-  /**
-   * @param rxTimestamp the rxTimestamp to set
-   */
-  public void setRxTimestamp(long rxTimestamp) {
-    this.rxTimestamp = rxTimestamp;
-  }
-
-  /**
-   * @param txTimestamp the txTimestamp to set
-   */
-  public void setTxTimestamp(long txTimestamp) {
-    this.txTimestamp = txTimestamp;
+  public void addSent(MessageMetaWrapper<StandardMessage> msg) {
+	  sentMessages.add(msg);
   }
   
-  public void stampRx() {
-    setRxTimestamp(System.nanoTime());
-  }
+ public MessageMetaWrapper<StandardMessage> getLastSent() {
+	 return sentMessages.getLast();
+ }
+ 
+ public MessageMetaWrapper<StandardMessage> getLastRecieved() {
+	 return receivedMessages.getLast();
+ }
+
+protected LinkedList<MessageMetaWrapper<StandardMessage>> getSentMessages() {
+	return sentMessages;
+}
+
+protected LinkedList<MessageMetaWrapper<StandardMessage>> getReceivedMessages() {
+	return receivedMessages;
+}
   
-  public void stampTx() {
-    setTxTimestamp(System.nanoTime());
-  }
+  
   
 }
   
