@@ -30,6 +30,7 @@ import org.cowboycoders.ant.utils.TimestampQueryable;
  * @author will
  *
  */
+@Deprecated
 public abstract class BufferedNodeComponent {
   
   private static final int ACK_BUFFER_LENGTH = 20;
