@@ -18,6 +18,8 @@
  */
 package org.cowboycoders.ant;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,8 +132,11 @@ public class Channel {
   private final MessageSender channelSender = new MessageSender() {
 
     @Override
-    public MessageMetaWrapper<StandardMessage> send(StandardMessage msg) {
-      return Channel.this.send((ChannelMessage)msg);
+    public List<MessageMetaWrapper<? extends StandardMessage>> send(StandardMessage msg) {
+  	MessageMetaWrapper<StandardMessage> sentMeta = Channel.this.send((ChannelMessage)msg);
+  	List<MessageMetaWrapper<? extends StandardMessage>> rtn = new ArrayList<MessageMetaWrapper<? extends StandardMessage>>(1);
+  	rtn.add(sentMeta);
+  	return rtn;
       
     }
     
@@ -559,25 +564,24 @@ public class Channel {
       MessageSender massSender = new MessageSender() {
 
         @Override
-        public MessageMetaWrapper<StandardMessage> send(StandardMessage msgIn) {
-          MessageMetaWrapper<StandardMessage> rtn = null;
+        public ArrayList<MessageMetaWrapper<? extends StandardMessage>> send(StandardMessage msgIn) {
+          ArrayList<MessageMetaWrapper<? extends StandardMessage>> sentMessages = new ArrayList<MessageMetaWrapper<? extends StandardMessage>>(list.size());
+          
+          // handle all but last
           for (int i = 0; i < list.size() -1 ; i++) {
             BurstDataMessage msg = new BurstDataMessage();
             msg.setData(list.get(i));
             msg.setSequenceNumber(generator.next());
-            if (rtn == null) {
-            rtn = Channel.this.send(msg);
-            } else {
-              Channel.this.send(msg);
-            }
+            sentMessages.add(Channel.this.send(msg));
+
           }
           
           BurstDataMessage msg = new BurstDataMessage();
           msg.setData(list.get(list.size() -1));
           msg.setSequenceNumber(generator.finish());
-          Channel.this.send(msg);
+          sentMessages.add(Channel.this.send(msg));
           
-          return rtn;
+          return sentMessages;
 
         }
         

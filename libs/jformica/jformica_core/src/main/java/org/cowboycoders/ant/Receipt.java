@@ -19,36 +19,58 @@
 package org.cowboycoders.ant;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
 
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
 
 public class Receipt {
+	
+  public static Logger LOGGER = Logger.getLogger(Receipt.class.getName());
 
-  private LinkedList<MessageMetaWrapper<StandardMessage>> sentMessages = new LinkedList<MessageMetaWrapper<StandardMessage>>();
-  private LinkedList<MessageMetaWrapper<StandardMessage>> receivedMessages = new LinkedList<MessageMetaWrapper<StandardMessage>>();
+  private LinkedList<MessageMetaWrapper<? extends StandardMessage>> sentMessages = new LinkedList<MessageMetaWrapper<? extends StandardMessage>>();
+  private LinkedList<MessageMetaWrapper<? extends StandardMessage>> receivedMessages = new LinkedList<MessageMetaWrapper<? extends StandardMessage>>();
   
-  public void addRecieved(MessageMetaWrapper<StandardMessage> msg) {
-	  receivedMessages.add(msg);
+  public void addReceived(MessageMetaWrapper<? extends StandardMessage> receivedMeta) {
+	  if (receivedMeta == null) {
+		  LOGGER.warning("passed null message, ignoring");
+		  return;
+	  }
+	  receivedMessages.add(receivedMeta);
   }
   
-  public void addSent(MessageMetaWrapper<StandardMessage> msg) {
+  public void addSent(MessageMetaWrapper<? extends StandardMessage> msg) {
+	  if (msg == null) {
+		  LOGGER.warning("passed null message, ignoring");
+		  return;
+	  }
 	  sentMessages.add(msg);
   }
   
- public MessageMetaWrapper<StandardMessage> getLastSent() {
+  public void addSent(List<MessageMetaWrapper<? extends StandardMessage>> msgs) {
+	  if (msgs == null) {
+		  LOGGER.warning("passed null list, ignoring");
+		  return;
+	  }
+	  for (MessageMetaWrapper<? extends StandardMessage> msg : msgs) {
+		  addSent(msg);
+	  }
+  }
+  
+ public MessageMetaWrapper<? extends StandardMessage> getLastSent() {
 	 return sentMessages.getLast();
  }
  
- public MessageMetaWrapper<StandardMessage> getLastRecieved() {
+ public MessageMetaWrapper<? extends StandardMessage> getLastRecieved() {
 	 return receivedMessages.getLast();
  }
 
-protected LinkedList<MessageMetaWrapper<StandardMessage>> getSentMessages() {
+protected LinkedList<MessageMetaWrapper<? extends StandardMessage>> getSentMessages() {
 	return sentMessages;
 }
 
-protected LinkedList<MessageMetaWrapper<StandardMessage>> getReceivedMessages() {
+protected LinkedList<MessageMetaWrapper<? extends StandardMessage>> getReceivedMessages() {
 	return receivedMessages;
 }
   

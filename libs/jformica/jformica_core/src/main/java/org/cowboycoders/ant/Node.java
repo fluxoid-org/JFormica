@@ -18,6 +18,7 @@
  */
 package org.cowboycoders.ant;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -350,9 +351,11 @@ public class Node {
   private final MessageSender nodeSender = new MessageSender() {
 
     @Override
-    public MessageMetaWrapper<StandardMessage> send(StandardMessage msg) {
-      return Node.this.send(msg);
-      
+    public List<MessageMetaWrapper<? extends StandardMessage>> send(StandardMessage msg) {
+    	MessageMetaWrapper<StandardMessage> sentMeta = Node.this.send(msg);
+    	List<MessageMetaWrapper<? extends StandardMessage>> rtn = new ArrayList<MessageMetaWrapper<? extends StandardMessage>>(1);
+    	rtn.add(sentMeta);
+    	return rtn;
     }
     
   };
@@ -371,7 +374,7 @@ public class Node {
     Callable<MessageMetaWrapper<? extends StandardMessage>> waitTask= new ThreadedWait(waitAdapter);
     Future<MessageMetaWrapper<? extends StandardMessage>> future = SharedThreadPool.getThreadPool().submit(waitTask);
     MessageMetaWrapper<? extends StandardMessage> receivedMeta = null;
-    MessageMetaWrapper<StandardMessage> sentMeta = null;
+    List<MessageMetaWrapper<? extends StandardMessage>> sentMeta = null;
     
     sender = sender == null ? nodeSender : sender;
     
@@ -419,9 +422,10 @@ public class Node {
       throw new RuntimeException(e);
     }
     
+    // message is in charge of updating sent messages
     if (receipt != null) {
-      receipt.setTxTimestamp(sentMeta.getTimestamp());
-      receipt.setRxTimestamp(receivedMeta.getTimestamp());
+      receipt.addReceived(receivedMeta);
+      receipt.addSent(sentMeta);
     }
     
     return receivedMeta.unwrap();

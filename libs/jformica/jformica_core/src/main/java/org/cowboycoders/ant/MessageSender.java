@@ -18,26 +18,19 @@
  */
 package org.cowboycoders.ant;
 
+import java.util.List;
+
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
 
-interface MessageSender {
+public interface MessageSender {
   
   /**
    * Should send the message
-   * @param msg 
+   * @param msg may be null if submitting multiple messages
+   * @return a list of messages sent
    */
-  public MessageMetaWrapper<StandardMessage> send(StandardMessage msg);
+  public List<MessageMetaWrapper<? extends StandardMessage>> send(StandardMessage msg);
   
-  /**
-   * hook called after send
-   * @param msg
-   */
-  public void postSend(MessageMetaWrapper<StandardMessage> msg);
-  
-  /**
-   * Calls send then postSend with result
-   */
-  public void doSend(StandardMessage msg);
 
 }
