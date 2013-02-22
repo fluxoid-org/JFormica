@@ -248,8 +248,8 @@ public class BushidoHeadunit extends AntTurboTrainer {
       synchronized(data) {
         data.setDistance(distance);
         distanceUpdated = true;
-        synchronized(this) {
-          this.notifyAll();
+        synchronized(model) {
+          model.notifyAll();
         }
       }
       synchronized (dataChangeListeners) {
@@ -462,7 +462,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
   public void startCycling() throws InterruptedException, TimeoutException {
     BroadcastDataMessage msg = new BroadcastDataMessage();
     msg.setData(BushidoHeadunit.PACKET_START_CYLING);
-    channel.sendAndWaitForAck(msg, AntUtils.CONDITION_CHANNEL_TX, 10L, TimeUnit.SECONDS, null, null);
+    channel.sendAndWaitForMessage(msg, AntUtils.CONDITION_CHANNEL_TX, 10L, TimeUnit.SECONDS, null);
   }
 
   private void initConnection() throws InterruptedException, TimeoutException {
@@ -521,7 +521,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
 	  
       BroadcastDataMessage msg = new BroadcastDataMessage();
       msg.setData(BushidoHeadunit.PACKET_RESET_ODOMETER);
-      channel.sendAndWaitForAck(msg, AntUtils.CONDITION_CHANNEL_TX, 10L, TimeUnit.SECONDS, null, null);
+      channel.sendAndWaitForMessage(msg, AntUtils.CONDITION_CHANNEL_TX, 10L, TimeUnit.SECONDS, null);
       long startTimeStamp = System.nanoTime();
       synchronized(model) {
         while(!distanceUpdated) {
@@ -538,7 +538,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
       startTimeStamp = System.nanoTime();
       synchronized(model) {
         while (model.getDistance() > 0.000001) {
-          channel.sendAndWaitForAck(msg, AntUtils.CONDITION_CHANNEL_TX, 10L, TimeUnit.SECONDS, null, null);
+          channel.sendAndWaitForMessage(msg, AntUtils.CONDITION_CHANNEL_TX, 10L, TimeUnit.SECONDS, null);
           long currentTimestamp = System.nanoTime();
           long timeLeft = RESET_ODOMETER_TIMEOUT - (currentTimestamp - startTimeStamp);
           if (timeLeft <= 0) {
