@@ -27,7 +27,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import org.cowboycoders.ant.events.FixedSizeBuffer;
+import org.cowboycoders.ant.utils.FixedSizeFifo;
+import org.cowboycoders.ant.utils.FixedSizeLifo;
 
 class Dave {
   String name;
@@ -42,20 +43,24 @@ public class TestQueue {
 
   
   public static void main(String [] args) throws InterruptedException {
-    Queue<String> list = new FixedSizeBuffer<String>(3);
+	FixedSizeLifo<String> list = new FixedSizeLifo<String>(3);
     list.offer("hi");
+    System.out.println(list.size());
     list.offer("bye");
     list.offer("smells");
     list.offer("crufts");
-    ArrayList<String> reverse = new ArrayList<String>(list);
-    Collections.reverse(reverse);
-    list.removeAll(list);
-    for (String s : reverse ) {
-      System.out.println(s);
-    }
+    System.out.println(list.displace("strange"));
+//    ArrayList<String> reverse = new ArrayList<String>(list);
+//    Collections.reverse(reverse);
+//    list.removeAll(list);
+//    for (String s : reverse ) {
+//      System.out.println(s);
+//    }
     for (String s : list ) {
       System.out.println(s);
     }
+    
+    System.out.println(list.poll());
     
     Set<Dave> strings = Collections.newSetFromMap(new WeakHashMap<Dave,Boolean>());
     
@@ -75,15 +80,15 @@ public class TestQueue {
     
     int count = 0;
     
-    while(true) {
-    count++;
-    System.out.println(count);
-    for (Dave s : strings ) {
-      System.out.println(s.name);
-    }
-    System.gc();
-    Thread.sleep(1000);
-    }
+//    while(true) {
+//    count++;
+//    System.out.println(count);
+//    for (Dave s : strings ) {
+//      System.out.println(s.name);
+//    }
+//    System.gc();
+//    Thread.sleep(1000);
+//    }
     
   }
   

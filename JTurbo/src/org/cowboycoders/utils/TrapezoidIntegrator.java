@@ -45,9 +45,15 @@ public class TrapezoidIntegrator {
   public double getIntegral() {
     return integral;
   }
-
-
-
+  
+  /**
+   * Adjust integral to a new value
+   * @param newValue
+   */
+  public void setIntegral(double newValue) {
+	  integral = newValue;
+  }
+  
   /**
    * @param args
    */

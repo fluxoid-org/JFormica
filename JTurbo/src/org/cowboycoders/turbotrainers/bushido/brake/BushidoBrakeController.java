@@ -338,8 +338,8 @@ public class BushidoBrakeController extends AntTurboTrainer {
 			getMessageSender().pause(true);
 			BroadcastDataMessage msg = new BroadcastDataMessage();
 			msg.setData(BushidoBrakeController.PACKET_REQUEST_VERSION);
-			channel.sendAndWaitForAck(msg, AntUtils.CONDITION_CHANNEL_TX, 10L,
-					TimeUnit.SECONDS, null, null);
+			channel.sendAndWaitForMessage(msg, AntUtils.CONDITION_CHANNEL_TX, 10L,
+					TimeUnit.SECONDS, null);
 
 		} catch (InterruptedException e) {
 			LOGGER.warning("interrupted waiting for version");

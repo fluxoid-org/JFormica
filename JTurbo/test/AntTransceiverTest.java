@@ -120,7 +120,7 @@ public class AntTransceiverTest {
     ant.stop();
   }
   
- //@Test
+ @Test
   public void basic_node() throws InterruptedException {
     AntTransceiver ant = antchip;
     
@@ -193,7 +193,7 @@ public class AntTransceiverTest {
         capabilitiesResponse = n.sendAndWaitForMessage(
             capabilitiesMessage, 
             condition,
-            10L,TimeUnit.SECONDS,null,null,null, null
+            10L,TimeUnit.SECONDS,null,null
             );
       } catch (InterruptedException e) {
         throw new AntError(e);
@@ -350,7 +350,7 @@ class Listener implements BroadcastListener<BroadcastDataMessage> {
 }
   
   
-  @Test
+  //@Test
   public void test_hrm() throws InterruptedException, TimeoutException {
     
     int repeats = 10;
@@ -420,7 +420,7 @@ class Listener implements BroadcastListener<BroadcastDataMessage> {
           msg.setData(new byte[] {(byte) 0xde,(byte) 0xad,(byte) 0xbe,(byte) 0xef,0x00,0x00,0x00,0x00});
           MessageCondition condition = MessageConditionFactory.newResponseCondition(null, null);
           try {
-            c.sendAndWaitForAck(msg, condition, 10L, TimeUnit.SECONDS, null, null) ;
+            c.sendAndWaitForMessage(msg, condition, 10L, TimeUnit.SECONDS, null) ;
           } catch (InterruptedException e) {
             e.printStackTrace();
           } catch (TimeoutException e) {
@@ -437,7 +437,7 @@ class Listener implements BroadcastListener<BroadcastDataMessage> {
     public void send(ChannelMessage msg) {
       MessageCondition condition = MessageConditionFactory.newResponseCondition(null, null);
       try {
-        c.sendAndWaitForAck(msg, condition, 10L, TimeUnit.SECONDS, null, null) ;
+        c.sendAndWaitForMessage(msg, condition, 10L, TimeUnit.SECONDS, null) ;
       } catch (InterruptedException e) {
         e.printStackTrace();
       } catch (TimeoutException e) {

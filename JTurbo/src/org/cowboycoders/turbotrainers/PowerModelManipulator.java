@@ -67,4 +67,6 @@ public interface PowerModelManipulator {
 
 	public abstract double getYaw();
 
+	void setVelocity(double velocity);
+
 }

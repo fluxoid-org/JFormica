@@ -187,7 +187,7 @@ public class BushidoBrakeTest {
     BroadcastDataMessage msg = new BroadcastDataMessage();
     msg.setData(model.getDataPacket());
     try {
-      c.sendAndWaitForAck(msg, CONDITION_CHANNEL_TX , 10l, TimeUnit.SECONDS, null, null);
+      c.sendAndWaitForMessage(msg, CONDITION_CHANNEL_TX , 10l, TimeUnit.SECONDS, null);
     } catch (InterruptedException e) {
       e.printStackTrace();
     } catch (TimeoutException e) {

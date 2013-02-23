@@ -51,7 +51,7 @@ public class EnqueuedMessageSender implements ChannelMessageSender {
           }
           
           try {
-            channel.sendAndWaitForAck(msg, DEFAULT_CONDITION, DEFAULT_TIMEOUT_DURATION, DEFAULT_TIMEOUT_TIMEUNIT, null, null);
+            channel.sendAndWaitForMessage(msg, DEFAULT_CONDITION, DEFAULT_TIMEOUT_DURATION, DEFAULT_TIMEOUT_TIMEUNIT, null);
           } catch (Exception e) {
             LOGGER.severe("Message send failed");
           }

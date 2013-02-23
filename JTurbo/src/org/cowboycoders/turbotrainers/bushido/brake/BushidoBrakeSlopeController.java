@@ -15,6 +15,7 @@ import org.cowboycoders.turbotrainers.PowerModelManipulator;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.utils.Conversions;
 import org.cowboycoders.utils.FixedPeriodUpdater;
+import org.cowboycoders.utils.SlopeTimeAverager;
 import org.cowboycoders.utils.UpdateCallback;
 
 public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
@@ -27,7 +28,17 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 	
 	private static final double PID_PROPORTIONAL_GAIN = 0.5;
 	
-	private static final int STARTING_RESISTANCE = 20; // %
+	private static final int STARTING_RESISTANCE = 10; // %
+	
+	// if acceleration is +/- this value we assume we have reach a steady state. 
+	// This is when we try and sync actual wheel speed to prdicted wheel speed
+	private static final Double ACTUAL_SPEED_STEADY_STATE_THRESHOLD = 0.28; // m/s^2
+	
+	private static final int MIN_SLOPE_SAMPLES = 5;
+
+	// Don't try and simulate speeds below this due to inaccuracies in readings at low speed
+	// Rolling resistance on turbo becomes excessively large such that lowest resistance setting is unrealistically hard
+	private static final double LOW_SPEED_LIMIT = 1.8; // m/s ~ 4 mph
 	
 	private PowerModel powerModel = new PowerModel();
 	
@@ -35,13 +46,21 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 	
 	private Lock speedUpdateLock = new ReentrantLock();
 
-	private double predictedSpeed; // metres/s
+	private double predictedSpeed = -1; // metres/s
 	
-	private double actualSpeed; // metres/s
+	private double actualSpeed = -1; // metres/s
+	
+	private SlopeTimeAverager predictedSpeedSlopeAverager = new SlopeTimeAverager();
+	
+	private SlopeTimeAverager actualSpeedSlopeAverager = new SlopeTimeAverager();
+	
+	// true when actual speed has been updated at least one
+	private boolean actualSpeedUpdated = false;
 	
 	public BushidoBrakeSlopeController(BushidoData bushidoModel) {
 		this.bushidoDataModel = bushidoModel;
 		bushidoDataModel.setResistance(STARTING_RESISTANCE);
+		actualSpeedSlopeAverager.setThreshold(ACTUAL_SPEED_STEADY_STATE_THRESHOLD, -ACTUAL_SPEED_STEADY_STATE_THRESHOLD);
 	}
 	
 	private UpdateCallback powerModelUpdateCallback  = new UpdateCallback() {
@@ -100,14 +119,46 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 	
 	private PidController resistancePidController = new PidController(actualSpeedProvider, resistanceOutputController,resistanceGainController);
 
+	private boolean needsSync = true;
+
 	@Override
 	public void onSpeedChange(double speed) {
 		setActualSpeed(speed* Conversions.KM_PER_HOUR_TO_METRES_PER_SECOND);
-		resistancePidController.adjustSetpoint(getPredictedSpeed());
+		double predictedSpeed = getPredictedSpeed();
+		double actualSpeed = getActualSpeed();
+
+		// test for stationary -> non-stationary transition
+		// speed is on average increasing and is below our threshold
+		if (predictedSpeed <= LOW_SPEED_LIMIT 
+				&& predictedSpeedSlopeAverager.getAverage() > 0 ) {
+			// only sync if actualSpeed is higher : actualSpeed will be lower than predicted if slowing down
+			// as real speed drops faster than model predicts
+			if (actualSpeed > predictedSpeed) {
+				// resync
+				needsSync = true;
+				resistancePidController.reset();
+				// use high resistance to force sync at lower speed
+				bushidoDataModel.setResistance(STARTING_RESISTANCE + powerModel.getGradientAsPercentage());
+			}
+			
+		}
+		// don't mess with brake resistance until reached steady state
+		if (!needsSync || actualSpeedSlopeAverager.getNumberOfSamples() >= MIN_SLOPE_SAMPLES && actualSpeedSlopeAverager.isWithinThreshold()) {
+			if (needsSync) {
+				powerModel.setVelocity(actualSpeed);
+				setPredictedSpeed(actualSpeed);
+			}
+			resistancePidController.adjustSetpoint(getPredictedSpeed());
+			needsSync = false;
+		}
+		
+
+		//actualSpeedUpdated = true;
 	}
 
 	@Override
 	public void onPowerChange(double power) {
+		
 		powerModelUpdater.update(new Double (power));
 		// only starts once
 		powerModelUpdater.start();
@@ -140,6 +191,9 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 		// double non-atomic?
 		try {
 			speedUpdateLock.lock();
+//			if (predictedSpeed <= LOW_SPEED_LIMIT) {
+//				return LOW_SPEED_LIMIT;
+//			}
 			return predictedSpeed;
 		} finally {
 			speedUpdateLock.unlock();
@@ -152,6 +206,8 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 		try {
 			speedUpdateLock.lock();
 			BushidoBrakeSlopeController.this.predictedSpeed = newValue;
+			// gradient averager
+			predictedSpeedSlopeAverager.add(predictedSpeed);
 		} finally {
 			speedUpdateLock.unlock();
 		}
@@ -173,6 +229,7 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 		try {
 			speedUpdateLock.lock();
 			BushidoBrakeSlopeController.this.actualSpeed = newValue;
+			actualSpeedSlopeAverager.add(actualSpeed);
 		} finally {
 			speedUpdateLock.unlock();
 		}

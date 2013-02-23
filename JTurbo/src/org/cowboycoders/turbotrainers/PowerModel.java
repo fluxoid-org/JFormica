@@ -228,6 +228,12 @@ public class PowerModel implements PowerModelManipulator {
 			return kineticEnergy.getIntegral();
 		}
 	}
+	
+	private void setKineticEnergy(double newEnergy) {
+		synchronized (this){
+			kineticEnergy.setIntegral(newEnergy);
+		}
+	}
 
 
 
@@ -297,6 +303,23 @@ public class PowerModel implements PowerModelManipulator {
 		if (negative) return -velocity;
 		return velocity;
 		//return 8.36;
+	}
+	
+	/**
+	 * Force power model to a new velocity
+	 * @param velocity the new velocity
+	 */
+	@Override
+	public synchronized void setVelocity(final double velocity) {
+		double I = getMomentOfInertiaWheels();
+		double r = this.getOutsideRadiusTire();
+		// energy required for given speed
+		double energy =  0.5 * Math.pow(velocity,2) * (getTotalMass() + I/Math.pow(r,2));
+		// negative energy for negative velocities
+		if (velocity < 0) {
+			energy = -energy;
+		}
+		setKineticEnergy(energy);
 	}
 	
 	/* (non-Javadoc)
@@ -423,6 +446,10 @@ protected double getTimestamp() {
 				return timestamp += 1;
 			}
 		};
+		pm.setVelocity(20.0);
+		double ACCURACY = 0.00000000001;
+		assert pm.getVelocity() < 20 + ACCURACY && pm.getVelocity() > 20 - ACCURACY : "setVelocity is bust";
+		System.out.println("initial velocity = " + pm.getVelocity());
 		pm.setNegativeVelocityAllowed(false);
 		for (int i = 0 ; i< 1000 ; i++) {
 			System.out.println(pm.updatePower(400));

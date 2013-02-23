@@ -166,10 +166,12 @@ public class BrakeControllerTest {
 
 	@Override
 	public GainParameters getGain(OutputControlParameters parameters) {
-		if (parameters.getSetPoint() < 7.4) {
-			return new GainParameters(2,0.5,0);
-		}
-		return new GainParameters(1,0.5,0.2);
+		//we could ease them until on target, so we don't get a sudden jerk
+		//if (parameters.getSetPoint() < 7.4) {
+		//	return new GainParameters(2,0.5,0);
+		//}
+		//return new GainParameters(-1.8,-0.5,-0.2);
+		return new GainParameters(-4.2,-0.8,-0.5);
 	}
 	  
   };
@@ -186,7 +188,7 @@ public class BrakeControllerTest {
     b.getPidParamaterController().setGainController(gainController);
     pidLogger.newLog(b.getPidParamaterController());
 
-    Thread.sleep(60000);
+    Thread.sleep(10000);
     
     b.stop();
     n.stop();
