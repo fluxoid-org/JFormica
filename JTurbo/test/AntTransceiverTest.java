@@ -37,6 +37,7 @@ import org.cowboycoders.ant.AntError;
 import org.cowboycoders.ant.Channel;
 import org.cowboycoders.ant.NetworkKey;
 import org.cowboycoders.ant.Node;
+import org.cowboycoders.ant.Receipt;
 import org.cowboycoders.ant.TransferException;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.events.MessageCondition;
@@ -121,7 +122,7 @@ public class AntTransceiverTest {
   }
   
  @Test
-  public void basic_node() throws InterruptedException {
+  public void basic_node() throws InterruptedException, TimeoutException {
     AntTransceiver ant = antchip;
     
     ant.start();
@@ -142,10 +143,22 @@ public class AntTransceiverTest {
     
     //n.reset();
     
-    n.send(msg);
+    MessageCondition condition = new MessageCondition() {
+
+		@Override
+		public boolean test(StandardMessage msg) {
+			return true;
+		}
+    	
+    };
     
+    Receipt receipt = new Receipt();
+    
+    n.sendAndWaitForMessage(msg, condition, null, null, null, receipt);
+    
+    System.out.println(receipt.getLastSent().getTimestamp());
 
-
+    System.out.println(receipt.getLastReceived().getTimestamp());
     
     Thread.sleep(1000);
     

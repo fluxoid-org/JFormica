@@ -62,7 +62,7 @@ public class Receipt {
 	 return sentMessages.getLast();
  }
  
- public MessageMetaWrapper<? extends StandardMessage> getLastRecieved() {
+ public MessageMetaWrapper<? extends StandardMessage> getLastReceived() {
 	 return receivedMessages.getLast();
  }
 

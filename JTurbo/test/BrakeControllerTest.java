@@ -171,7 +171,7 @@ public class BrakeControllerTest {
 		//	return new GainParameters(2,0.5,0);
 		//}
 		//return new GainParameters(-1.8,-0.5,-0.2);
-		return new GainParameters(-4.2,-0.8,-0.5);
+		return new GainParameters(-4.6,-0.8,-0.3);
 	}
 	  
   };
@@ -188,7 +188,7 @@ public class BrakeControllerTest {
     b.getPidParamaterController().setGainController(gainController);
     pidLogger.newLog(b.getPidParamaterController());
 
-    Thread.sleep(10000);
+    Thread.sleep(60000);
     
     b.stop();
     n.stop();

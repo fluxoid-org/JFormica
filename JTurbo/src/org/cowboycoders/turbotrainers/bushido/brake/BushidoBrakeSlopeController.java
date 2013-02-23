@@ -54,12 +54,9 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 	
 	private SlopeTimeAverager actualSpeedSlopeAverager = new SlopeTimeAverager();
 	
-	// true when actual speed has been updated at least one
-	private boolean actualSpeedUpdated = false;
-	
 	public BushidoBrakeSlopeController(BushidoData bushidoModel) {
 		this.bushidoDataModel = bushidoModel;
-		bushidoDataModel.setResistance(STARTING_RESISTANCE);
+		bushidoDataModel.setResistance(getEstimatedResistance());
 		actualSpeedSlopeAverager.setThreshold(ACTUAL_SPEED_STEADY_STATE_THRESHOLD, -ACTUAL_SPEED_STEADY_STATE_THRESHOLD);
 	}
 	
@@ -81,7 +78,8 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 
 		@Override
 		public double getProcessVariable() {
-			return getActualSpeed();
+			double actualSpeed = getActualSpeed();
+			return actualSpeed;
 		}
 		
 	};
@@ -90,17 +88,29 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 
 		@Override
 		public void setOutput(double resistance) {
-			bushidoDataModel.setResistance(resistance);
+			// enforce estimated resistance for first update
+			if (needsSync) {
+				bushidoDataModel.setResistance(getEstimatedResistance());
+				needsSync = false;
+				return;
+			}
+			bushidoDataModel.setResistance(resistance + getEstimatedResistance());
 		}
-
+		
+		/**
+		 * Centred on getEstimatedResistance()
+		 */
 		@Override
 		public double getMaxOutput() {
-			return BushidoData.RESISTANCE_MAX;
+			return BushidoData.RESISTANCE_MAX - getEstimatedResistance();
 		}
-
+		
+		/**
+		 * Centred on getEstimatedResistance()
+		 */
 		@Override
 		public double getMinOutput() {
-			return BushidoData.RESISTANCE_MIN;
+			return BushidoData.RESISTANCE_MIN - getEstimatedResistance();
 		}
 
 
@@ -133,13 +143,13 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 				&& predictedSpeedSlopeAverager.getAverage() > 0 ) {
 			// only sync if actualSpeed is higher : actualSpeed will be lower than predicted if slowing down
 			// as real speed drops faster than model predicts
-			if (actualSpeed > predictedSpeed) {
+			//if (actualSpeed > predictedSpeed) {
 				// resync
 				needsSync = true;
 				resistancePidController.reset();
 				// use high resistance to force sync at lower speed
-				bushidoDataModel.setResistance(STARTING_RESISTANCE + powerModel.getGradientAsPercentage());
-			}
+				bushidoDataModel.setResistance(getEstimatedResistance());
+			//}
 			
 		}
 		// don't mess with brake resistance until reached steady state
@@ -149,11 +159,18 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 				setPredictedSpeed(actualSpeed);
 			}
 			resistancePidController.adjustSetpoint(getPredictedSpeed());
-			needsSync = false;
 		}
 		
 
 		//actualSpeedUpdated = true;
+	}
+	
+	/**
+	 * Estimated resistance for given gradient
+	 * @return
+	 */
+	protected double getEstimatedResistance() {
+		return STARTING_RESISTANCE + powerModel.getGradientAsPercentage();
 	}
 
 	@Override

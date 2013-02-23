@@ -32,3 +32,5 @@ jarlist.cache
 *.jar
 antlog
 
+resources.ap_
+*.apk
