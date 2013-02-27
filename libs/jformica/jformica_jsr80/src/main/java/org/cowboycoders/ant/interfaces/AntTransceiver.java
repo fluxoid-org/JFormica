@@ -19,6 +19,7 @@
 package org.cowboycoders.ant.interfaces;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -44,6 +45,7 @@ import javax.usb.UsbServices;
 import org.cowboycoders.ant.SharedThreadPool;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.commands.ResetMessage;
+import org.cowboycoders.ant.utils.ByteUtils;
 import org.cowboycoders.ant.utils.UsbUtils;
 
 
@@ -176,6 +178,35 @@ public class AntTransceiver extends AbstractAntTransceiver {
   
   
   public class UsbReader extends Thread {
+	
+	private byte [] last;
+	
+	private static final int BUFFER_SIZE = 64; 
+	
+	
+	/**
+	 * @param data buffer to check
+	 * @return data remaining
+	 */
+	byte [] lookForSync(byte [] data) {
+        if (data[0] != MESSAGE_TX_SYNC) {
+        	int index =  -1;
+        	for (int i = 0 ; i < data.length ; i++) {
+        		if (data[i] == MESSAGE_TX_SYNC) {
+        			index = i;
+        			break;
+        		}
+        	}
+        	// not found
+        	if (index < 0) {
+            	LOGGER.warning("data read from usb endpoint does not contain a sync byte : ignoring");
+            	return new byte[0];
+        	}
+        	LOGGER.info("found non-zero sync byte index");
+        	data = Arrays.copyOfRange(data, index, data.length);
+        }
+        return data;
+	}
 
     @Override
     public void run() {
@@ -186,7 +217,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
           try {
            // interfaceLock.lock();
             //byte [] data = new byte[MAX_MSG_LENGTH];
-            byte [] data = new byte[64];
+            byte [] data = new byte[BUFFER_SIZE];
             try {
               //inPipe.open();
               LOGGER.finest("pre read");
@@ -196,18 +227,54 @@ public class AntTransceiver extends AbstractAntTransceiver {
             }
             
             logData(Level.FINER,data,"read");
-       
-            int msgLength = data[MESSAGE_OFFSET_MSG_LENGTH];
             
-            byte [] cleanData = new byte[ msgLength + 2];
-            
-            for (int i = 0 ; i < msgLength + 2 ; i++) {
-              cleanData[i] = data[i + 1];
+            // process remaining bytes from last buffer
+            if (last != null) {
+            	data = ByteUtils.joinArray(last,data);
+            	last = null;
             }
             
-            AntTransceiver.this.broadcastRxMessage(cleanData);
-            
-            
+            while ((data = lookForSync(data)).length > 0) {
+            	
+                int msgLength = data[MESSAGE_OFFSET_MSG_LENGTH];
+                
+                // negative length does not make sense
+                if (msgLength < 0) {
+                	LOGGER.warning("msgLength appears to be incorrect : ignoring" + msgLength);
+                	continue;
+                }
+                
+                int checkSumIndex = msgLength + 3;
+                
+                
+                if (checkSumIndex >= data.length) {
+                    // unreasonably large checkSumIndex (dont span multiple buffers)
+                    if (checkSumIndex >= BUFFER_SIZE -1) {
+                    	LOGGER.warning("msgLength appears to be incorrect : ignoring" + msgLength);
+                    	continue;
+                    }
+    
+                	// we try assume continued in next buffer
+                	last = data;
+                	break;
+                }
+                
+                // data minus sync and checksum
+                byte [] cleanData = new byte[ msgLength + 2];
+                
+                for (int i = 0 ; i < msgLength + 2 ; i++) {
+                  cleanData[i] = data[i + 1];
+                }
+                
+                if (getChecksum(cleanData) != data[checkSumIndex]) {
+                 	LOGGER.warning("checksum incorrect : ignoring");
+                	continue;
+                }
+                
+                AntTransceiver.this.broadcastRxMessage(cleanData);
+            }
+       
+
             
           } finally {
             //interfaceLock.unlock();
