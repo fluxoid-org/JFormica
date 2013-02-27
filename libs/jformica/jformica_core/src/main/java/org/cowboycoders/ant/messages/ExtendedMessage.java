@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.cowboycoders.ant.defines.AntMesg;
 import org.cowboycoders.ant.messages.Constants.DataElements;
-import org.cowboycoders.ant.utils.ByteMerger;
+import org.cowboycoders.ant.utils.ByteUtils;
 
 /**
  * 
@@ -263,7 +263,7 @@ public class ExtendedMessage extends Message
     int index = EXTENDED_FLAG_OFFSET + 1;
     for (DataElements e : extendedElements) {
       if (e == element) {
-        rtn = ByteMerger.lsbMerge(payload.subList(index, index += e.getLength()));
+        rtn = ByteUtils.lsbMerge(payload.subList(index, index += e.getLength()));
       }
       index += e.getLength();
     }

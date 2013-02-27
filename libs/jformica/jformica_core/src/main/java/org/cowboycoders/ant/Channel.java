@@ -52,7 +52,7 @@ import org.cowboycoders.ant.messages.data.BurstDataMessage;
 import org.cowboycoders.ant.messages.responses.ChannelResponse;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
 import org.cowboycoders.ant.utils.BurstMessageSequenceGenerator;
-import org.cowboycoders.ant.utils.MiscUtils;
+import org.cowboycoders.ant.utils.ByteUtils;
 
 
 public class Channel {
@@ -392,7 +392,17 @@ public class Channel {
     }
   }
   
-  
+  /**
+   * Not thread safe
+   * @param msg
+   * @param condition
+   * @param timeout
+   * @param timeoutUnit
+   * @param receipt
+   * @return
+   * @throws InterruptedException
+   * @throws TimeoutException
+   */
   public StandardMessage sendAndWaitForMessage(
       final ChannelMessage msg, 
       final MessageCondition condition,
@@ -523,7 +533,7 @@ public class Channel {
   
   public void sendBurst(byte[] data, Long timeout, TimeUnit timeoutUnit) 
       throws InterruptedException, TimeoutException, TransferException {
-    final List<byte[]> list = MiscUtils.splitByteArray(data, AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE);
+    final List<byte[]> list = ByteUtils.splitByteArray(data, AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE);
     final BurstMessageSequenceGenerator generator = new BurstMessageSequenceGenerator();
     try {
       sendLock.lock();

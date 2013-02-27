@@ -24,12 +24,12 @@ public class ValidationUtils {
     
   }
   
-  public interface MaxMinExceptionProducable<e extends Throwable> {
+  public interface MaxMinExceptionProducer<e extends Throwable> {
     e getMaxMinException(int min, int max, int value);
   }
   
   public static <e extends Throwable> void maxMinValidator(
-      int min, int max, int value, MaxMinExceptionProducable<e> factory) throws e{
+      int min, int max, int value, MaxMinExceptionProducer<e> factory) throws e{
     if (value > max || value < min) {
       throw factory.getMaxMinException(min, max, value);
     }
