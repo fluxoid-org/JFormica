@@ -49,7 +49,6 @@ import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 import org.cowboycoders.ant.messages.responses.CapabilityResponse;
 import org.cowboycoders.ant.utils.AntLoggerImpl;
 import org.cowboycoders.ant.utils.ArrayUtils;
-import org.cowboycoders.ant.utils.ByteMerger;
 import org.cowboycoders.ant.utils.ByteUtils;
 import org.cowboycoders.ant.utils.ChannelMessageSender;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
@@ -191,7 +190,7 @@ public class BushidoTest {
   //@Test
   public void testByteShift() {
     Byte [] data = new Byte [] {(byte) 255,(byte) 255,(byte) 255,(byte) 255,(byte) 255,(byte) 255,(byte) 255};
-    int [] unsignedData = ArrayUtils.unsignedBytesToInts(data);
+    int [] unsignedData = ByteUtils.unsignedBytesToInts(data);
     double distance = ((long)unsignedData [2] << 24) + (unsignedData [3] << 16) + (unsignedData [4] << 8) + unsignedData [5];
     System.out.println(distance);
     assertTrue(distance > 0);

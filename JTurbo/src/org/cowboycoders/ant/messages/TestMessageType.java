@@ -31,7 +31,7 @@ import org.cowboycoders.ant.messages.ExtendedMessage;
 import org.cowboycoders.ant.messages.LegacyMessage;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.utils.ByteMerger;
+import org.cowboycoders.ant.utils.ByteUtils;
 
 public class TestMessageType {
 
@@ -177,7 +177,7 @@ public class TestMessageType {
    
     System.out.println();
     
-    System.out.println(ByteMerger.lsbSplit(16384, 2));
+    System.out.println(ByteUtils.lsbSplit(16384, 2));
     
     
     

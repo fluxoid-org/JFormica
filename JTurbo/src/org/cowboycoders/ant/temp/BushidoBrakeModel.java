@@ -55,6 +55,9 @@ public class BushidoBrakeModel {
   private double power;
   private byte balance;
   private int counter = 0;
+  private double rightPower;
+  private double leftPower;
+  
   CalibrationState calibrationState = CalibrationState.CALIBRATED;
   /**
    * @return the calibrationState
@@ -210,7 +213,7 @@ public class BushidoBrakeModel {
     @Override
     public byte[] getDataPacket() {
       byte [] powerPacket = new byte[8];
-      powerPacket[0] = (byte) 0x01;
+      powerPacket[0] = (byte) 0x01;  
       insertPowerBytes(powerPacket);
       return powerPacket;
     }
@@ -318,10 +321,10 @@ public class BushidoBrakeModel {
     }
     
   };
-  
-  
+
+
   private void insertPowerBytes(byte[] powerPacket) {
-    BigInteger bigPower = BigIntUtils.convertUnsignedInt((int)power);;
+    BigInteger bigPower = BigIntUtils.convertUnsignedInt((int)leftPower);;
     byte [] powerBytes = BigIntUtils.clipToByteArray(bigPower, 2);
     
     // left power
@@ -335,7 +338,7 @@ public class BushidoBrakeModel {
     powerPacket[3] = powerBytes[0];
     powerPacket[4] = powerBytes[1];
     
-    bigPower = BigIntUtils.convertUnsignedInt((int)power );
+    bigPower = BigIntUtils.convertUnsignedInt((int)rightPower);
     powerBytes = BigIntUtils.clipToByteArray(bigPower, 2);
     
     // right power
@@ -400,7 +403,25 @@ public class BushidoBrakeModel {
     return packetProvidersIterator.next().getDataPacket();
   }
   
-  public static void main(String [] args) {
+  
+  
+  public double getRightPower() {
+	return rightPower;
+}
+
+public void setRightPower(double rightPower) {
+	this.rightPower = rightPower;
+}
+
+public double getLeftPower() {
+	return leftPower;
+}
+
+public void setLeftPower(double leftPower) {
+	this.leftPower = leftPower;
+}
+
+public static void main(String [] args) {
     BushidoBrakeModel model = new BushidoBrakeModel();
     model.setPower(1000);
     model.setWheelSpeed(14);

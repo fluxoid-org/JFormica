@@ -58,7 +58,7 @@ public class MiscUtilsTest {
   }
   
   public static List<byte[]> splitBurst(byte[] data) {
-    return MiscUtils.splitByteArray(data, AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE);
+    return ByteUtils.splitByteArray(data, AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE);
   }
 
 }

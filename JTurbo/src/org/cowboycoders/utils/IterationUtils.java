@@ -19,6 +19,8 @@
 */
 package org.cowboycoders.utils;
 
+import org.cowboycoders.ant.utils.Filter;
+
 public class IterationUtils {
   private IterationUtils() {}
   
@@ -27,6 +29,13 @@ public class IterationUtils {
       operator.performOperation(element);
     }
   }
+  
+  public static <V> void operateOnAll(Iterable<V> iterable, IterationOperator<V> operator, Filter<V> filter) {
+	    for (V element : iterable) {
+	      if (!filter.isWanted(element)) continue;
+	      operator.performOperation(element);
+	    }
+	  }
   
 
 }

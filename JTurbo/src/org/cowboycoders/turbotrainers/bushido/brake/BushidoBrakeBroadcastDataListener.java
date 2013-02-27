@@ -23,7 +23,7 @@ import java.math.BigInteger;
 
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
-import org.cowboycoders.ant.utils.ArrayUtils;
+import org.cowboycoders.ant.utils.ByteUtils;
 
 import static org.cowboycoders.ant.utils.ArrayUtils.*;
 
@@ -56,7 +56,7 @@ public class BushidoBrakeBroadcastDataListener implements BroadcastListener<Broa
     @Override
     public void receiveMessage(BroadcastDataMessage message) {
         data = message.getData();
-        int [] unsignedData = ArrayUtils.unsignedBytesToInts(data);
+        int [] unsignedData = ByteUtils.unsignedBytesToInts(data);
         if (arrayStartsWith(PARTIAL_PACKET_REQUEST_DATA, data)) {
         	bushidoListener.onRequestData(data);
         }

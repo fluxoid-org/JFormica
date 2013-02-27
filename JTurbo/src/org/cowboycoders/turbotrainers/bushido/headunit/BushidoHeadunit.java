@@ -383,6 +383,18 @@ public class BushidoHeadunit extends AntTurboTrainer {
     decrementSlope(0.1);
   }
   
+  public void setWeight(double weight) {
+    synchronized (model) {
+        model.setWeight(weight);
+      }
+  }
+  
+  public double getWeight() {
+    synchronized (model) {
+    	return model.getWeight();
+      }
+  }
+	 
   /**
    * As a opposed to that based on artificial speed used to compensate for negative gradients 
    * @return

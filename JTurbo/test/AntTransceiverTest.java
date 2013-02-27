@@ -51,7 +51,7 @@ import org.cowboycoders.ant.messages.commands.ChannelRequestMessage;
 import org.cowboycoders.ant.messages.commands.ResetMessage;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 import org.cowboycoders.ant.messages.responses.CapabilityResponse;
-import org.cowboycoders.ant.utils.ByteMerger;
+import org.cowboycoders.ant.utils.ByteUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -121,7 +121,7 @@ public class AntTransceiverTest {
     ant.stop();
   }
   
- @Test
+ //@Test
   public void basic_node() throws InterruptedException, TimeoutException {
     AntTransceiver ant = antchip;
     
@@ -168,7 +168,7 @@ public class AntTransceiverTest {
     
   }
   
-  //@Test
+  @Test
   public void test_init() throws InterruptedException, TimeoutException {
     //Object mBound = bindService(new Intent(MainActivity.getAppContext(), DummyService.class));
     //antchip.start();
@@ -197,7 +197,9 @@ public class AntTransceiverTest {
     
     // try expose a race condition or dead lock
     int i = 0;
-    while (++i < 100) {
+    while (++i < 1000
+    		
+    		) {
       StandardMessage capabilitiesMessage = new ChannelRequestMessage(
           0,ChannelRequestMessage.Request.CAPABILITIES );
       StandardMessage capabilitiesResponse;
@@ -208,6 +210,7 @@ public class AntTransceiverTest {
             condition,
             10L,TimeUnit.SECONDS,null,null
             );
+        System.out.println(((CapabilityResponse)capabilitiesResponse).getMaxNetworks());
       } catch (InterruptedException e) {
         throw new AntError(e);
       } catch (TimeoutException e) {
@@ -503,7 +506,7 @@ class Listener implements BroadcastListener<BroadcastDataMessage> {
     
     for (int i = 0 ; i < repeats ; i++) {
       BroadcastDataMessage msg = new BroadcastDataMessage();
-      List<Byte> bytes = ByteMerger.lsbSplit(i, 4);
+      List<Byte> bytes = ByteUtils.lsbSplit(i, 4);
       msg.setData(new byte[] {(byte) 0xde,(byte) 0xad,(byte) 0xbe,(byte) 0xef,bytes.get(0),bytes.get(1),bytes.get(2),bytes.get(3)});
       MessageCondition condition = MessageConditionFactory.newResponseCondition(null, null);
       //c.enqueue(msg, condition, null, null);

@@ -22,6 +22,7 @@ package org.cowboycoders.turbotrainers.bushido.headunit;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 import org.cowboycoders.ant.utils.ArrayUtils;
+import org.cowboycoders.ant.utils.ByteUtils;
 
 import static org.cowboycoders.ant.utils.ArrayUtils.*;
 
@@ -48,7 +49,7 @@ public class BushidoBroadcastDataListener implements BroadcastListener<Broadcast
     @Override
     public void receiveMessage(BroadcastDataMessage message) {
         data = message.getData();
-        int [] unsignedData = ArrayUtils.unsignedBytesToInts(data);
+        int [] unsignedData = ByteUtils.unsignedBytesToInts(data);
         if (arrayStartsWith(PARTIAL_PACKET_DATA, data)) {
             data = message.getData();
             if (arrayStartsWith(PARTIAL_PACKET_SPEED_POWER_CADENCE, data)) {
