@@ -40,6 +40,8 @@ import org.cowboycoders.ant.utils.ChannelMessageSender;
 import org.cowboycoders.ant.utils.EnqueuedMessageSender;
 import org.cowboycoders.pid.PidParameterController;
 import org.cowboycoders.turbotrainers.AntTurboTrainer;
+import org.cowboycoders.turbotrainers.Parameters.CommonParametersInterface;
+import org.cowboycoders.turbotrainers.Mode;
 import org.cowboycoders.turbotrainers.PowerModelManipulator;
 import org.cowboycoders.turbotrainers.TooFewAntChannelsAvailableException;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
@@ -47,6 +49,14 @@ import org.cowboycoders.utils.IterationOperator;
 import org.cowboycoders.utils.IterationUtils;
 
 public class BushidoBrakeController extends AntTurboTrainer {
+	
+	  public static final Mode [] SUPPORTED_MODES = new Mode [] {
+		  	Mode.TARGET_SLOPE
+		  };
+	  
+	  {
+		  setSupportedModes(SUPPORTED_MODES);
+	  }
 
 	public final static Logger LOGGER = Logger
 			.getLogger(BushidoBrakeController.class.getName());
@@ -426,6 +436,19 @@ public class BushidoBrakeController extends AntTurboTrainer {
 	
 	public PidParameterController getPidParamaterController() {
 		return slopeController.getPidParameterController();
+	}
+
+	@Override
+	public void setParameters(CommonParametersInterface parameters)
+			throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getTarget() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

@@ -20,6 +20,7 @@
 package org.cowboycoders.turbotrainers.bushido.headunit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -52,6 +53,8 @@ import org.cowboycoders.ant.utils.ArrayUtils;
 import org.cowboycoders.ant.utils.ChannelMessageSender;
 import org.cowboycoders.ant.utils.EnqueuedMessageSender;
 import org.cowboycoders.turbotrainers.AntTurboTrainer;
+import org.cowboycoders.turbotrainers.Mode;
+import org.cowboycoders.turbotrainers.Parameters.CommonParametersInterface;
 import org.cowboycoders.turbotrainers.TooFewAntChannelsAvailableException;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor.Button;
@@ -62,6 +65,14 @@ import org.cowboycoders.utils.IterationUtils;
 public class BushidoHeadunit extends AntTurboTrainer {
   
   public final static Logger LOGGER = Logger.getLogger(BushidoHeadunit.class .getName());
+  
+  public static final Mode [] SUPPORTED_MODES = new Mode [] {
+	  	Mode.TARGET_SLOPE
+	  };
+  
+  {
+	  setSupportedModes(SUPPORTED_MODES);
+  }
 
   private static final long TIMEOUT_DISTANCE_UPDATED = TimeUnit.SECONDS.toNanos(5);
   
@@ -81,6 +92,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
   // this may not be NO_CONNECTION
   private static final Byte[] PARTIAL_PACKET_NO_CONNECTION = new Byte [] {(byte) 0xad,0x01,0x00};
   
+  
 //  private static final MessageCondition AntUtils.CONDITION_CHANNEL_TX = 
 //      MessageConditionFactory.newResponseCondition(MessageId.EVENT, ResponseCode.EVENT_TX);
   
@@ -94,7 +106,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
   private EnqueuedMessageSender channelMessageSender;
 
 
-  private BushidoData model;
+  private AbstractBushidoModel model;
   
 //  /**
 //   * If locked should not send data packets;
@@ -154,15 +166,15 @@ public class BushidoHeadunit extends AntTurboTrainer {
   
   public class BushidoUpdatesListener implements BushidoInternalListener {
     
-    private BushidoData data;
+    private AbstractBushidoModel data;
         
     /**
      * Only route responses through this member
      */
     private ChannelMessageSender channelSender;
 
-    public BushidoUpdatesListener(BushidoData data, ChannelMessageSender channelSender) {
-      this.data = data;
+    public BushidoUpdatesListener(AbstractBushidoModel model, ChannelMessageSender channelSender) {
+      this.data = model;
       this.channelSender = channelSender;
     }
 
@@ -351,49 +363,6 @@ public class BushidoHeadunit extends AntTurboTrainer {
     }
   }
  
-  public double getSlope () {
-    synchronized (model) {
-      return model.getSlope();
-    }
-  }
-  
-  public void setSlope (double slope) {
-    synchronized (model) {
-      model.setSlope(slope);
-    }
-  }
-  
-  public void incrementSlope(double value) {
-    synchronized (model) {
-      model.incrementSlope(value);
-    }
-  }
-  
-  public void decrementSlope(double value) {
-    synchronized (model) {
-      model.decrementSlope(value);
-    }
-  }
-  
-  public void incrementSlope() {
-    incrementSlope(0.1);
-  }
-
-  public void decrementSlope() {
-    decrementSlope(0.1);
-  }
-  
-  public void setWeight(double weight) {
-    synchronized (model) {
-        model.setWeight(weight);
-      }
-  }
-  
-  public double getWeight() {
-    synchronized (model) {
-    	return model.getWeight();
-      }
-  }
 	 
   /**
    * As a opposed to that based on artificial speed used to compensate for negative gradients 
@@ -435,7 +404,16 @@ public class BushidoHeadunit extends AntTurboTrainer {
   }
   
   
+  
   public void startConnection() throws InterruptedException, TimeoutException {
+	
+	// check mode is valid
+	Mode currentMode = getCurrentMode();
+	
+	if (currentMode == null) {
+		throw new IllegalStateException("must set a mode");
+	}   
+	  
     node.start();
     node.setNetworkKey(0, key);
     channel = node.getFreeChannel();
@@ -463,7 +441,6 @@ public class BushidoHeadunit extends AntTurboTrainer {
     
     //startCycling();
     
-    this.model = new BushidoData();
     BushidoUpdatesListener updatesListener = new BushidoUpdatesListener(model,this.getMessageSender());
     BushidoBroadcastDataListener dataListener = new BushidoBroadcastDataListener(updatesListener);
     BushidoInternalButtonPressListener buttonListener = new BushidoInternalButtonPressListener(updatesListener);
@@ -612,6 +589,32 @@ public class BushidoHeadunit extends AntTurboTrainer {
   public boolean supportsHeartRate() {
     return true;
   }
+
+@Override
+public void setParameters(CommonParametersInterface parameters)
+		throws IllegalArgumentException {
+	model.setParameters(parameters);
+	
+}
+
+@Override
+public void setMode(Mode mode) throws IllegalArgumentException {
+	super.setMode(mode);
+	if (mode == Mode.TARGET_SLOPE) {
+		// already this model
+		if (model instanceof BushidoTargetSlopeModel) {
+			return;
+		}
+		model = new BushidoTargetSlopeModel();
+	}
+}
+
+@Override
+public double getTarget() {
+	synchronized(model) {
+		return model.getTarget();
+	}
+}
 
 
 

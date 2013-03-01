@@ -59,6 +59,7 @@ import org.cowboycoders.cyclisimo.util.TrackRecordingServiceConnectionUtils;
 import org.cowboycoders.cyclisimo.util.UnitConversions;
 import org.cowboycoders.location.LatLongAlt;
 import org.cowboycoders.turbotrainers.CourseTracker;
+import org.cowboycoders.turbotrainers.Parameters;
 import org.cowboycoders.turbotrainers.TooFewAntChannelsAvailableException;
 import org.cowboycoders.turbotrainers.TurboCommunicationException;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
@@ -114,6 +115,21 @@ public class TurboService extends Service {
   double lastRecordedSpeed = 0.0; // kmh
 
   private TurboTrainerInterface turboTrainer;
+  
+  private Lock parameterBuilderLock = new ReentrantLock();
+  
+  private Parameters.Builder parameterBuilder;
+  
+  public void setParameterBuilder(Parameters.Builder builder) {
+    try {
+      parameterBuilderLock.lock();
+      parameterBuilder = builder;
+    } finally {
+      parameterBuilderLock.unlock();
+    }
+   
+  }
+  
 
   TurboTrainerDataListener dataListener = new TurboTrainerDataListener() {
 
@@ -185,7 +201,13 @@ public class TurboService extends Service {
       double gradient = courseTracker.getCurrentGradient(); // returns 0.0 if
                                                             // finished for warm
                                                             // down
-      turboTrainer.setSlope(gradient);
+      try {
+        parameterBuilderLock.lock();
+        turboTrainer.setParameters(parameterBuilder.buildTargetSlope(gradient));
+      } finally {
+        parameterBuilderLock.unlock();
+      }
+      
       Log.d(TAG, "New Gradient: " + gradient);
       if (courseTracker.hasFinished()) {
         doFinish();
@@ -251,6 +273,9 @@ public class TurboService extends Service {
       return;
     }
     running = true;
+    
+    //FIXME: use real weight / bike weight
+    setParameterBuilder(new Parameters.Builder(70,7));
     
     attachAntLogger = PreferencesUtils.getBoolean(context,R.string.settings_ant_diagnostic_logging_state_key, false);
 

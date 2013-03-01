@@ -61,7 +61,7 @@ import org.cowboycoders.turbotrainers.bushido.brake.BushidoBrakeController;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoBroadcastDataListener;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressListener;
-import org.cowboycoders.turbotrainers.bushido.headunit.BushidoData;
+import org.cowboycoders.turbotrainers.bushido.headunit.BushidoTargetSlopeModel;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoHeadunit;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor.Button;
 import org.junit.AfterClass;

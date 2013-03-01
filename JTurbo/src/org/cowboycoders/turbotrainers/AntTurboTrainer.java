@@ -19,9 +19,6 @@
  */
 package org.cowboycoders.turbotrainers;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
@@ -37,16 +34,10 @@ import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoHeadunit;
 
-public abstract class AntTurboTrainer implements TurboTrainerInterface {
+public abstract class AntTurboTrainer extends GenericTurboTrainer {
 
 	public final static Logger LOGGER = Logger.getLogger(AntTurboTrainer.class
 			.getName());
-
-	/**
-	 * Weak set
-	 */
-	protected Set<TurboTrainerDataListener> dataChangeListeners = Collections
-			.newSetFromMap(new WeakHashMap<TurboTrainerDataListener, Boolean>());
 
 	private Node node;
 
@@ -64,30 +55,11 @@ public abstract class AntTurboTrainer implements TurboTrainerInterface {
 	public abstract void start() throws TooFewAntChannelsAvailableException,
 			TurboCommunicationException, InterruptedException, TimeoutException;
 
-	protected Set<TurboTrainerDataListener> getDataChangeListeners() {
-		return dataChangeListeners;
-	}
-
 	// dangerous at moment as we are using dataChangeListeners directly
 //	protected void setDataChangeListeners(
 //			Set<TurboTrainerDataListener> dataChangeListeners) {
 //		this.dataChangeListeners = dataChangeListeners;
 //	}
 
-	@Override
-	public void unregisterDataListener(TurboTrainerDataListener listener) {
-		synchronized (dataChangeListeners) {
-			dataChangeListeners.remove(listener);
-		}
-	}
-
-	/**
-	 * Stored in weak set, so keep a reference : no anonymous classes
-	 */
-	public void registerDataListener(TurboTrainerDataListener listener) {
-		synchronized (dataChangeListeners) {
-			dataChangeListeners.add(listener);
-		}
-	}
 
 }

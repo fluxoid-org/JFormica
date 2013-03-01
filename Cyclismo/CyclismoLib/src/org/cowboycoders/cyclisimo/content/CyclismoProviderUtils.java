@@ -5,7 +5,7 @@ import android.net.Uri;
 
 import java.util.List;
 
-public interface CyclismoProviderUtils extends MyUsersProviderUtils {
+public interface CyclismoProviderUtils extends MyTracksProviderUtils {
   
   /**
   * Creates a {@link User} from a cursor.

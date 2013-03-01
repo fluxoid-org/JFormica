@@ -119,6 +119,14 @@ public class AntTransceiver extends AbstractAntTransceiver {
     doInit(deviceNumber);
     
   }
+  
+  /**
+   * Testing only
+   */
+  AntTransceiver() {
+	  
+  }
+  
 
   private void doInit(int deviceNumber) {
     UsbServices usbServices = null;
@@ -183,12 +191,14 @@ public class AntTransceiver extends AbstractAntTransceiver {
 	
 	private static final int BUFFER_SIZE = 64; 
 	
-	
 	/**
 	 * @param data buffer to check
 	 * @return data remaining
 	 */
-	byte [] lookForSync(byte [] data) {
+	private byte [] lookForSync(byte [] data) {
+		if (data == null || data.length < 1) {
+			return new byte[0];
+		}
         if (data[0] != MESSAGE_TX_SYNC) {
         	int index =  -1;
         	for (int i = 0 ; i < data.length ; i++) {
@@ -207,6 +217,70 @@ public class AntTransceiver extends AbstractAntTransceiver {
         }
         return data;
 	}
+	
+	// All this array copying inefficient but simple (could keep reference to current index instead)
+	private byte [] skipCurrentSync(byte [] data) {
+		if (data.length < 1) {
+			return new byte[0];
+		}
+		data = Arrays.copyOfRange(data, 1, data.length);
+		return data;
+	}
+	
+	void processBuffer(byte[] data) {
+        while ((data = lookForSync(data)).length > 0) {
+        	
+        	if (data.length <= MESSAGE_OFFSET_MSG_LENGTH ) {
+        		LOGGER.info("data length too small, checking next packet");
+        		// assume rest will arrive in next packet
+        		last = data;
+        		break;
+        	}
+        	
+            int msgLength = data[MESSAGE_OFFSET_MSG_LENGTH];
+            
+            // negative length does not make sense
+            if (msgLength < 0) {
+            	LOGGER.warning("msgLength appears to be incorrect (ignorning). Length : " + msgLength);
+            	data = skipCurrentSync(data);
+            	continue;
+            }
+            
+            int checkSumIndex = msgLength + 3;
+            
+            
+            if (checkSumIndex >= data.length) {
+                // unreasonably large checkSumIndex (dont span multiple buffers)
+                if (checkSumIndex >= BUFFER_SIZE -1) {
+                	LOGGER.warning("msgLength appears to be incorrect (ignorning). Length : " + msgLength);
+                	data = skipCurrentSync(data);
+                	continue;
+                }
+
+            	// we try assume continued in next buffer
+            	last = data;
+            	break;
+            }
+            
+            // data minus sync and checksum
+            byte [] cleanData = new byte[ msgLength + 2];
+            
+            for (int i = 0 ; i < msgLength + 2 ; i++) {
+              cleanData[i] = data[i + 1];
+            }
+            
+            if (getChecksum(cleanData) != data[checkSumIndex]) {
+             	LOGGER.warning("checksum incorrect : ignoring");
+             	data = skipCurrentSync(data);
+            	continue;
+            }
+            
+            AntTransceiver.this.broadcastRxMessage(cleanData);
+            // cleandata length + sync + checksum
+            data = Arrays.copyOfRange(data, cleanData.length + 2, data.length);
+        }
+	}
+	
 
     @Override
     public void run() {
@@ -234,45 +308,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
             	last = null;
             }
             
-            while ((data = lookForSync(data)).length > 0) {
-            	
-                int msgLength = data[MESSAGE_OFFSET_MSG_LENGTH];
-                
-                // negative length does not make sense
-                if (msgLength < 0) {
-                	LOGGER.warning("msgLength appears to be incorrect : ignoring" + msgLength);
-                	continue;
-                }
-                
-                int checkSumIndex = msgLength + 3;
-                
-                
-                if (checkSumIndex >= data.length) {
-                    // unreasonably large checkSumIndex (dont span multiple buffers)
-                    if (checkSumIndex >= BUFFER_SIZE -1) {
-                    	LOGGER.warning("msgLength appears to be incorrect : ignoring" + msgLength);
-                    	continue;
-                    }
-    
-                	// we try assume continued in next buffer
-                	last = data;
-                	break;
-                }
-                
-                // data minus sync and checksum
-                byte [] cleanData = new byte[ msgLength + 2];
-                
-                for (int i = 0 ; i < msgLength + 2 ; i++) {
-                  cleanData[i] = data[i + 1];
-                }
-                
-                if (getChecksum(cleanData) != data[checkSumIndex]) {
-                 	LOGGER.warning("checksum incorrect : ignoring");
-                	continue;
-                }
-                
-                AntTransceiver.this.broadcastRxMessage(cleanData);
-            }
+            processBuffer(data);
        
 
             

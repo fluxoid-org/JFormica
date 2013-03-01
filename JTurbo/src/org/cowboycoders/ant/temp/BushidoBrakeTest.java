@@ -48,6 +48,7 @@ import org.cowboycoders.ant.temp.BushidoBrakeModel.CalibrationState;
 import org.cowboycoders.ant.utils.AntLoggerImpl;
 import org.cowboycoders.ant.utils.ArrayUtils;
 import org.cowboycoders.ant.utils.ByteUtils;
+import org.cowboycoders.turbotrainers.Parameters;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoHeadunit;
 import org.cowboycoders.utils.SimpleCsvLogger;
@@ -479,8 +480,8 @@ public class BushidoBrakeTest {
 			} else {
 				wheelSpeed += 0.5;
 			}
-			b.setWeight(weight);
-			b.setSlope(slope);
+			Parameters.Builder builder = new Parameters.Builder(weight,0);
+			b.setParameters(builder.buildTargetSlope(slope));
 			model.setWheelSpeed(wheelSpeed);
 			
 							
@@ -565,8 +566,8 @@ private SimpleCsvLogger log;
     
     main = Thread.currentThread();
     
-    b.setSlope(slope);
-    b.setWeight(weight);
+	Parameters.Builder builder = new Parameters.Builder(weight,0);
+	b.setParameters(builder.buildTargetSlope(slope));
     
     doStartUp();
     
@@ -636,12 +637,15 @@ private SimpleCsvLogger log;
 				+ " slope: " + slope
 				);
 	    
+		// bodge
+		dataListener = dataListener2;
+		
 	    startHeadunit();
 	    
 	    main = Thread.currentThread();
 	    
-	    b.setSlope(slope);
-	    b.setWeight(weight);
+		Parameters.Builder builder = new Parameters.Builder(weight,0);
+		b.setParameters(builder.buildTargetSlope(slope));
 	    
 	    doStartUp();
 	    
@@ -724,39 +728,8 @@ private SimpleCsvLogger log;
 
 	    @Override
 	    public void onSpeedChange(double speed) {
+	    	
 	      virtualSpeed = speed;
-	      System.out.println("speed from headunit:" +speed);
-			if (speed == lastVirtualSpeed) {
-				if (weight > 120){
-				main.interrupt();
-			}				
-			log.update(weight,slope,power,speed,resistance);
-			if (power > 2000)
-			{
-				power = 0;
-				if (slope > 20) {
-					slope = -5;
-					weight += 5;
-				} else {
-					slope += 0.5;
-				}
-				
-			} else {
-				power += 10;
-			}
-			b.setWeight(weight);
-			b.setSlope(slope);
-			model.setPower(power);
-			//model.setWheelSpeed(wheelSpeed);
-			
-							
-		
-				
-				
-		
-			}
-			
-			lastVirtualSpeed = speed;
 	      
 	    }
 
@@ -787,6 +760,76 @@ private SimpleCsvLogger log;
 	    
 	    
 	  };
+	  
+	  TurboTrainerDataListener dataListener2 = new TurboTrainerDataListener() {
+
+		    @Override
+		    public void onSpeedChange(double speed) {
+		    	
+		    //FIXME: make sure ppower has actualy been sent ie check last val recieved is what we set
+		      virtualSpeed = speed;
+		      System.out.println("speed from headunit:" +speed);
+				if (speed == lastVirtualSpeed) {
+					if (weight > 120){
+					main.interrupt();
+				}				
+				log.update(weight,slope,power,speed,resistance);
+				if (power > 2000)
+				{
+					power = 0;
+					if (slope > 20) {
+						slope = -5;
+						weight += 5;
+					} else {
+						slope += 0.5;
+					}
+					
+				} else {
+					power += 10;
+				}
+				Parameters.Builder builder = new Parameters.Builder(weight,0);
+				b.setParameters(builder.buildTargetSlope(slope));
+				model.setPower(power);
+				//model.setWheelSpeed(wheelSpeed);
+				
+								
+			
+					
+					
+			
+				}
+				
+				lastVirtualSpeed = speed;
+		      
+		    }
+
+		    @Override
+		    public void onPowerChange(double power) {
+		      // TODO Auto-generated method stub
+		      
+		    }
+
+		    @Override
+		    public void onCadenceChange(double cadence) {
+		      // TODO Auto-generated method stub
+		      
+		    }
+
+		    @Override
+		    public void onDistanceChange(double distance) {
+		     //System.out.println("Distance: " + distance);
+		     //System.out.println("Distance real: " + b.getRealDistance());
+		      
+		    }
+
+		    @Override
+		    public void onHeartRateChange(double heartRate) {
+		      // TODO Auto-generated method stub
+		      
+		    }
+		    
+		    
+		  };
 
 	  BushidoHeadunit b;
 	  Node headunit;

@@ -51,11 +51,13 @@ import org.cowboycoders.ant.utils.AntLoggerImpl;
 import org.cowboycoders.ant.utils.ArrayUtils;
 import org.cowboycoders.ant.utils.ByteUtils;
 import org.cowboycoders.ant.utils.ChannelMessageSender;
+import org.cowboycoders.turbotrainers.Mode;
+import org.cowboycoders.turbotrainers.Parameters;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoBroadcastDataListener;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressListener;
-import org.cowboycoders.turbotrainers.bushido.headunit.BushidoData;
+import org.cowboycoders.turbotrainers.bushido.headunit.BushidoTargetSlopeModel;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoHeadunit;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor.Button;
 import org.junit.AfterClass;
@@ -97,6 +99,10 @@ public class BushidoTest {
     //Thread.sleep(1000);
   }
   
+  Parameters.Builder builder = new Parameters.Builder(65,10);
+  
+  double oldSlope = 0;
+  
   BushidoButtonPressListener buttonPressListener = new BushidoButtonPressListener() {
 
     @Override
@@ -104,10 +110,14 @@ public class BushidoTest {
       System.out.println("Button :" + descriptor.getButton());
       System.out.println("Duration :" + descriptor.getDuration());
       if(descriptor.getButton() == Button.UP) {
-        b.incrementSlope(5);
+    	double slope = 5 + oldSlope;
+        b.setParameters(builder.buildTargetSlope(slope));
+        oldSlope = slope;
         printSlope();
       } else if (descriptor.getButton() == Button.DOWN) {
-        b.decrementSlope(5);
+    	  double slope = -5 + oldSlope;
+          b.setParameters(builder.buildTargetSlope(slope));
+          oldSlope = slope;
         printSlope();
       }
       
@@ -119,7 +129,7 @@ public class BushidoTest {
     }
     
     public void printSlope() {
-      System.out.println("Slope: " + b.getSlope());
+      System.out.println("Slope: " + oldSlope);
   }
 
     
@@ -172,6 +182,7 @@ public class BushidoTest {
     b = new BushidoHeadunit(n);
     b.registerButtonPressListener(buttonPressListener);
     b.registerDataListener(dataListener);
+    b.setMode(Mode.TARGET_SLOPE);
     b.startConnection();
     b.resetOdometer();
     b.startCycling();
@@ -182,7 +193,7 @@ public class BushidoTest {
     //b.getMessageSender().sendMessage(msg);
     //b.getMessageSender().sendMessage(msg);
     //b.getMessageSender().sendMessage(msg);
-    Thread.sleep(10000);
+    Thread.sleep(20000);
     b.stop();
     n.stop();
   }

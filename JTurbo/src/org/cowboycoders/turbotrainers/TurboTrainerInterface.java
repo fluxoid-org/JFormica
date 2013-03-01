@@ -21,6 +21,8 @@ package org.cowboycoders.turbotrainers;
 
 import java.util.concurrent.TimeoutException;
 
+import org.cowboycoders.turbotrainers.Parameters.CommonParametersInterface;
+
 public interface TurboTrainerInterface {
 
   public abstract void registerDataListener(TurboTrainerDataListener listener);
@@ -34,12 +36,38 @@ public interface TurboTrainerInterface {
   public abstract boolean supportsCadence();
 
   public abstract boolean supportsHeartRate();
-
-  public abstract void setSlope(double gradient);
   
-  public abstract double getSlope();
-
-  public abstract void start() throws TurboCommunicationException, InterruptedException, TimeoutException;
+  /**
+   * Parameters which will be cast to a super type depending on mode
+   * @param parameters
+   * @throws IllegalArgumentException if parameter type doesn't match current mode
+   */
+  public abstract void setParameters(CommonParametersInterface parameters) throws IllegalArgumentException;
+  
+  public abstract Mode [] modesSupported();
+  
+  /**
+   * Must be called before start
+   * @param mode mode to use
+   * @throws IllegalArgumentException if mode not supported
+   * @throws IllegalStateException if called after start() 
+   */
+  public void setMode(Mode mode) throws IllegalArgumentException;
+  
+  /**
+   * Gets target value e.g power, slope
+   * @return target value or -1
+   */
+  public double getTarget();
+  
+  /**
+   * 
+   * @throws TurboCommunicationException cannot communicate with turbo trainer
+   * @throws InterruptedException if thread is interrupted during start up
+   * @throws TimeoutException can communicate with turbo trainer but it is not responding in a reasonable timeframe
+   * @throws IllegalStateException if mode is invalid
+   */
+  public abstract void start() throws TurboCommunicationException, InterruptedException, TimeoutException, IllegalStateException;
 
   public abstract void stop() throws InterruptedException, TimeoutException;
   
