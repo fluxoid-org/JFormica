@@ -42,6 +42,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
+import android.net.Uri;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 import android.test.mock.MockContentResolver;
@@ -62,9 +63,9 @@ import org.cowboycoders.cyclisimo.stats.TripStatistics;
  * @author Bartlomiej Niechwiej
  * @author Youtao Liu
  */
-public class MyTracksProviderUtilsImplTest extends AndroidTestCase {
+public class CyclismoProviderUtilsImplTest extends AndroidTestCase {
   private Context context;
-  private MyTracksProviderUtils providerUtils;
+  private CyclismoProviderUtils providerUtils;
   
   private static final String NAME_PREFIX = "test name";    
   private static final String MOCK_DESC = "Mock Next Waypoint Desc!";
@@ -73,6 +74,9 @@ public class MyTracksProviderUtilsImplTest extends AndroidTestCase {
   private double INITIAL_LATITUDE = 37.0;
   private double INITIAL_LONGITUDE = -57.0;
   private double ALTITUDE_INTERVAL = 2.5;
+  
+  private User dummyUser = new User();
+  
 
   @Override
   protected void setUp() throws Exception {
@@ -87,8 +91,18 @@ public class MyTracksProviderUtilsImplTest extends AndroidTestCase {
     mockContentResolver.addProvider(MyTracksProviderUtils.AUTHORITY, provider);
     setContext(context);
 
-    providerUtils = MyTracksProviderUtils.Factory.get(context);
+    providerUtils = MyTracksProviderUtils.Factory.getCyclimso(context);
     providerUtils.deleteAllTracks();
+    providerUtils.deleteAllUsers();
+    providerUtils.deleteAllBikes();
+    
+    dummyUser.setName("tony");
+    dummyUser.setWeight(90);
+    providerUtils.insertUser(dummyUser);
+    
+    //updated id
+    dummyUser = providerUtils.getAllUsers().get(0);
+    
   }
 
   public void testLocationIterator_noPoints() {
@@ -170,6 +184,7 @@ public class MyTracksProviderUtilsImplTest extends AndroidTestCase {
     track.setId(id);
     track.setName("Test: " + id);
     track.setNumberOfPoints(numPoints);
+    track.setOwner(dummyUser.getId());
     providerUtils.insertTrack(track);
     track = providerUtils.getTrack(id);
     assertNotNull(track);
@@ -238,6 +253,34 @@ public class MyTracksProviderUtilsImplTest extends AndroidTestCase {
     AndroidMock.verify(cursorMock);
   }
   
+  @UsesMocks(Cursor.class)
+  public void testCreateUser() {
+    Cursor cursorMock = AndroidMock.createNiceMock(Cursor.class);
+    int startColumnIndex = 1;
+    int columnIndex = startColumnIndex;
+    AndroidMock.expect(cursorMock.getColumnIndexOrThrow(UserInfoColumns._ID))
+        .andReturn(columnIndex++);
+    AndroidMock.expect(cursorMock.getColumnIndexOrThrow(UserInfoColumns.NAME)).andReturn(
+        columnIndex++);
+    columnIndex = startColumnIndex;
+    // Id
+    AndroidMock.expect(cursorMock.isNull(columnIndex++)).andReturn(false);
+    // Name
+    AndroidMock.expect(cursorMock.isNull(columnIndex++)).andReturn(false);
+    long userId = System.currentTimeMillis();
+    columnIndex = startColumnIndex;
+    // Id
+    AndroidMock.expect(cursorMock.getLong(columnIndex++)).andReturn(userId);
+    // Name
+    String name = NAME_PREFIX + Long.toString(userId);
+    AndroidMock.expect(cursorMock.getString(columnIndex++)).andReturn(name);
+    AndroidMock.replay(cursorMock);
+    User user = providerUtils.createUser(cursorMock,true);
+    assertEquals(userId, user.getId());
+    assertEquals(name, user.getName());
+    AndroidMock.verify(cursorMock);
+  }
+
   /**
    * Tests the method {@link MyTracksProviderUtilsImpl#deleteAllTracks()}
    */
@@ -279,7 +322,7 @@ public class MyTracksProviderUtilsImplTest extends AndroidTestCase {
     // Insert three tracks, points of two tracks and way point of one track.
     long trackId = System.currentTimeMillis();
     Track track = getTrack(trackId, 10);
-    
+    track.setOwner(dummyUser.getId());
     providerUtils.insertTrack(track);   
     insertTrackWithLocations(getTrack(trackId + 1, 10));
     insertTrackWithLocations(getTrack(trackId + 2, 10));
@@ -351,6 +394,7 @@ public class MyTracksProviderUtilsImplTest extends AndroidTestCase {
     String nameOld = "name1";
     String nameNew = "name2";
     track.setName(nameOld);
+    track.setOwner(dummyUser.getId());
     providerUtils.insertTrack(track);
     assertEquals(nameOld, providerUtils.getTrack(trackId).getName()); 
     track.setName(nameNew);
@@ -470,7 +514,7 @@ public class MyTracksProviderUtilsImplTest extends AndroidTestCase {
   
       @Override
       public String generateWaypointDescription(TripStatistics tripStatistics) {
-        return MyTracksProviderUtilsImplTest.MOCK_DESC;
+        return CyclismoProviderUtilsImplTest.MOCK_DESC;
       }
   
       @Override
@@ -525,7 +569,7 @@ public class MyTracksProviderUtilsImplTest extends AndroidTestCase {
     DescriptionGenerator descriptionGenerator = new DescriptionGenerator() {
       @Override
       public String generateWaypointDescription(TripStatistics tripStatistics) {
-        return MyTracksProviderUtilsImplTest.MOCK_DESC;
+        return CyclismoProviderUtilsImplTest.MOCK_DESC;
       }
   
       @Override
@@ -537,7 +581,7 @@ public class MyTracksProviderUtilsImplTest extends AndroidTestCase {
     providerUtils.deleteWaypoint(1, descriptionGenerator);
   
     assertNull(providerUtils.getWaypoint(1));
-    assertEquals(MyTracksProviderUtilsImplTest.MOCK_DESC, providerUtils.getWaypoint(2)
+    assertEquals(CyclismoProviderUtilsImplTest.MOCK_DESC, providerUtils.getWaypoint(2)
         .getDescription());
   }
 
@@ -879,6 +923,7 @@ public class MyTracksProviderUtilsImplTest extends AndroidTestCase {
     track.setId(id);
     track.setName("Test: " + id);
     track.setNumberOfPoints(numPoints);
+    track.setOwner(dummyUser.getId());
     for(int i = 0; i < numPoints; i++) {
       track.addLocation(createLocation(i));
     }
@@ -904,7 +949,7 @@ public class MyTracksProviderUtilsImplTest extends AndroidTestCase {
    * Checks the value of a location.
    * 
    * @param i the index of this location which created in the method
-   *          {@link MyTracksProviderUtilsImplTest#getTrack(long, int)}
+   *          {@link CyclismoProviderUtilsImplTest#getTrack(long, int)}
    * @param location the location to be checked
    */
   private void checkLocation(int i, Location location) {
@@ -920,8 +965,172 @@ public class MyTracksProviderUtilsImplTest extends AndroidTestCase {
    * @param track track to be inserted
    */
   private void insertTrackWithLocations(Track track) {
+    track.setOwner(dummyUser.getId());
     providerUtils.insertTrack(track);
     providerUtils.bulkInsertTrackPoint(track.getLocations().toArray(new Location[0]), track
         .getLocations().size(), track.getId());
   }
+  
+  public void test_insertUser() {
+    final String name = "dave";
+    final double weight = 90.9;
+    final double leeway = 0.001;
+    User user = new User();
+    user.setName(name);
+    user.setWeight(weight);
+    Uri userUri = providerUtils.insertUser(user);
+    long userId = Long.parseLong(userUri.getLastPathSegment());
+    assertEquals(name,providerUtils.getUser(userId).getName());
+    assertEquals(weight,providerUtils.getUser(userId).getWeight(),leeway);
+  }
+  
+
+  
+  public void test_updateUser() {
+    User user = providerUtils.getUser(dummyUser.getId());
+    final String newName = "clarence";
+    user.setName(newName);
+    providerUtils.updateUser(user);
+    assertEquals(newName, providerUtils.getUser(user.getId()).getName());
+    // TODO: update other fields
+  }
+  
+  public void test_deleteUser() {
+    // inserts one user
+    test_insertUser();
+    final int numUsers = providerUtils.getAllUsers().size();
+    User user = providerUtils.getAllUsers().get(0);
+    providerUtils.deleteUser(user.getId());
+    assertEquals(numUsers - 1, providerUtils.getAllUsers().size());
+  }
+  
+  public void test_deleteAllUsers() {
+    test_insertUser();
+    final int numUsers = providerUtils.getAllUsers().size();
+    assertEquals(true, numUsers > 1);
+    providerUtils.deleteAllUsers();
+    assertEquals(0, providerUtils.getAllUsers().size());
+  }
+  
+  public void test_insertBike() {
+    final String name = "dave";
+    final double weight = 90.9;
+    final double leeway = 0.001;
+    final boolean shared = true;
+    final long owner = dummyUser.getId();
+    
+    Bike bike = new Bike();
+    bike.setName(name);
+    bike.setWeight(weight);
+    bike.setOwnerId(owner);
+    bike.setShared(shared);
+    Uri uri = providerUtils.insertBike(bike);
+    assertNotNull(uri);
+    long bikeId = Long.parseLong(uri.getLastPathSegment());
+    assertNotSame(-1L,bikeId);
+    assertNotNull(providerUtils.getBike(bikeId));
+    assertEquals(name,providerUtils.getBike(bikeId).getName());
+    assertEquals(weight,providerUtils.getBike(bikeId).getWeight(),leeway);
+    assertEquals(shared,providerUtils.getBike(bikeId).isShared());
+    assertEquals(owner,providerUtils.getBike(bikeId).getOwnerId());
+  }
+  
+  public void test_updateBike() {
+    test_insertBike();
+    Bike bike = providerUtils.getAllBikes().get(0);
+    bike.setShared(false);
+    providerUtils.updateBike(bike);
+    assertEquals(false, providerUtils.getBike(bike.getId()).isShared());
+    bike.setShared(true);
+    providerUtils.updateBike(bike);
+    assertEquals(true, providerUtils.getBike(bike.getId()).isShared());
+    // TODO test other fields
+  }
+  
+  public void test_deleteBike() {
+    // inserts one bike
+    test_insertBike();
+    Bike bike = providerUtils.getAllBikes().get(0);
+    providerUtils.deleteBike(bike.getId());
+    assertEquals(0, providerUtils.getAllBikes().size());
+  }
+  
+  public void test_deleteAllBikes() {
+    // inserts one bike
+    test_insertBike();
+    test_insertBike();
+    assertEquals(2,providerUtils.getAllBikes().size());
+    providerUtils.deleteAllBikes();
+    assertEquals(0, providerUtils.getAllBikes().size());
+  }
+  
+  /*
+   * test that all tracks and bikes are deleted when all users are deleted 
+   */
+  public void test_userCleanUp() {
+    
+    // inserts some bikes belonging to dummy user
+    for (int i = 0; i< 10 ; i++) {
+      test_insertBike();
+    }
+    // insert some tracks belonging to dummy user
+    for (int i =0; i < 10 ; i++) {
+      long trackId = System.currentTimeMillis();
+      Track track = getTrack(trackId, 10);
+      insertTrackWithLocations(track);
+    }
+    
+    providerUtils.deleteAllUsers();
+    
+    assertEquals(0,providerUtils.getAllTracks().size());
+    assertEquals(0,providerUtils.getAllBikes().size());
+    
+    
+  }
+  
+  public void test_userCleanUp2() {
+    
+    // inserts some bikes belonging to dummy user
+    for (int i = 0; i< 10 ; i++) {
+      test_insertBike();
+    }
+    // insert some tracks belonging to dummy user
+    for (int i =0; i < 10 ; i++) {
+      long trackId = System.currentTimeMillis();
+      Track track = getTrack(trackId, 10);
+      insertTrackWithLocations(track);
+    }
+    
+    final String name = "dave";
+    final double weight = 90.9;
+    final double leeway = 0.001;
+    User user = new User();
+    user.setName(name);
+    user.setWeight(weight);
+    Uri userUri = providerUtils.insertUser(user);
+    long userId = Long.parseLong(userUri.getLastPathSegment());
+    user = providerUtils.getUser(userId);
+    
+    // make one bike belong to diff user
+    Bike bike = providerUtils.getAllBikes().get(0);
+    bike.setOwnerId(userId);
+    providerUtils.updateBike(bike);
+    
+    // make one track belong to diff user
+    Track track = providerUtils.getAllTracks().get(0);
+    track.setOwner(userId);
+    providerUtils.updateTrack(track);
+    
+    assertEquals(1,providerUtils.getAllTracks(user).size());
+    assertEquals(1,providerUtils.getAllBikes(user).size());
+    
+    providerUtils.deleteUser(dummyUser.getId());
+    
+    assertEquals(1,providerUtils.getAllTracks().size());
+    assertEquals(1,providerUtils.getAllBikes().size());
+    
+    
+  }
+  
+  
 }

@@ -11,8 +11,9 @@ public interface CyclismoProviderUtils extends MyTracksProviderUtils {
   * Creates a {@link User} from a cursor.
   * 
   * @param cursor the cursor pointing to the user
+  * @param allFieldsMustBePresent true to enforce that all fields must be populated
   */
- public User createUser(Cursor cursor);
+ public User createUser(Cursor cursor, boolean allFieldsMustBePresent);
 
  /**
   * Deletes all users (including waypoints and user points).
@@ -77,8 +78,9 @@ public interface CyclismoProviderUtils extends MyTracksProviderUtils {
  * Creates a {@link Bike} from a cursor.
  * 
  * @param cursor the cursor pointing to the bike
+ * @param allFieldsMustBePresent true to enforce that all fields must be populated
  */
-public Bike createBike(Cursor cursor);
+public Bike createBike(Cursor cursor, boolean allFieldsMustBePresent);
 
 /**
  * Deletes all bikes (including waypoints and bike points).
@@ -99,10 +101,6 @@ public void deleteBike(long bikeId);
  */
 public List<Bike> getAllBikes();
 
-/**
- * Gets the last bike. Returns null if doesn't exist.
- */
-public Bike getLastBike();
 
 /**
  * Gets a bike by a bike id. Returns null if not found.
@@ -141,6 +139,32 @@ public Uri insertBike(Bike bike);
  * @param bike the bike
  */
 public void updateBike(Bike bike);
+
+/**
+ * Deletes all bikes belong to a particular user
+ * @param user the user whose bikes you wish to delete
+ */
+void deleteAllBikes(User user);
+
+/**
+ * Gets all bikes which are shared (multiple people are allowed to use them)
+ * @return
+ */
+List<Bike> getAllSharedBikes();
+
+/**
+ * Gets all bikes belonging to a specific user
+ * @param user
+ * @return
+ */
+List<Bike> getAllBikes(User user);
+
+/**
+ * Get all tracks that are linked to a certain user
+ * @param user
+ * @return
+ */
+public List<Track>getAllTracks(User user);
 
 
 

@@ -73,7 +73,7 @@ public class BushidoBrakeController extends AntTurboTrainer {
 
 	private Lock requestDataLock = new ReentrantLock();
 	private boolean requestDataInProgess = false;
-	private BushidoBrakeSlopeController slopeController; 
+	private PowrModelSlopeController slopeController; 
 
 	private Runnable requestDataCallback = new Runnable() {
 
@@ -338,7 +338,7 @@ public class BushidoBrakeController extends AntTurboTrainer {
 				updatesListener);
 		this.registerChannelRxListener(dataListener, BroadcastDataMessage.class);
 		
-		slopeController = new BushidoBrakeSlopeController(model);
+		slopeController = new PowrModelSlopeController(model);
 		
 		this.registerDataListener(slopeController);
 	}

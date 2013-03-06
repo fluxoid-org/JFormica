@@ -40,12 +40,6 @@ import static org.cowboycoders.cyclisimo.Constants.MAX_LOCATION_AGE_MS;
 import static org.cowboycoders.cyclisimo.Constants.MAX_NETWORK_AGE_MS;
 import static org.cowboycoders.cyclisimo.Constants.TARGET_DISPLAYED_TRACK_POINTS;
 
-import org.cowboycoders.cyclisimo.content.MyTracksCourseProviderUtils;
-import org.cowboycoders.cyclisimo.content.MyTracksProviderUtils;
-import org.cowboycoders.cyclisimo.content.Track;
-import org.cowboycoders.cyclisimo.content.Waypoint;
-import org.cowboycoders.cyclisimo.content.MyTracksProviderUtils.LocationIterator;
-import org.cowboycoders.cyclisimo.R;
 import com.google.common.annotations.VisibleForTesting;
 
 import android.content.Context;
@@ -62,8 +56,9 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import org.cowboycoders.cyclisimo.Constants;
+import org.cowboycoders.cyclisimo.R;
+import org.cowboycoders.cyclisimo.content.MyTracksProviderUtils.LocationIterator;
 import org.cowboycoders.cyclisimo.content.TrackDataListener.LocationState;
-import org.cowboycoders.cyclisimo.util.ExceptionUtils;
 import org.cowboycoders.cyclisimo.util.LocationUtils;
 import org.cowboycoders.cyclisimo.util.PreferencesUtils;
 
@@ -863,11 +858,11 @@ public class TrackDataHub implements DataSourceListener {
    */
   protected void setSelectedTrackId(long selectedTrackId) {
     if (selectedTrackId == -1) {
-      try {
-       throw new Exception();
-      }catch (Exception e) {
-        Log.e(TAG,ExceptionUtils.getStackTraceAsString(e));
-      }
+//      try {
+//       throw new Exception();
+//      }catch (Exception e) {
+//        Log.e(TAG,ExceptionUtils.getStackTraceAsString(e));
+//      }
     }
     this.selectedTrackId = selectedTrackId;
   }

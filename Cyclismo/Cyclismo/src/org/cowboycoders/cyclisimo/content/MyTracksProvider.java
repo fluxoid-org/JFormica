@@ -124,7 +124,7 @@ public class MyTracksProvider extends ContentProvider {
 //          db.execSQL(
 //              "ALTER TABLE " + TracksColumns.TABLE_NAME + " ADD " + TracksColumns.ICON + " STRING");
 //        }
-        
+        onCreate(db);
       }
     }
   }

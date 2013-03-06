@@ -36,10 +36,6 @@ package org.cowboycoders.cyclisimo.io.backup;
 
 import static org.cowboycoders.cyclisimo.Constants.TAG;
 
-import org.cowboycoders.cyclisimo.content.TrackPointsColumns;
-import org.cowboycoders.cyclisimo.content.TracksColumns;
-import org.cowboycoders.cyclisimo.content.WaypointsColumns;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -63,6 +59,11 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import org.cowboycoders.cyclisimo.Constants;
+import org.cowboycoders.cyclisimo.content.BikeInfoColumns;
+import org.cowboycoders.cyclisimo.content.TrackPointsColumns;
+import org.cowboycoders.cyclisimo.content.TracksColumns;
+import org.cowboycoders.cyclisimo.content.UserInfoColumns;
+import org.cowboycoders.cyclisimo.content.WaypointsColumns;
 import org.cowboycoders.cyclisimo.util.FileUtils;
 
 /**
@@ -183,6 +184,14 @@ class ExternalFileBackup {
         TrackPointsColumns.COLUMNS,
         TrackPointsColumns.COLUMN_TYPES,
         false);
+    DatabaseDumper userDumper = new DatabaseDumper(
+        UserInfoColumns.COLUMNS,
+        UserInfoColumns.COLUMN_TYPES,
+        false);
+    DatabaseDumper bikeDumper = new DatabaseDumper(
+        BikeInfoColumns.COLUMNS,
+        BikeInfoColumns.COLUMN_TYPES,
+        false);
 
     // Open the target for writing
     FileOutputStream outputStream = new FileOutputStream(outputFile);
@@ -192,8 +201,26 @@ class ExternalFileBackup {
     DataOutputStream outWriter = new DataOutputStream(compressedStream);
 
     try {
+      
       // Dump the entire contents of each table
       ContentResolver contentResolver = context.getContentResolver();
+      
+      Cursor userCursor = contentResolver.query(
+          UserInfoColumns.CONTENT_URI, null, null, null, null);
+      try {
+        userDumper.writeAllRows(userCursor, outWriter);
+      } finally {
+        userCursor.close();
+      }
+      
+      Cursor bikeCursor = contentResolver.query(
+          BikeInfoColumns.CONTENT_URI, null, null, null, null);
+      try {
+        bikeDumper.writeAllRows(bikeCursor, outWriter);
+      } finally {
+        bikeCursor.close();
+      }
+      
       Cursor tracksCursor = contentResolver.query(
           TracksColumns.CONTENT_URI, null, null, null, null);
       try {
@@ -217,6 +244,8 @@ class ExternalFileBackup {
       } finally {
         pointsCursor.close();
       }
+      
+      
 
       // Dump preferences
       SharedPreferences preferences = context.getSharedPreferences(
@@ -245,6 +274,10 @@ class ExternalFileBackup {
 
     PreferenceBackupHelper preferencesHelper = new PreferenceBackupHelper(context);
     ContentResolver resolver = context.getContentResolver();
+    DatabaseImporter userImporter =
+        new DatabaseImporter(UserInfoColumns.CONTENT_URI, resolver, false);
+    DatabaseImporter bikeImporter =
+        new DatabaseImporter(BikeInfoColumns.CONTENT_URI, resolver, false);
     DatabaseImporter trackImporter =
         new DatabaseImporter(TracksColumns.CONTENT_URI, resolver, false);
     DatabaseImporter waypointImporter =
@@ -266,8 +299,12 @@ class ExternalFileBackup {
       resolver.delete(TracksColumns.CONTENT_URI, null, null);
       resolver.delete(TrackPointsColumns.CONTENT_URI, null, null);
       resolver.delete(WaypointsColumns.CONTENT_URI, null, null);
+      resolver.delete(UserInfoColumns.CONTENT_URI, null, null);
+      resolver.delete(BikeInfoColumns.CONTENT_URI, null, null);
 
       // Import the new contents of each table
+      userImporter.importAllRows(reader);
+      bikeImporter.importAllRows(reader);
       trackImporter.importAllRows(reader);
       waypointImporter.importAllRows(reader);
       pointImporter.importAllRows(reader);

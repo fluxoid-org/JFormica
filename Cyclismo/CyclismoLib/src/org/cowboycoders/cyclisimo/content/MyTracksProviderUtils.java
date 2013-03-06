@@ -92,6 +92,7 @@ public interface MyTracksProviderUtils {
    * Note that the returned tracks do not have any track points attached.
    */
   public List<Track> getAllTracks();
+  
 
   /**
    * Gets the last track. Returns null if doesn't exist.
@@ -364,6 +365,15 @@ public interface MyTracksProviderUtils {
     public static MyTracksProviderUtils get(Context context) {
       return instance.newForContext(context);
     }
+    
+    public static CyclismoProviderUtils getCyclimso(Context context) {
+      return instance.newCyclimsoForContext(context);
+    }
+    
+    public static MyTracksCourseProviderUtils getCourseProvider(Context context) {
+      return instance.newCourseUtilsForContext(context);
+    }
+    
 
     /**
      * Returns the factory instance.
@@ -390,6 +400,14 @@ public interface MyTracksProviderUtils {
      */
     protected MyTracksProviderUtils newForContext(Context context) {
       return new MyTracksProviderUtilsImpl(context.getContentResolver());
+    }
+    
+    protected CyclismoProviderUtils newCyclimsoForContext(Context context) {
+      return new CyclimsoProviderUtilsImpl(context.getContentResolver());
+    }
+    
+    protected MyTracksCourseProviderUtils newCourseUtilsForContext(Context context) {
+      return new MyTracksCourseProviderUtils(context.getContentResolver());
     }
   }
 }

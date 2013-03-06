@@ -18,7 +18,7 @@ import org.cowboycoders.utils.FixedPeriodUpdater;
 import org.cowboycoders.utils.SlopeTimeAverager;
 import org.cowboycoders.utils.UpdateCallback;
 
-public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
+public class PowrModelSlopeController implements TurboTrainerDataListener {
 	
 	private static final int  POWER_MODEL_UPDATE_PERIOD_MS = 100; // milli-seconds
 	
@@ -54,7 +54,7 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 	
 	private SlopeTimeAverager actualSpeedSlopeAverager = new SlopeTimeAverager();
 	
-	public BushidoBrakeSlopeController(BushidoData bushidoModel) {
+	public PowrModelSlopeController(BushidoData bushidoModel) {
 		this.bushidoDataModel = bushidoModel;
 		bushidoDataModel.setResistance(getEstimatedResistance());
 		actualSpeedSlopeAverager.setThreshold(ACTUAL_SPEED_STEADY_STATE_THRESHOLD, -ACTUAL_SPEED_STEADY_STATE_THRESHOLD);
@@ -222,7 +222,7 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 		// double non-atomic?
 		try {
 			speedUpdateLock.lock();
-			BushidoBrakeSlopeController.this.predictedSpeed = newValue;
+			PowrModelSlopeController.this.predictedSpeed = newValue;
 			// gradient averager
 			predictedSpeedSlopeAverager.add(predictedSpeed);
 		} finally {
@@ -245,7 +245,7 @@ public class BushidoBrakeSlopeController implements TurboTrainerDataListener {
 		// double non-atomic?
 		try {
 			speedUpdateLock.lock();
-			BushidoBrakeSlopeController.this.actualSpeed = newValue;
+			PowrModelSlopeController.this.actualSpeed = newValue;
 			actualSpeedSlopeAverager.add(actualSpeed);
 		} finally {
 			speedUpdateLock.unlock();

@@ -74,6 +74,6 @@ public class UriUtils {
   public static boolean isFileUri(Uri uri) {
     return "file".equals(uri.getScheme());
   }
-
+  
   private UriUtils() {}
 }

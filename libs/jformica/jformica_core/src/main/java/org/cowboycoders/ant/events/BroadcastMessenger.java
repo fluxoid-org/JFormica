@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -38,6 +39,8 @@ import org.cowboycoders.ant.SharedThreadPool;
  *
  */
 public class BroadcastMessenger<V> {
+	
+  private static final ExecutorService SHARED_SINGLE_THREAD_EXECUTOR = Executors.newSingleThreadExecutor();
   
   /**
    * Used to concurrently notify listeners
@@ -59,7 +62,7 @@ public class BroadcastMessenger<V> {
    * Backed by an unbounded {@see java.util.concurrent.ThreadPoolExecutor}
    */
   public BroadcastMessenger() {
-    dispatchPool = SharedThreadPool.getThreadPool();
+	  dispatchPool = SHARED_SINGLE_THREAD_EXECUTOR;
   }
   
  /**

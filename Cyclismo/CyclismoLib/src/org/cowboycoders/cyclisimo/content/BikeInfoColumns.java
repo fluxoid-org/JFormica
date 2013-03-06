@@ -43,7 +43,7 @@ public interface BikeInfoColumns extends BaseColumns {
   public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" 
       + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
       + NAME + " STRING, " 
-      + SHARED + " BOOLEAN, "
+      + SHARED + " INTEGER, "
       + OWNER + " INTEGER REFERENCES " + UserInfoColumns.TABLE_NAME + " ON DELETE CASCADE ON UPDATE CASCADE" + ", "
       + WEIGHT + " FLOAT"
       //+ "FOREIGN KEY(" + OWNER +") REFERENCES " + UserInfoColumns.TABLE_NAME +"(" + UserInfoColumns._ID +") "

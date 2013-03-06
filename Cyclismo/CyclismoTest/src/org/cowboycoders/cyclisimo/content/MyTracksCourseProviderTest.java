@@ -35,16 +35,10 @@
 package org.cowboycoders.cyclisimo.content;
 
 
-import org.cowboycoders.cyclisimo.content.CourseTrackPointsColumns;
-import org.cowboycoders.cyclisimo.content.CourseTracksColumns;
-import org.cowboycoders.cyclisimo.content.CourseWaypointsColumns;
-
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.test.AndroidTestCase;
 
-import org.cowboycoders.cyclisimo.content.MyTracksCourseProvider;
-import org.cowboycoders.cyclisimo.content.MyTracksProvider;
 import org.cowboycoders.cyclisimo.content.MyTracksProvider.DatabaseHelper;
 
 /**
@@ -76,78 +70,78 @@ public class MyTracksCourseProviderTest extends AndroidTestCase {
     assertTrue(checkTable(CourseWaypointsColumns.TABLE_NAME));
   }
 
-  /**
-   * Tests the method
-   * {@link MyTracksProvider.DatabaseHelper#onUpgrade(SQLiteDatabase, int, int)}
-   * when version is less than 17.
-   */
-  public void testDatabaseHelper_onUpgrade_Version16() {
-    DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-    dropTable(CourseTrackPointsColumns.TABLE_NAME);
-    dropTable(CourseTracksColumns.TABLE_NAME);
-    dropTable(CourseWaypointsColumns.TABLE_NAME);
-    databaseHelper.onUpgrade(db, 16, 20);
-    assertTrue(checkTable(CourseTrackPointsColumns.TABLE_NAME));
-    assertTrue(checkTable(CourseTracksColumns.TABLE_NAME));
-    assertTrue(checkTable(CourseWaypointsColumns.TABLE_NAME));
-  }
-
-  /**
-   * Tests the method
-   * {@link MyTracksProvider.DatabaseHelper#onUpgrade(SQLiteDatabase, int, int)}
-   * when version is 17.
-   */
-  public void testDatabaseHelper_onUpgrade_Version17() {
-    DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-
-    // Make two table is only contains one normal integer column.
-    dropTable(CourseTrackPointsColumns.TABLE_NAME);
-    dropTable(CourseTracksColumns.TABLE_NAME);
-    createEmptyTable(CourseTrackPointsColumns.TABLE_NAME);
-    createEmptyTable(CourseTracksColumns.TABLE_NAME);
-    databaseHelper.onUpgrade(db, 17, 20);
-    assertTrue(isColumnExisted(CourseTrackPointsColumns.TABLE_NAME, CourseTrackPointsColumns.SENSOR));
-    assertTrue(isColumnExisted(CourseTracksColumns.TABLE_NAME, CourseTracksColumns.TABLEID));
-    assertTrue(isColumnExisted(CourseTracksColumns.TABLE_NAME, CourseTracksColumns.ICON));
-  }
-
-  /**
-   * Tests the method
-   * {@link MyTracksProvider.DatabaseHelper#onUpgrade(SQLiteDatabase, int, int)}
-   * when version is 18.
-   */
-  public void testDatabaseHelper_onUpgrade_Version18() {
-    DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-
-    // Make two table is only contains one normal integer column.
-    dropTable(CourseTrackPointsColumns.TABLE_NAME);
-    dropTable(CourseTracksColumns.TABLE_NAME);
-    createEmptyTable(CourseTrackPointsColumns.TABLE_NAME);
-    createEmptyTable(CourseTracksColumns.TABLE_NAME);
-    databaseHelper.onUpgrade(db, 18, 20);
-    assertFalse(isColumnExisted(CourseTrackPointsColumns.TABLE_NAME, CourseTrackPointsColumns.SENSOR));
-    assertTrue(isColumnExisted(CourseTracksColumns.TABLE_NAME, CourseTracksColumns.TABLEID));
-    assertTrue(isColumnExisted(CourseTracksColumns.TABLE_NAME, CourseTracksColumns.ICON));
-  }
-
-  /**
-   * Tests the method
-   * {@link MyTracksProvider.DatabaseHelper#onUpgrade(SQLiteDatabase, int, int)}
-   * when version is 19.
-   */
-  public void testDatabaseHelper_onUpgrade_Version19() {
-    DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-
-    // Make two table is only contains one normal integer column.
-    dropTable(CourseTrackPointsColumns.TABLE_NAME);
-    dropTable(CourseTracksColumns.TABLE_NAME);
-    createEmptyTable(CourseTrackPointsColumns.TABLE_NAME);
-    createEmptyTable(CourseTracksColumns.TABLE_NAME);
-    databaseHelper.onUpgrade(db, 19, 20);
-    assertFalse(isColumnExisted(CourseTrackPointsColumns.TABLE_NAME, CourseTrackPointsColumns.SENSOR));
-    assertFalse(isColumnExisted(CourseTracksColumns.TABLE_NAME, CourseTracksColumns.TABLEID));
-    assertTrue(isColumnExisted(CourseTracksColumns.TABLE_NAME, CourseTracksColumns.ICON));
-  }
+//  /**
+//   * Tests the method
+//   * {@link MyTracksProvider.DatabaseHelper#onUpgrade(SQLiteDatabase, int, int)}
+//   * when version is less than 17.
+//   */
+//  public void testDatabaseHelper_onUpgrade_Version16() {
+//    DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
+//    dropTable(CourseTrackPointsColumns.TABLE_NAME);
+//    dropTable(CourseTracksColumns.TABLE_NAME);
+//    dropTable(CourseWaypointsColumns.TABLE_NAME);
+//    databaseHelper.onUpgrade(db, 16, 20);
+//    assertTrue(checkTable(CourseTrackPointsColumns.TABLE_NAME));
+//    assertTrue(checkTable(CourseTracksColumns.TABLE_NAME));
+//    assertTrue(checkTable(CourseWaypointsColumns.TABLE_NAME));
+//  }
+//
+//  /**
+//   * Tests the method
+//   * {@link MyTracksProvider.DatabaseHelper#onUpgrade(SQLiteDatabase, int, int)}
+//   * when version is 17.
+//   */
+//  public void testDatabaseHelper_onUpgrade_Version17() {
+//    DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
+//
+//    // Make two table is only contains one normal integer column.
+//    dropTable(CourseTrackPointsColumns.TABLE_NAME);
+//    dropTable(CourseTracksColumns.TABLE_NAME);
+//    createEmptyTable(CourseTrackPointsColumns.TABLE_NAME);
+//    createEmptyTable(CourseTracksColumns.TABLE_NAME);
+//    databaseHelper.onUpgrade(db, 17, 20);
+//    assertTrue(isColumnExisted(CourseTrackPointsColumns.TABLE_NAME, CourseTrackPointsColumns.SENSOR));
+//    assertTrue(isColumnExisted(CourseTracksColumns.TABLE_NAME, CourseTracksColumns.TABLEID));
+//    assertTrue(isColumnExisted(CourseTracksColumns.TABLE_NAME, CourseTracksColumns.ICON));
+//  }
+//
+//  /**
+//   * Tests the method
+//   * {@link MyTracksProvider.DatabaseHelper#onUpgrade(SQLiteDatabase, int, int)}
+//   * when version is 18.
+//   */
+//  public void testDatabaseHelper_onUpgrade_Version18() {
+//    DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
+//
+//    // Make two table is only contains one normal integer column.
+//    dropTable(CourseTrackPointsColumns.TABLE_NAME);
+//    dropTable(CourseTracksColumns.TABLE_NAME);
+//    createEmptyTable(CourseTrackPointsColumns.TABLE_NAME);
+//    createEmptyTable(CourseTracksColumns.TABLE_NAME);
+//    databaseHelper.onUpgrade(db, 18, 20);
+//    assertFalse(isColumnExisted(CourseTrackPointsColumns.TABLE_NAME, CourseTrackPointsColumns.SENSOR));
+//    assertTrue(isColumnExisted(CourseTracksColumns.TABLE_NAME, CourseTracksColumns.TABLEID));
+//    assertTrue(isColumnExisted(CourseTracksColumns.TABLE_NAME, CourseTracksColumns.ICON));
+//  }
+//
+//  /**
+//   * Tests the method
+//   * {@link MyTracksProvider.DatabaseHelper#onUpgrade(SQLiteDatabase, int, int)}
+//   * when version is 19.
+//   */
+//  public void testDatabaseHelper_onUpgrade_Version19() {
+//    DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
+//
+//    // Make two table is only contains one normal integer column.
+//    dropTable(CourseTrackPointsColumns.TABLE_NAME);
+//    dropTable(CourseTracksColumns.TABLE_NAME);
+//    createEmptyTable(CourseTrackPointsColumns.TABLE_NAME);
+//    createEmptyTable(CourseTracksColumns.TABLE_NAME);
+//    databaseHelper.onUpgrade(db, 19, 20);
+//    assertFalse(isColumnExisted(CourseTrackPointsColumns.TABLE_NAME, CourseTrackPointsColumns.SENSOR));
+//    assertFalse(isColumnExisted(CourseTracksColumns.TABLE_NAME, CourseTracksColumns.TABLEID));
+//    assertTrue(isColumnExisted(CourseTracksColumns.TABLE_NAME, CourseTracksColumns.ICON));
+//  }
 
   /**
    * Tests the method {@link MyTracksProvider#onCreate()}.

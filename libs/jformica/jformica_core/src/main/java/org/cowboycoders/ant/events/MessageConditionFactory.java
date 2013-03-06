@@ -137,7 +137,7 @@ public class MessageConditionFactory {
       
       @Override
       public boolean test(StandardMessage msg) {
-    	// if we have are re-testing after all conditions have returned true  
+    	// if we are re-testing after all conditions have returned true  
     	if (!(currentIndex < conditions.length)) {
     		return success;
     	}
