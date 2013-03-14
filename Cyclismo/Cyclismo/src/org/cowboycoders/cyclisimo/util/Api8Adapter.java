@@ -156,4 +156,12 @@ public class Api8Adapter implements ApiAdapter {
     // Return false and allow the framework to handle the search key.
     return false;
   }
+
+  @Override
+  public void configureListViewContextualMenu(Activity activity, ListView listView,
+      ContextualActionModeCallback contextualActionModeCallback, int contextMenuId) {
+    activity.registerForContextMenu(listView);
+  }
+
+
 }

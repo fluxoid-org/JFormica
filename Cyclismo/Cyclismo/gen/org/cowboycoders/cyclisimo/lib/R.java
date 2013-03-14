@@ -22,6 +22,6 @@ public final class R {
 		public static final int track_resumed_broadcast_action = 0x7f060016;
 	}
 	public static final class drawable {
-		public static final int my_tracks_icon = 0x7f020026;
+		public static final int my_tracks_icon = 0x7f020027;
 	}
 }

@@ -15,10 +15,13 @@ public class User implements Parcelable {
   
   private double weight = -1l;
   
+  private long currentlySelectedBike = -1l; 
+  
   private User(Parcel in) {
     id = in.readLong();
     name = in.readString();
     weight = in.readDouble();
+    currentlySelectedBike = in.readLong();
   }
   
   
@@ -32,6 +35,7 @@ public class User implements Parcelable {
     dest.writeLong(id);
     dest.writeString(name);
     dest.writeDouble(weight);
+    dest.writeLong(currentlySelectedBike);
   }
   
   public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
@@ -89,9 +93,16 @@ public class User implements Parcelable {
   public void setId(long id) {
     this.id = id;
   }
-  
 
-  
+
+  public long getCurrentlySelectedBike() {
+    return currentlySelectedBike;
+  }
+
+
+  public void setCurrentlySelectedBike(long currentlySelectedBike) {
+    this.currentlySelectedBike = currentlySelectedBike;
+  }
   
 
 }

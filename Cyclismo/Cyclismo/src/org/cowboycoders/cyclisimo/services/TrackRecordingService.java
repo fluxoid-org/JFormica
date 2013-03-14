@@ -577,9 +577,12 @@ public class TrackRecordingService extends Service {
     long now = System.currentTimeMillis();
     trackTripStatisticsUpdater = new TripStatisticsUpdater(now);
     markerTripStatisticsUpdater = new TripStatisticsUpdater(now);
+    
+    long currentUserId = PreferencesUtils.getLong(this, R.string.settings_select_user_current_selection_key);
 
     // Insert a track
     Track track = new Track();
+    track.setOwner(currentUserId);
     Uri uri = myTracksProviderUtils.insertTrack(track);
     long trackId = Long.parseLong(uri.getLastPathSegment());
 

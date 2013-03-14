@@ -62,7 +62,7 @@ limitations under the License.
   <string name="voice_frequency_key">voiceFrequency</string>
   <string name="course_mode">courseMode</string>
   <string name="course_track_id">courseSelectedTrackId</string>
-  
+  <string name="course_bike_id">courseSelectedBikeId</string>
         
   <!-- Keys for persistend preferences. But they should not get backed up or restored. -->
   <string name="auto_resume_track_current_retry_key">autoResumeTrackCurrentRetry</string>
@@ -96,4 +96,24 @@ limitations under the License.
   <string name="settings_sensor_root_key">settingsSensorRoot</string>
   <string name="settings_sharing_key">settingsSharing</string>
   <string name="settings_stats_key">settingsStats</string>
+  
+  <!-- Generic turbo preferences screen keys -->
+ <string name="settings_turbotrainer_generic_root_key">settingsGenericTurboRootKey</string>
+ <string name="settings_turbotrainer_generic_scale_factor_name">settingsGenericTurboScaleName</string>
+ <string name="settings_turbotrainer_generic_scale_factor_key">settingsGenericTurboScaleKey</string>
+ <!--  generic turbo settings menu key -->
+ <string name="settings_generic_turbo_key">settingsGenericTurboKey</string>
+ 
+ <!-- Select user main settings menu key -->
+ <string name="settings_select_user_key">settingsSelectUserMainMenuKey</string>
+  <!-- Select user main settings menu key -->
+ <string name="settings_select_user_user_id_tag">settingsSelectUserIDTag</string>
+ 
+ <string name="settings_select_user_current_selection_key">userCurrentSelection</string>
+ <string name="settings_select_bike_current_selection_key">bikeCurrentSelection</string>
+ 
+  <string name="bike_select_request_code">bikeSelectRequestCode</string>
+ 
+ 
+ 
 </resources>

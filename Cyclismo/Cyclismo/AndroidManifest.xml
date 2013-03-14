@@ -15,301 +15,328 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  android:installLocation="auto"
-  android:versionCode="65"
-  android:versionName="0.0.5"
-  package="org.cowboycoders.cyclisimo" >
-  <uses-permission android:name="android.permission.GET_TASKS" />
-  <!-- Permission to initialize services -->
-  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-  <!-- Permissions to record locations -->
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-  <uses-permission android:name="android.permission.WAKE_LOCK" />
-  <!-- Permissions to access sensors -->
-<!--   <uses-permission android:name="com.dsi.ant.permission.ANT" /> -->
-<!--   <uses-permission android:name="com.dsi.ant.permission.ANT_ADMIN" /> -->
-  <uses-permission android:name="android.permission.BLUETOOTH" />
-  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-  <!-- Permissions to upload tracks -->
-  <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-  <uses-permission android:name="android.permission.INTERNET" />
-  <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-  <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-  <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH" />
-  <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.fusiontables" />
-  <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.local" />
-  <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.wise" />
-  <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.writely" />
-  <!-- Permission to access Google services to communicate with the map servers. -->
-  <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-  <!-- Permission to read phone state so voice announcement will not interrupt ongoing calls -->
-  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-  <!-- Permission to write to SD card -->
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-  <!-- Permissions to access Cyclisimo data -->
-  <uses-permission android:name="org.cowboycoders.cyclisimo.MYTRACKS_NOTIFICATIONS" />
-  <uses-permission android:name="org.cowboycoders.cyclisimo.READ_TRACK_DATA" />
-  <uses-permission android:name="org.cowboycoders.cyclisimo.WRITE_TRACK_DATA" />
-  <uses-permission android:name="android.permission.INTERNET" />
+    package="org.cowboycoders.cyclisimo"
+    android:installLocation="auto"
+    android:versionCode="65"
+    android:versionName="0.0.5" >
+
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <!-- Permission to initialize services -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Permissions to record locations -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-  <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
-  
-  <!-- Permission to receive Cyclisimo internal broadcasts -->
-  <permission
-    android:description="@string/permission_notification_label"
-    android:label="@string/permission_notification_label"
-    android:name="org.cowboycoders.cyclisimo.MYTRACKS_NOTIFICATIONS"
-    android:permissionGroup="android.permission-group.LOCATION"
-    android:protectionLevel="signature" />
-  <!-- Permission to read track data -->
-  <permission
-    android:description="@string/permission_read_description"
-    android:label="@string/permission_read_label"
-    android:name="org.cowboycoders.cyclisimo.READ_TRACK_DATA"
-    android:permissionGroup="android.permission-group.LOCATION"
-    android:protectionLevel="dangerous" />
-  <!-- Permission to receive track start/end broadcasts -->
-  <permission
-    android:description="@string/permission_notification_description"
-    android:label="@string/permission_notification_label"
-    android:name="org.cowboycoders.cyclisimo.TRACK_NOTIFICATIONS"
-    android:permissionGroup="android.permission-group.LOCATION"
-    android:protectionLevel="dangerous" />
-  <!-- Permission to write track data, either directly or through service calls -->
-  <permission
-    android:description="@string/permission_write_description"
-    android:label="@string/permission_write_label"
-    android:name="org.cowboycoders.cyclisimo.WRITE_TRACK_DATA"
-    android:permissionGroup="android.permission-group.LOCATION"
-    android:protectionLevel="dangerous" />
-  <!-- Permission for map view v2. Note the prefix must be the application package name -->
-  <permission
-    android:name="org.cowboycoders.cyclisimo.permission.MAPS_RECEIVE"
-    android:protectionLevel="signature" />
-  <uses-permission android:name="org.cowboycoders.cyclisimo.permission.MAPS_RECEIVE" />
-  <uses-sdk
-    android:minSdkVersion="8"
-    android:targetSdkVersion="16" />
-  <!-- Required features -->
-  <uses-feature
-    android:glEsVersion="0x00020000"
-    android:required="true" />
-  <uses-feature
-    android:name="android.hardware.location"
-    android:required="true" />
-  <uses-feature
-    android:name="android.hardware.location.gps"
-    android:required="true" />
-  <!-- Optional features -->
-  <uses-feature
-    android:name="android.hardware.bluetooth"
-    android:required="false" />
-  <uses-feature
-    android:name="android.hardware.faketouch"
-    android:required="false" />
-  <uses-feature
-    android:name="android.hardware.location.network"
-    android:required="false" />
-  <uses-feature
-    android:name="android.hardware.sensor.compass"
-    android:required="false" />
-  <uses-feature
-    android:name="android.hardware.telephony"
-    android:required="false" />
-  <uses-feature
-    android:name="android.hardware.telephony.gsm"
-    android:required="false" />
-  <uses-feature
-    android:name="android.hardware.touchscreen"
-    android:required="false" />
-  <uses-feature
-    android:name="android.hardware.touchscreen.multitouch"
-    android:required="false" />
-  <supports-screens
-    android:anyDensity="true"
-    android:largeScreens="true"
-    android:normalScreens="true"
-    android:smallScreens="true"
-    android:xlargeScreens="true" />
-  <application
-    android:backupAgent="org.cowboycoders.cyclisimo.io.backup.MyTracksBackupAgent"
-    android:hardwareAccelerated="true"
-    android:icon="@drawable/track_bike"
-    android:label="@string/my_tracks_app_name"
-    android:name="org.cowboycoders.cyclisimo.MyTracksApplication"
-    android:theme="@style/ThemeSelector" >
-    <!-- For data backup -->
-    <meta-data
-      android:name="com.google.android.backup.api_key"
-      android:value="AEdPqrEAAAAIi-_QiwoRSc9_bAC9cmuNXTQyU8ajJmGtKdhskQ" />
-    <!-- For map view v2 -->
-    <meta-data
-      android:name="com.google.android.maps.v2.API_KEY"
-      android:value="AIzaSyAVGdR_2AVfAItl_MIhaOooRq7m-Pr9jqg" />
-    <!-- Activities -->
-    <activity
-      android:label="@string/menu_aggregated_statistics"
-      android:name="org.cowboycoders.cyclisimo.AggregatedStatsActivity" />
-    <activity
-      android:label="@string/menu_help"
-      android:name="org.cowboycoders.cyclisimo.HelpActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.ImportActivity" >
-      <intent-filter>
-        <action android:name="android.intent.action.ATTACH_DATA" />
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <data android:mimeType="application/gpx" />
-        <data android:mimeType="application/gpx+xml" />
-        <data android:mimeType="application/vnd.google-earth.gpx" />
-        <data android:mimeType="application/vnd.google-earth.gpx+xml" />
-        <data android:scheme="file" />
-      </intent-filter>
-    </activity>
-    <activity android:name="org.cowboycoders.cyclisimo.MarkerEditActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.MarkerDetailActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.MarkerListActivity" >
-      <meta-data
-        android:name="android.app.default_searchable"
-        android:value="org.cowboycoders.cyclisimo.SearchListActivity" />
-    </activity>
-    <activity
-      android:launchMode="singleTop"
-      android:name="org.cowboycoders.cyclisimo.SearchListActivity" >
-      <intent-filter>
-        <action android:name="android.intent.action.SEARCH" />
-      </intent-filter>
-      <meta-data
-        android:name="android.app.searchable"
-        android:resource="@xml/search" />
-    </activity>
-    <activity
-      android:label="@string/menu_sensor_state"
-      android:name="org.cowboycoders.cyclisimo.SensorStateActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.TrackDetailActivity" android:launchMode="singleTask" />
-    <activity android:name="org.cowboycoders.cyclisimo.TrackEditActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.CourseListActivity" >
-    </activity>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Permissions to access sensors -->
+    <!-- <uses-permission android:name="com.dsi.ant.permission.ANT" /> -->
+    <!-- <uses-permission android:name="com.dsi.ant.permission.ANT_ADMIN" /> -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Permissions to upload tracks -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH" />
+    <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.fusiontables" />
+    <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.local" />
+    <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.wise" />
+    <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.writely" />
+    <!-- Permission to access Google services to communicate with the map servers. -->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <!-- Permission to read phone state so voice announcement will not interrupt ongoing calls -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- Permission to write to SD card -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Permissions to access Cyclisimo data -->
+    <uses-permission android:name="org.cowboycoders.cyclisimo.MYTRACKS_NOTIFICATIONS" />
+    <uses-permission android:name="org.cowboycoders.cyclisimo.READ_TRACK_DATA" />
+    <uses-permission android:name="org.cowboycoders.cyclisimo.WRITE_TRACK_DATA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
 
-        <activity android:name="org.cowboycoders.cyclisimo.TrackListActivity" android:launchMode="singleTask">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-      <meta-data
-        android:name="android.app.default_searchable"
-        android:value="org.cowboycoders.cyclisimo.SearchListActivity" />
-    </activity> 
-            <activity android:name="org.cowboycoders.cyclisimo.CourseSetupActivity" 
-                android:launchMode="singleTop">
-<!--       <intent-filter> -->
-<!--         <action android:name="android.intent.action.MAIN" /> -->
-<!--         <category android:name="android.intent.category.LAUNCHER" /> -->
-<!--       </intent-filter> -->
-<!--       <meta-data -->
-<!--         android:name="android.app.default_searchable" -->
-<!--         android:value="org.cowboycoders.cyclisimo.SearchListActivity" /> -->
-    </activity>
-    <activity android:name="org.cowboycoders.cyclisimo.io.backup.BackupActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.io.backup.RestoreActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.io.backup.RestoreChooserActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.io.docs.SendDocsActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.io.file.SaveActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.io.fusiontables.SendFusionTablesActivity" />
-    <activity
-      android:label="@string/maps_list_title"
-      android:name="org.cowboycoders.cyclisimo.io.maps.ChooseMapActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.io.maps.SendMapsActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.io.sendtogoogle.AccountChooserActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.io.sendtogoogle.ConfirmSharingActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.io.sendtogoogle.UploadResultActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.settings.BackupSettingsActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.settings.ChartSettingsActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.settings.MapSettingsActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.settings.RecordingSettingsActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.settings.SensorSettingsActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.settings.AntSettingsActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.settings.SettingsActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.settings.SharingSettingsActivity" />
-    <activity android:name="org.cowboycoders.cyclisimo.settings.StatsSettingsActivity" />
-    <activity
-      android:label="@string/track_widget_config_title"
-      android:name="org.cowboycoders.cyclisimo.widgets.TrackWidgetConfigActivity" >
-      <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-      </intent-filter>
-    </activity>
-    <activity
-    android:name="com.ipaulpro.afilechooser.FileChooserActivity"
-    android:exported="true"
-    android:icon="@drawable/ic_chooser"
-    android:label="@string/choose_file"
-    android:theme="@style/ChooserTheme" >
-    <intent-filter>
-        <action android:name="android.intent.action.GET_CONTENT" />
+    <!-- Permission to receive Cyclisimo internal broadcasts -->
+    <permission
+        android:name="org.cowboycoders.cyclisimo.MYTRACKS_NOTIFICATIONS"
+        android:description="@string/permission_notification_label"
+        android:label="@string/permission_notification_label"
+        android:permissionGroup="android.permission-group.LOCATION"
+        android:protectionLevel="signature" />
+    <!-- Permission to read track data -->
+    <permission
+        android:name="org.cowboycoders.cyclisimo.READ_TRACK_DATA"
+        android:description="@string/permission_read_description"
+        android:label="@string/permission_read_label"
+        android:permissionGroup="android.permission-group.LOCATION"
+        android:protectionLevel="dangerous" />
+    <!-- Permission to receive track start/end broadcasts -->
+    <permission
+        android:name="org.cowboycoders.cyclisimo.TRACK_NOTIFICATIONS"
+        android:description="@string/permission_notification_description"
+        android:label="@string/permission_notification_label"
+        android:permissionGroup="android.permission-group.LOCATION"
+        android:protectionLevel="dangerous" />
+    <!-- Permission to write track data, either directly or through service calls -->
+    <permission
+        android:name="org.cowboycoders.cyclisimo.WRITE_TRACK_DATA"
+        android:description="@string/permission_write_description"
+        android:label="@string/permission_write_label"
+        android:permissionGroup="android.permission-group.LOCATION"
+        android:protectionLevel="dangerous" />
+    <!-- Permission for map view v2. Note the prefix must be the application package name -->
+    <permission
+        android:name="org.cowboycoders.cyclisimo.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
 
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.OPENABLE" />
+    <uses-permission android:name="org.cowboycoders.cyclisimo.permission.MAPS_RECEIVE" />
 
-        <data android:mimeType="*/*" />
-    </intent-filter>
-	</activity>
-    <!-- Services -->
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="16" />
+    <!-- Required features -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="true" />
+    <!-- Optional features -->
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.faketouch"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.sensor.compass"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony.gsm"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen.multitouch"
+        android:required="false" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <application
+        android:name="org.cowboycoders.cyclisimo.MyTracksApplication"
+        android:backupAgent="org.cowboycoders.cyclisimo.io.backup.MyTracksBackupAgent"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/track_bike"
+        android:label="@string/my_tracks_app_name"
+        android:theme="@style/ThemeSelector" >
+
+        <!-- For data backup -->
+        <meta-data
+            android:name="com.google.android.backup.api_key"
+            android:value="AEdPqrEAAAAIi-_QiwoRSc9_bAC9cmuNXTQyU8ajJmGtKdhskQ" />
+        <!-- For map view v2 -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyAVGdR_2AVfAItl_MIhaOooRq7m-Pr9jqg" />
+        <!-- Activities -->
+        <activity
+            android:name="org.cowboycoders.cyclisimo.AggregatedStatsActivity"
+            android:label="@string/menu_aggregated_statistics" />
+        <activity
+            android:name="org.cowboycoders.cyclisimo.HelpActivity"
+            android:label="@string/menu_help" />
+        <activity android:name="org.cowboycoders.cyclisimo.ImportActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.ATTACH_DATA" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/gpx" />
+                <data android:mimeType="application/gpx+xml" />
+                <data android:mimeType="application/vnd.google-earth.gpx" />
+                <data android:mimeType="application/vnd.google-earth.gpx+xml" />
+                <data android:scheme="file" />
+            </intent-filter>
+        </activity>
+        <activity android:name="org.cowboycoders.cyclisimo.MarkerEditActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.MarkerDetailActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.MarkerListActivity" >
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value="org.cowboycoders.cyclisimo.SearchListActivity" />
+        </activity>
+        <activity
+            android:name="org.cowboycoders.cyclisimo.SearchListActivity"
+            android:launchMode="singleTop" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/search" />
+        </activity>
+        <activity
+            android:name="org.cowboycoders.cyclisimo.SensorStateActivity"
+            android:label="@string/menu_sensor_state" />
+        <activity
+            android:name="org.cowboycoders.cyclisimo.TrackDetailActivity"
+            android:launchMode="singleTask" />
+        <activity android:name="org.cowboycoders.cyclisimo.TrackEditActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.CourseListActivity" >
+        </activity>
+        <activity
+            android:name="org.cowboycoders.cyclisimo.TrackListActivity"
+            android:launchMode="singleTask" >
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+            android:name="android.app.default_searchable"
+            android:value="org.cowboycoders.cyclisimo.SearchListActivity" />
+        </activity>
+        <activity
+            android:name="org.cowboycoders.cyclisimo.CourseSetupActivity"
+            android:launchMode="singleTop" >
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+            <!-- <meta-data -->
+            <!-- android:name="android.app.default_searchable" -->
+            <!-- android:value="org.cowboycoders.cyclisimo.SearchListActivity" /> -->
+        </activity>
+        <activity
+            android:name="org.cowboycoders.cyclisimo.UserListActivity"
+            android:launchMode="singleTop" >
+        </activity>
+        <activity android:name="org.cowboycoders.cyclisimo.UserEditActivity" />
+        <activity
+            android:name="org.cowboycoders.cyclisimo.BikeListActivity">
+        </activity>
+        <activity android:name="org.cowboycoders.cyclisimo.BikeEditActivity" />
+        
+        
+        <activity android:name="org.cowboycoders.cyclisimo.io.backup.BackupActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.io.backup.RestoreActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.io.backup.RestoreChooserActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.io.docs.SendDocsActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.io.file.SaveActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.io.fusiontables.SendFusionTablesActivity" />
+        <activity
+            android:name="org.cowboycoders.cyclisimo.io.maps.ChooseMapActivity"
+            android:label="@string/maps_list_title" />
+        <activity android:name="org.cowboycoders.cyclisimo.io.maps.SendMapsActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.io.sendtogoogle.AccountChooserActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.io.sendtogoogle.ConfirmSharingActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.io.sendtogoogle.UploadResultActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.settings.BackupSettingsActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.settings.ChartSettingsActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.settings.MapSettingsActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.settings.RecordingSettingsActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.settings.SensorSettingsActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.settings.AntSettingsActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.settings.SettingsActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.settings.SharingSettingsActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.settings.StatsSettingsActivity" />
+        <activity
+            android:name="org.cowboycoders.cyclisimo.widgets.TrackWidgetConfigActivity"
+            android:label="@string/track_widget_config_title" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.ipaulpro.afilechooser.FileChooserActivity"
+            android:exported="true"
+            android:icon="@drawable/ic_chooser"
+            android:label="@string/choose_file"
+            android:theme="@style/ChooserTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+        <!-- Services -->
         <service
-      android:exported="false"
-      android:name="org.cowboycoders.cyclisimo.turbo.TurboService" />
-    <service
-      android:exported="false"
-      android:name="org.cowboycoders.cyclisimo.services.ControlRecordingService" />
-    <service android:name="org.cowboycoders.cyclisimo.services.RemoveTempFilesService" />
-    <service android:name="org.cowboycoders.cyclisimo.turbo.AntHubService" />
-    <service
-      android:enabled="true"
-      android:exported="true"
-      android:icon="@drawable/arrow_320"
-      android:label="@string/my_tracks_recording_service"
-      android:name="org.cowboycoders.cyclisimo.services.TrackRecordingService"
-      android:permission="org.cowboycoders.cyclisimo.WRITE_TRACK_DATA" />
-    <!-- Receivers -->
-    <receiver android:name="org.cowboycoders.cyclisimo.BootReceiver" >
-      <intent-filter>
-        <action android:name="android.intent.action.BOOT_COMPLETED" />
-      </intent-filter>
-    </receiver>
-    <receiver android:name="org.cowboycoders.cyclisimo.widgets.TrackWidgetProvider" >
-      <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-        <action android:name="org.cowboycoders.cyclisimo.TRACK_PAUSED" />
-        <action android:name="org.cowboycoders.cyclisimo.TRACK_RESUMED" />
-        <action android:name="org.cowboycoders.cyclisimo.TRACK_STARTED" />
-        <action android:name="org.cowboycoders.cyclisimo.TRACK_STOPPED" />
-        <action android:name="org.cowboycoders.cyclisimo.TRACK_UPDATE" />
-      </intent-filter>
-      <meta-data
-        android:name="android.appwidget.provider"
-        android:resource="@xml/track_widget_info" />
-    </receiver>
-    <!-- Providers -->
-    <!-- Cyclisimo data provider -->
-    <provider
-      android:authorities="org.cowboycoders.cyclisimo"
-      android:exported="true"
-      android:name="org.cowboycoders.cyclisimo.content.MyTracksProvider"
-      android:readPermission="org.cowboycoders.cyclisimo.READ_TRACK_DATA"
-      android:writePermission="org.cowboycoders.cyclisimo.WRITE_TRACK_DATA" />
+            android:name="org.cowboycoders.cyclisimo.turbo.TurboService"
+            android:exported="false" />
+        <service
+            android:name="org.cowboycoders.cyclisimo.services.ControlRecordingService"
+            android:exported="false" />
+        <service android:name="org.cowboycoders.cyclisimo.services.RemoveTempFilesService" />
+        <service android:name="org.cowboycoders.cyclisimo.turbo.AntHubService" />
+        <service
+            android:name="org.cowboycoders.cyclisimo.services.TrackRecordingService"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@drawable/arrow_320"
+            android:label="@string/my_tracks_recording_service"
+            android:permission="org.cowboycoders.cyclisimo.WRITE_TRACK_DATA" />
+        <!-- Receivers -->
+        <receiver android:name="org.cowboycoders.cyclisimo.BootReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="org.cowboycoders.cyclisimo.widgets.TrackWidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="org.cowboycoders.cyclisimo.TRACK_PAUSED" />
+                <action android:name="org.cowboycoders.cyclisimo.TRACK_RESUMED" />
+                <action android:name="org.cowboycoders.cyclisimo.TRACK_STARTED" />
+                <action android:name="org.cowboycoders.cyclisimo.TRACK_STOPPED" />
+                <action android:name="org.cowboycoders.cyclisimo.TRACK_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/track_widget_info" />
+        </receiver>
+        <!-- Providers -->
+        <!-- Cyclisimo data provider -->
         <provider
-      android:authorities="org.cowboycoders.cyclisimo.courses"
-      android:exported="true"
-      android:name="org.cowboycoders.cyclisimo.content.MyTracksCourseProvider"
-      android:readPermission="org.cowboycoders.cyclisimo.READ_TRACK_DATA"
-      android:writePermission="org.cowboycoders.cyclisimo.WRITE_TRACK_DATA" />
-    <!-- Search suggestion provider -->
-    <provider
-      android:authorities="org.cowboycoders.cyclisimo.search"
-      android:exported="false"
-      android:name="org.cowboycoders.cyclisimo.content.SearchEngineProvider" />
-  </application>
+            android:name="org.cowboycoders.cyclisimo.content.MyTracksProvider"
+            android:authorities="org.cowboycoders.cyclisimo"
+            android:exported="true"
+            android:readPermission="org.cowboycoders.cyclisimo.READ_TRACK_DATA"
+            android:writePermission="org.cowboycoders.cyclisimo.WRITE_TRACK_DATA" />
+        <provider
+            android:name="org.cowboycoders.cyclisimo.content.MyTracksCourseProvider"
+            android:authorities="org.cowboycoders.cyclisimo.courses"
+            android:exported="true"
+            android:readPermission="org.cowboycoders.cyclisimo.READ_TRACK_DATA"
+            android:writePermission="org.cowboycoders.cyclisimo.WRITE_TRACK_DATA" />
+        <!-- Search suggestion provider -->
+        <provider
+            android:name="org.cowboycoders.cyclisimo.content.SearchEngineProvider"
+            android:authorities="org.cowboycoders.cyclisimo.search"
+            android:exported="false" />
+    </application>
+
 </manifest>

@@ -88,6 +88,11 @@ public Bike createBike(Cursor cursor, boolean allFieldsMustBePresent);
 public void deleteAllBikes();
 
 /**
+ * Deletes all bikes belong to a specific user (including waypoints and bike points).
+ */
+public void deleteAllBikes(long userId);
+
+/**
  * Deletes a bike.
  * 
  * @param bikeId the bike id

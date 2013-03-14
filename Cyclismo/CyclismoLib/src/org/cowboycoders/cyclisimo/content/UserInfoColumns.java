@@ -36,24 +36,29 @@ public interface UserInfoColumns extends BaseColumns {
   // Columns
   public static final String NAME = "name"; // user name
   public static final String WEIGHT = "weight"; // weight in kilos
+  public static final String CURRENT_BIKE = "current_bike"; // currently selected bike
+
   
   
   
   public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" 
       + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
       + NAME + " STRING, " 
-      + WEIGHT + " FLOAT" 
+      + WEIGHT + " FLOAT, "
+      + CURRENT_BIKE + " INTEGER"
       + ");";
 
   public static final String[] COLUMNS = {
       _ID,
       NAME,
       WEIGHT,
+      CURRENT_BIKE,
   };
 
   public static final byte[] COLUMN_TYPES = {
       ContentTypeIds.LONG_TYPE_ID, // id
       ContentTypeIds.STRING_TYPE_ID, // name
       ContentTypeIds.FLOAT_TYPE_ID, // weight
+      ContentTypeIds.LONG_TYPE_ID, // currently selected bike
     };
 }

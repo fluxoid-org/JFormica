@@ -1,22 +1,22 @@
 /*
-*    Copyright (c) 2013, Will Szumski
-*    Copyright (c) 2013, Doug Szumski
-*
-*    This file is part of Cyclismo.
-*
-*    Cyclismo is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU General Public License as published by
-*    the Free Software Foundation, either version 3 of the License, or
-*    (at your option) any later version.
-*
-*    Cyclismo is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU General Public License for more details.
-*
-*    You should have received a copy of the GNU General Public License
-*    along with Cyclismo.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ *    Copyright (c) 2013, Will Szumski
+ *    Copyright (c) 2013, Doug Szumski
+ *
+ *    This file is part of Cyclismo.
+ *
+ *    Cyclismo is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    Cyclismo is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with Cyclismo.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /*
  * Copyright 2008 Google Inc.
  *
@@ -35,12 +35,8 @@
 
 package org.cowboycoders.cyclisimo;
 
-import org.cowboycoders.cyclisimo.content.Track;
-import org.cowboycoders.cyclisimo.content.TracksColumns;
-import org.cowboycoders.cyclisimo.content.Waypoint;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import org.cowboycoders.cyclisimo.R;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -51,6 +47,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
@@ -77,15 +74,21 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.EnumSet;
+import java.util.concurrent.atomic.AtomicLong;
 
+import org.cowboycoders.cyclisimo.content.MyTracksProviderUtils;
+import org.cowboycoders.cyclisimo.content.Track;
 import org.cowboycoders.cyclisimo.content.TrackDataHub;
 import org.cowboycoders.cyclisimo.content.TrackDataListener;
 import org.cowboycoders.cyclisimo.content.TrackDataType;
+import org.cowboycoders.cyclisimo.content.TracksColumns;
+import org.cowboycoders.cyclisimo.content.User;
+import org.cowboycoders.cyclisimo.content.Waypoint;
 import org.cowboycoders.cyclisimo.fragments.DeleteAllTrackDialogFragment;
 import org.cowboycoders.cyclisimo.fragments.DeleteOneTrackDialogFragment;
+import org.cowboycoders.cyclisimo.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
 import org.cowboycoders.cyclisimo.fragments.EulaDialogFragment;
 import org.cowboycoders.cyclisimo.fragments.WelcomeDialogFragment;
-import org.cowboycoders.cyclisimo.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
 import org.cowboycoders.cyclisimo.io.file.SaveActivity;
 import org.cowboycoders.cyclisimo.io.file.TrackWriterFactory.TrackFileFormat;
 import org.cowboycoders.cyclisimo.services.TrackRecordingServiceConnection;
@@ -114,19 +117,21 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
   private static final String[] PROJECTION = new String[] { TracksColumns._ID, TracksColumns.NAME,
       TracksColumns.DESCRIPTION, TracksColumns.CATEGORY, TracksColumns.STARTTIME,
       TracksColumns.TOTALDISTANCE, TracksColumns.TOTALTIME, TracksColumns.ICON };
-  
+
   protected static final int COURSE_SETUP_RESPONSE_CODE = 0;
+
+  private AtomicLong currentUserId = new AtomicLong();
 
   // Callback when the trackRecordingServiceConnection binding changes.
   private final Runnable bindChangedCallback = new Runnable() {
-      @Override
+    @Override
     public void run() {
       /*
        * After binding changes (e.g., becomes available), update the total time
        * in trackController.
        */
       runOnUiThread(new Runnable() {
-          @Override
+        @Override
         public void run() {
           trackController.update(recordingTrackId != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT,
               recordingTrackPaused);
@@ -136,28 +141,31 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
       if (!startNewRecording) {
         return;
       }
-      
 
-//      ITrackRecordingService service = trackRecordingServiceConnection.getServiceIfBound();
-//      if (service == null) {
-//        Log.d(TAG, "service not available to start a new recording");
-//        return;
-//      }
-      
-//  TODO: hack this back in if setting is not set to turbo trainer mode?
-//      try {
-//        long trackId = service.startNewTrack();
-//        startNewRecording = false;
-//        Intent intent = IntentUtils.newIntent(TrackListActivity.this, TrackDetailActivity.class)
-//            .putExtra(TrackDetailActivity.EXTRA_TRACK_ID, trackId);
-//        startActivity(intent);
-//        Toast.makeText(
-//            TrackListActivity.this, R.string.track_list_record_success, Toast.LENGTH_SHORT).show();
-//      } catch (Exception e) {
-//        Toast.makeText(TrackListActivity.this, R.string.track_list_record_error, Toast.LENGTH_LONG)
-//            .show();
-//        Log.e(TAG, "Unable to start a new recording.", e);
-//      }
+      // ITrackRecordingService service =
+      // trackRecordingServiceConnection.getServiceIfBound();
+      // if (service == null) {
+      // Log.d(TAG, "service not available to start a new recording");
+      // return;
+      // }
+
+      // TODO: hack this back in if setting is not set to turbo trainer mode?
+      // try {
+      // long trackId = service.startNewTrack();
+      // startNewRecording = false;
+      // Intent intent = IntentUtils.newIntent(TrackListActivity.this,
+      // TrackDetailActivity.class)
+      // .putExtra(TrackDetailActivity.EXTRA_TRACK_ID, trackId);
+      // startActivity(intent);
+      // Toast.makeText(
+      // TrackListActivity.this, R.string.track_list_record_success,
+      // Toast.LENGTH_SHORT).show();
+      // } catch (Exception e) {
+      // Toast.makeText(TrackListActivity.this,
+      // R.string.track_list_record_error, Toast.LENGTH_LONG)
+      // .show();
+      // Log.e(TAG, "Unable to start a new recording.", e);
+      // }
     }
   };
 
@@ -165,62 +173,66 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
    * Note that sharedPreferenceChangeListenr cannot be an anonymous inner class.
    * Anonymous inner class will get garbage collected.
    */
-  private final OnSharedPreferenceChangeListener
-      sharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
-          @Override
-        public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
-          if (key == null || key.equals(
-              PreferencesUtils.getKey(TrackListActivity.this, R.string.metric_units_key))) {
-            metricUnits = PreferencesUtils.getBoolean(TrackListActivity.this,
-                R.string.metric_units_key, PreferencesUtils.METRIC_UNITS_DEFAULT);
-          }
-          if (key == null || key.equals(
-              PreferencesUtils.getKey(TrackListActivity.this, R.string.recording_track_id_key))) {
-            recordingTrackId = PreferencesUtils.getLong(
-                TrackListActivity.this, R.string.recording_track_id_key);
-            if (key != null && recordingTrackId != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
-              trackRecordingServiceConnection.startAndBind();
-            }
-          }
-          if (key == null || key.equals(PreferencesUtils.getKey(
-              TrackListActivity.this, R.string.recording_track_paused_key))) {
-            recordingTrackPaused = PreferencesUtils.getBoolean(TrackListActivity.this,
-                R.string.recording_track_paused_key,
-                PreferencesUtils.RECORDING_TRACK_PAUSED_DEFAULT);
-          }
-          if (key != null) {
-            runOnUiThread(new Runnable() {
-                @Override
-              public void run() {
-                boolean isRecording = recordingTrackId
-                    != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT;
-                updateMenuItems(isRecording);
-                resourceCursorAdapter.notifyDataSetChanged();
-                trackController.update(isRecording, recordingTrackPaused);
-              }
-            });
-          }
+  private final OnSharedPreferenceChangeListener sharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
+      
+      if (key == getString(R.string.settings_select_user_current_selection_key)) {
+        updateCurrentUserId();
+        restart();
+      }
+      
+      if (key == null
+          || key.equals(PreferencesUtils.getKey(TrackListActivity.this, R.string.metric_units_key))) {
+        metricUnits = PreferencesUtils.getBoolean(TrackListActivity.this,
+            R.string.metric_units_key, PreferencesUtils.METRIC_UNITS_DEFAULT);
+      }
+      if (key == null
+          || key.equals(PreferencesUtils.getKey(TrackListActivity.this,
+              R.string.recording_track_id_key))) {
+        recordingTrackId = PreferencesUtils.getLong(TrackListActivity.this,
+            R.string.recording_track_id_key);
+        if (key != null && recordingTrackId != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
+          trackRecordingServiceConnection.startAndBind();
         }
-      };
+      }
+      if (key == null
+          || key.equals(PreferencesUtils.getKey(TrackListActivity.this,
+              R.string.recording_track_paused_key))) {
+        recordingTrackPaused = PreferencesUtils.getBoolean(TrackListActivity.this,
+            R.string.recording_track_paused_key, PreferencesUtils.RECORDING_TRACK_PAUSED_DEFAULT);
+      }
+      if (key != null) {
+        runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+            boolean isRecording = recordingTrackId != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT;
+            updateMenuItems(isRecording);
+            resourceCursorAdapter.notifyDataSetChanged();
+            trackController.update(isRecording, recordingTrackPaused);
+          }
+        });
+      }
+    }
+  };
 
   // Callback when an item is selected in the contextual action mode
-  private final ContextualActionModeCallback
-      contextualActionModeCallback = new ContextualActionModeCallback() {
-          @Override
-        public boolean onClick(int itemId, int position, long id) {
-          return handleContextItem(itemId, id);
-        }
-      };
+  private final ContextualActionModeCallback contextualActionModeCallback = new ContextualActionModeCallback() {
+    @Override
+    public boolean onClick(int itemId, int position, long id) {
+      return handleContextItem(itemId, id);
+    }
+  };
 
   private final OnClickListener recordListener = new OnClickListener() {
     public void onClick(View v) {
       if (recordingTrackId == PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
         // Not recording -> Recording
         AnalyticsUtils.sendPageViews(TrackListActivity.this, "/action/record_track");
-        //startGps = false;
-        //handleStartGps();
-        //updateMenuItems(true);
-        //startRecording();
+        // startGps = false;
+        // handleStartGps();
+        // updateMenuItems(true);
+        // startRecording();
         startCourseSelector();
       } else {
         if (recordingTrackPaused) {
@@ -241,89 +253,89 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
   };
 
   private final OnClickListener stopListener = new OnClickListener() {
-      @Override
+    @Override
     public void onClick(View v) {
-        TrackListActivity.this.stopRecording();
+      TrackListActivity.this.stopRecording();
     }
   };
 
   private final TrackDataListener trackDataListener = new TrackDataListener() {
-      @Override
+    @Override
     public void onTrackUpdated(Track track) {
       // Ignore
     }
 
-      @Override
+    @Override
     public void onSelectedTrackChanged(Track track) {
       // Ignore
     }
 
-      @Override
+    @Override
     public void onSegmentSplit(Location location) {
       // Ignore
     }
 
-      @Override
+    @Override
     public void onSampledOutTrackPoint(Location location) {
       // Ignore
     }
 
-      @Override
+    @Override
     public void onSampledInTrackPoint(Location location) {
       // Ignore
     }
 
-      @Override
+    @Override
     public boolean onReportSpeedChanged(boolean reportSpeed) {
       return false;
     }
 
-      @Override
+    @Override
     public void onNewWaypointsDone() {
       // Ignore
     }
 
-      @Override
+    @Override
     public void onNewWaypoint(Waypoint waypoint) {
       // Ignore
     }
 
-      @Override
+    @Override
     public void onNewTrackPointsDone() {
       // Ignore
     }
 
-      @Override
+    @Override
     public boolean onMinRecordingDistanceChanged(int minRecordingDistance) {
       return false;
     }
 
-      @Override
+    @Override
     public boolean onMetricUnitsChanged(boolean isMetricUnits) {
       return false;
     }
 
-      @Override
+    @Override
     public void onLocationStateChanged(LocationState locationState) {
       // Ignore
     }
 
-      @Override
+    @Override
     public void onLocationChanged(Location location) {
       // Ignore
     }
 
-      @Override
+    @Override
     public void onHeadingChanged(double heading) {
       // Ignore
     }
 
-      @Override
+    @Override
     public void clearWaypoints() {
       // Ignore
     }
 
-      @Override
+    @Override
     public void clearTrackPoints() {
       // Ignore
     }
@@ -361,27 +373,26 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
 
     sharedPreferences = getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
 
-    trackRecordingServiceConnection = new TrackRecordingServiceConnection(
-        this, bindChangedCallback);
+    trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, bindChangedCallback);
 
-    trackController = new TrackController(
-        this, trackRecordingServiceConnection, true, recordListener, stopListener);
+    trackController = new TrackController(this, trackRecordingServiceConnection, true,
+        recordListener, stopListener);
 
     listView = (ListView) findViewById(R.id.track_list);
     listView.setEmptyView(findViewById(R.id.track_list_empty_view));
     listView.setOnItemClickListener(new OnItemClickListener() {
-        @Override
+      @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = IntentUtils.newIntent(TrackListActivity.this, TrackDetailActivity.class)
             .putExtra(TrackDetailActivity.EXTRA_TRACK_ID, id);
         intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); 
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
       }
     });
     resourceCursorAdapter = new ResourceCursorAdapter(this, R.layout.list_item, null, 0) {
-        @Override
+      @Override
       public void bindView(View view, Context context, Cursor cursor) {
         int idIndex = cursor.getColumnIndex(TracksColumns._ID);
         int iconIndex = cursor.getColumnIndex(TracksColumns.ICON);
@@ -396,8 +407,8 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
         int iconId = TrackIconUtils.getIconDrawable(cursor.getString(iconIndex));
         String name = cursor.getString(nameIndex);
         String totalTime = StringUtils.formatElapsedTime(cursor.getLong(totalTimeIndex));
-        String totalDistance = StringUtils.formatDistance(
-            TrackListActivity.this, cursor.getDouble(totalDistanceIndex), metricUnits);
+        String totalDistance = StringUtils.formatDistance(TrackListActivity.this,
+            cursor.getDouble(totalDistanceIndex), metricUnits);
         long startTime = cursor.getLong(startTimeIndex);
         String startTimeDisplay = StringUtils.formatDateTime(context, startTime).equals(name) ? null
             : StringUtils.formatRelativeDateTime(context, startTime);
@@ -408,22 +419,26 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
       }
     };
     listView.setAdapter(resourceCursorAdapter);
-    ApiAdapterFactory.getApiAdapter()
-        .configureListViewContextualMenu(this, listView, contextualActionModeCallback);
+    ApiAdapterFactory.getApiAdapter().configureListViewContextualMenu(this, listView,
+        contextualActionModeCallback);
 
     getSupportLoaderManager().initLoader(0, null, new LoaderCallbacks<Cursor>() {
-        @Override
+      @Override
       public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-        return new CursorLoader(TrackListActivity.this, TracksColumns.CONTENT_URI, PROJECTION, null,
-            null, TracksColumns._ID + " DESC");
+        updateCurrentUserId();
+        long userId = currentUserId.get();
+        String selection = TracksColumns.OWNER + "=?";
+        String[] args = new String[] { Long.toString(userId) };
+        return new CursorLoader(TrackListActivity.this, TracksColumns.CONTENT_URI, PROJECTION,
+            selection, args, TracksColumns._ID + " DESC");
       }
 
-        @Override
+      @Override
       public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         resourceCursorAdapter.swapCursor(cursor);
       }
 
-        @Override
+      @Override
       public void onLoaderReset(Loader<Cursor> loader) {
         resourceCursorAdapter.swapCursor(null);
       }
@@ -435,11 +450,20 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
     showStartupDialogs();
   }
 
+  private void restart() {
+    Intent intent = IntentUtils.newIntent(this, TrackListActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    this.finish();
+    this.startActivity(intent);
+  }
+
   protected void stopRecording() {
     AnalyticsUtils.sendPageViews(TrackListActivity.this, "/action/stop_recording");
     updateMenuItems(false);
-    TrackRecordingServiceConnectionUtils.stopRecording(
-        TrackListActivity.this, trackRecordingServiceConnection, true);
+    TrackRecordingServiceConnectionUtils.stopRecording(TrackListActivity.this,
+        trackRecordingServiceConnection, true);
   }
 
   @Override
@@ -463,6 +487,30 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
   @Override
   protected void onResume() {
     super.onResume();
+    
+    // check for stale userid
+    new AsyncTask<Object,Integer,Boolean>() {
+
+      @Override
+      protected Boolean doInBackground(Object... params) {
+        long id = PreferencesUtils.getLong(TrackListActivity.this, R.string.settings_select_user_current_selection_key);
+        return (currentUserId.get() == id);
+      }
+
+      @Override
+      protected void onPostExecute(Boolean result) {
+        if (result == false) {
+          TrackListActivity.this.restart();
+        }
+      }
+      
+      
+      
+      
+    }.execute(new Object());
+
+    // select user if one is not selected
+    getNewUpdateTitleTask().execute(new Object());
 
     // Update track data hub
     handleStartGps();
@@ -473,7 +521,7 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
     resourceCursorAdapter.notifyDataSetChanged();
     trackController.update(isRecording, recordingTrackPaused);
   }
-  
+
   @Override
   protected void onPause() {
     super.onPause();
@@ -509,15 +557,14 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == GOOGLE_PLAY_SERVICES_REQUEST_CODE) {
       checkGooglePlayServices();
-    } else if (requestCode == TrackListActivity.COURSE_SETUP_RESPONSE_CODE){
+    } else if (requestCode == TrackListActivity.COURSE_SETUP_RESPONSE_CODE) {
       if (resultCode == Activity.RESULT_CANCELED) {
         stopRecording();
       } else {
         startRecording(true);
       }
       super.onActivityResult(requestCode, resultCode, data);
-    }
-      else {
+    } else {
       super.onActivityResult(requestCode, resultCode, data);
     }
   }
@@ -526,14 +573,14 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.track_list, menu);
     String fileTypes[] = getResources().getStringArray(R.array.file_types);
-    menu.findItem(R.id.track_list_save_all_gpx)
-        .setTitle(getString(R.string.menu_save_format, fileTypes[0]));
-    menu.findItem(R.id.track_list_save_all_kml)
-        .setTitle(getString(R.string.menu_save_format, fileTypes[1]));
-    menu.findItem(R.id.track_list_save_all_csv)
-        .setTitle(getString(R.string.menu_save_format, fileTypes[2]));
-    menu.findItem(R.id.track_list_save_all_tcx)
-        .setTitle(getString(R.string.menu_save_format, fileTypes[3]));
+    menu.findItem(R.id.track_list_save_all_gpx).setTitle(
+        getString(R.string.menu_save_format, fileTypes[0]));
+    menu.findItem(R.id.track_list_save_all_kml).setTitle(
+        getString(R.string.menu_save_format, fileTypes[1]));
+    menu.findItem(R.id.track_list_save_all_csv).setTitle(
+        getString(R.string.menu_save_format, fileTypes[2]));
+    menu.findItem(R.id.track_list_save_all_tcx).setTitle(
+        getString(R.string.menu_save_format, fileTypes[3]));
 
     searchMenuItem = menu.findItem(R.id.track_list_search);
     startGpsMenuItem = menu.findItem(R.id.track_list_start_gps);
@@ -555,15 +602,15 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
       case R.id.track_list_start_gps:
         if (!trackDataHub.isGpsProviderEnabled()) {
           intent = GoogleLocationUtils.isAvailable(TrackListActivity.this) ? new Intent(
-              GoogleLocationUtils.ACTION_GOOGLE_LOCATION_SETTINGS)
-              : new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+              GoogleLocationUtils.ACTION_GOOGLE_LOCATION_SETTINGS) : new Intent(
+              Settings.ACTION_LOCATION_SOURCE_SETTINGS);
           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
           startActivity(intent);
           return true;
         }
         startGps = !startGps;
-        Toast toast = Toast.makeText(
-            this, startGps ? R.string.gps_starting : R.string.gps_stopping, Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this,
+            startGps ? R.string.gps_starting : R.string.gps_stopping, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
         handleStartGps();
@@ -571,8 +618,8 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
         return true;
       case R.id.track_list_import:
         AnalyticsUtils.sendPageViews(this, "/action/import");
-        intent = IntentUtils.newIntent(this, ImportActivity.class)
-            .putExtra(ImportActivity.EXTRA_IMPORT_ALL, true);
+        intent = IntentUtils.newIntent(this, ImportActivity.class).putExtra(
+            ImportActivity.EXTRA_IMPORT_ALL, true);
         startActivity(intent);
         return true;
       case R.id.track_list_save_all_gpx:
@@ -588,8 +635,8 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
         startSaveActivity(TrackFileFormat.TCX);
         return true;
       case R.id.track_list_delete_all:
-        new DeleteAllTrackDialogFragment().show(
-            getSupportFragmentManager(), DeleteAllTrackDialogFragment.DELETE_ALL_TRACK_DIALOG_TAG);
+        new DeleteAllTrackDialogFragment().show(getSupportFragmentManager(),
+            DeleteAllTrackDialogFragment.DELETE_ALL_TRACK_DIALOG_TAG);
         return true;
       case R.id.track_list_aggregated_statistics:
         intent = IntentUtils.newIntent(this, AggregatedStatsActivity.class);
@@ -642,37 +689,71 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
    */
   public void showStartupDialogs() {
     if (!EulaUtils.getAcceptEula(this)) {
-      Fragment fragment = getSupportFragmentManager()
-          .findFragmentByTag(EulaDialogFragment.EULA_DIALOG_TAG);
+      Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+          EulaDialogFragment.EULA_DIALOG_TAG);
       if (fragment == null) {
-        EulaDialogFragment.newInstance(false)
-            .show(getSupportFragmentManager(), EulaDialogFragment.EULA_DIALOG_TAG);
+        EulaDialogFragment.newInstance(false).show(getSupportFragmentManager(),
+            EulaDialogFragment.EULA_DIALOG_TAG);
       }
     } else if (EulaUtils.getShowWelcome(this)) {
-      Fragment fragment = getSupportFragmentManager()
-          .findFragmentByTag(WelcomeDialogFragment.WELCOME_DIALOG_TAG);
+      Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+          WelcomeDialogFragment.WELCOME_DIALOG_TAG);
       if (fragment == null) {
-        new WelcomeDialogFragment().show(
-            getSupportFragmentManager(), WelcomeDialogFragment.WELCOME_DIALOG_TAG);
+        new WelcomeDialogFragment().show(getSupportFragmentManager(),
+            WelcomeDialogFragment.WELCOME_DIALOG_TAG);
       }
     } else {
+
       /*
        * Before the welcome sequence, the empty view is not visible so that it
        * doesn't show through.
        */
       findViewById(R.id.track_list_empty_view).setVisibility(View.VISIBLE);
-      
+
       checkGooglePlayServices();
+
+      // select user if one is not selected
+      getNewUpdateTitleTask().execute(new Object());
     }
+  }
+
+  private AsyncTask<Object, Integer, User> getNewUpdateTitleTask() {
+    AsyncTask<Object, Integer, User> updateTitle = new AsyncTask<Object, Integer, User>() {
+
+      @Override
+      protected User doInBackground(Object... params) {
+        long userId = PreferencesUtils.getLong(TrackListActivity.this,
+            R.string.settings_select_user_current_selection_key);
+        if (userId == -1L)
+          return null;
+        return MyTracksProviderUtils.Factory.getCyclimso(TrackListActivity.this).getUser(userId);
+      }
+
+      @Override
+      protected void onPostExecute(User result) {
+        Context context = TrackListActivity.this;
+        if (result == null) {
+          Intent intent = IntentUtils.newIntent(context, UserListActivity.class);
+          TrackListActivity.this.startActivity(intent);
+          TrackListActivity.this.finish();
+        } else {
+          TrackListActivity.this.setTitle(context.getString(R.string.my_tracks_app_name) + " : "
+              + result.getName());
+        }
+      }
+
+    };
+
+    return updateTitle;
   }
 
   private void checkGooglePlayServices() {
     int code = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
     if (code != ConnectionResult.SUCCESS) {
-      Dialog dialog = GooglePlayServicesUtil.getErrorDialog(
-          code, this, GOOGLE_PLAY_SERVICES_REQUEST_CODE, new DialogInterface.OnCancelListener() {
-  
-              @Override
+      Dialog dialog = GooglePlayServicesUtil.getErrorDialog(code, this,
+          GOOGLE_PLAY_SERVICES_REQUEST_CODE, new DialogInterface.OnCancelListener() {
+
+            @Override
             public void onCancel(DialogInterface dialogInterface) {
               finish();
             }
@@ -719,24 +800,23 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
      */
     bindChangedCallback.run();
   }
-  
+
   private void startRecording(boolean firstRun) {
-     if (firstRun) {
-       startGps = false;
-       handleStartGps();
-       updateMenuItems(true);
-     }
-     startRecording();
+    if (firstRun) {
+      startGps = false;
+      handleStartGps();
+      updateMenuItems(true);
+    }
+    startRecording();
   }
-  
+
   private void startCourseSelector() {
     Intent intent = IntentUtils.newIntent(TrackListActivity.this, CourseSetupActivity.class);
-    TrackListActivity.this.startActivityForResult(intent, TrackListActivity.COURSE_SETUP_RESPONSE_CODE);
-    
-    Log.d(TAG," started CourseSetupActivity");
+    TrackListActivity.this.startActivityForResult(intent,
+        TrackListActivity.COURSE_SETUP_RESPONSE_CODE);
+
+    Log.d(TAG, " started CourseSetupActivity");
   }
-  
-  
 
   /**
    * Starts the {@link SaveActivity} to save all tracks.
@@ -745,8 +825,8 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
    */
   private void startSaveActivity(TrackFileFormat trackFileFormat) {
     AnalyticsUtils.sendPageViews(this, "/action/save_all");
-    Intent intent = IntentUtils.newIntent(this, SaveActivity.class)
-        .putExtra(SaveActivity.EXTRA_TRACK_FILE_FORMAT, (Parcelable) trackFileFormat);
+    Intent intent = IntentUtils.newIntent(this, SaveActivity.class).putExtra(
+        SaveActivity.EXTRA_TRACK_FILE_FORMAT, (Parcelable) trackFileFormat);
     startActivity(intent);
   }
 
@@ -761,25 +841,28 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
     Intent intent;
     switch (itemId) {
       case R.id.list_context_menu_show_on_map:
-        intent = IntentUtils.newIntent(this, TrackDetailActivity.class)
-            .putExtra(TrackDetailActivity.EXTRA_TRACK_ID, trackId);
+        intent = IntentUtils.newIntent(this, TrackDetailActivity.class).putExtra(
+            TrackDetailActivity.EXTRA_TRACK_ID, trackId);
         startActivity(intent);
         return true;
       case R.id.list_context_menu_edit:
-        intent = IntentUtils.newIntent(this, TrackEditActivity.class)
-            .putExtra(TrackEditActivity.EXTRA_TRACK_ID, trackId);
+        intent = IntentUtils.newIntent(this, TrackEditActivity.class).putExtra(
+            TrackEditActivity.EXTRA_TRACK_ID, trackId);
         startActivity(intent);
         return true;
       case R.id.list_context_menu_delete:
-        DeleteOneTrackDialogFragment.newInstance(trackId).show(
-            getSupportFragmentManager(), DeleteOneTrackDialogFragment.DELETE_ONE_TRACK_DIALOG_TAG);
+        DeleteOneTrackDialogFragment.newInstance(trackId).show(getSupportFragmentManager(),
+            DeleteOneTrackDialogFragment.DELETE_ONE_TRACK_DIALOG_TAG);
         return true;
       default:
         return false;
     }
   }
-  
 
+  private void updateCurrentUserId() {
+    long id = PreferencesUtils.getLong(this, R.string.settings_select_user_current_selection_key);
+    currentUserId.set(id);
+  }
 
   /**
    * Handles starting gps.

@@ -19,20 +19,7 @@ limitations under the License.
   <style name="AboutValue" parent="@style/TextMedium">
     <item name="android:paddingLeft">48dp</item>
   </style>
-  <!-- bottom button -->
-  <style name="BottomButton" parent="@android:style/Widget.DeviceDefault.Button.Borderless">
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:layout_weight">1</item>
-    <item name="android:layout_width">0dp</item>
-    <item name="android:maxLines">2</item>
-  </style>
-  <!-- bottom button bar -->
-  <style name="BottomButtonBar" parent="@android:style/DeviceDefault.ButtonBar">
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:orientation">horizontal</item>
-    <item name="android:measureWithLargestChild">true</item>
-  </style>
+
   <!-- choose upload service checkbox -->
   <style name="ChooseUploadServiceCheckBox" parent="@style/TextMedium">
     <item name="android:layout_gravity">center_vertical</item>
@@ -400,5 +387,23 @@ limitations under the License.
     <item name="android:orientation">vertical</item>
   </style>
   
+  	<!-- START USER EDIT -->
+    <!-- edit name track -->
+  <style name="EditNameUser" parent="@style/TextMedium">
+    <item name="android:inputType">textAutoCorrect|textCapWords</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:selectAllOnFocus">true</item>
+    <item name="android:singleLine">true</item>
+  </style>
+    <style name="EditWeightUser" parent="@style/TextMedium">
+    <item name="android:inputType">numberDecimal</item>
+    <item name="android:ems">10</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:selectAllOnFocus">true</item>
+    <item name="android:singleLine">true</item>
+  </style>
+   	<!-- END USER EDIT -->
+   	
+   	
       <style name="ChooserTheme" parent="android:Theme.Light" />
 </resources>

@@ -20,12 +20,15 @@ public class CyclimsoProviderUtilsImpl extends MyTracksProviderUtilsImpl impleme
     int idIndex = cursor.getColumnIndexOrThrow(UserInfoColumns._ID);
     int nameIndex;
     int weightIndex; 
+    int currentBikeIndex; 
     if (allFieldsMustBePresent) {
       nameIndex = cursor.getColumnIndexOrThrow(UserInfoColumns.NAME);
       weightIndex = cursor.getColumnIndexOrThrow(UserInfoColumns.WEIGHT);
+      currentBikeIndex = cursor.getColumnIndexOrThrow(UserInfoColumns.CURRENT_BIKE);
     } else {
       nameIndex = cursor.getColumnIndex(UserInfoColumns.NAME);
       weightIndex = cursor.getColumnIndex(UserInfoColumns.WEIGHT);
+      currentBikeIndex = cursor.getColumnIndex(UserInfoColumns.CURRENT_BIKE);
     }
     
     User user = new User();
@@ -37,6 +40,9 @@ public class CyclimsoProviderUtilsImpl extends MyTracksProviderUtilsImpl impleme
     }
     if (weightIndex > 0 && !cursor.isNull(weightIndex)) {
       user.setWeight(cursor.getFloat(weightIndex));
+    }
+    if (currentBikeIndex > 0 && !cursor.isNull(currentBikeIndex)) {
+      user.setCurrentlySelectedBike(cursor.getLong(currentBikeIndex));
     }
 
     return user;
@@ -185,6 +191,7 @@ public class CyclimsoProviderUtilsImpl extends MyTracksProviderUtilsImpl impleme
     }
     values.put(UserInfoColumns.NAME, user.getName());
     values.put(UserInfoColumns.WEIGHT, user.getWeight());
+    values.put(UserInfoColumns.CURRENT_BIKE, user.getCurrentlySelectedBike());
     
     return values;
   }
@@ -400,6 +407,13 @@ public class CyclimsoProviderUtilsImpl extends MyTracksProviderUtilsImpl impleme
     String [] args = new String[] {Long.toString(user.getId())};
     Cursor cursor = getTrackCursor(null, selection, args, TracksColumns._ID);
     return getAllTracks(cursor,true);
+  }
+
+  @Override
+  public void deleteAllBikes(long userId) {
+    User user = new User();
+    user.setId(userId);
+    deleteAllBikes(user);
   }
 
 

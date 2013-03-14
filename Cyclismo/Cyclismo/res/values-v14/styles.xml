@@ -33,4 +33,21 @@ limitations under the License.
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_width">wrap_content</item>
   </style>
+  
+  <!-- Removed from main styles as claimed api 14 only -->
+  
+    <!-- bottom button -->
+  <style name="BottomButton" parent="@android:style/Widget.DeviceDefault.Button.Borderless">
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:layout_width">0dp</item>
+    <item name="android:maxLines">2</item>
+  </style>
+  <!-- bottom button bar -->
+  <style name="BottomButtonBar" parent="@android:style/DeviceDefault.ButtonBar">
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:orientation">horizontal</item>
+    <item name="android:measureWithLargestChild">true</item>
+  </style>
 </resources>

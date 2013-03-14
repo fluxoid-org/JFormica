@@ -35,14 +35,14 @@
 
 package org.cowboycoders.cyclisimo.util;
 
-import org.cowboycoders.cyclisimo.R;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
+
+import org.cowboycoders.cyclisimo.R;
 
 /**
  * Utilities for creating dialogs.
@@ -91,6 +91,39 @@ public class DialogUtils {
     }
     
     return builder.create();
+  }
+  
+  /**
+   * Creates a confirmation dialog.
+   * 
+   * @param context the context
+   * @param message message displayed
+   * @param view the view
+   * @param okListener the listener when OK is clicked
+   * @param cancelListener the listener when cancel is clicked
+   */
+  public static Dialog createConfirmationDialog(
+      Context context, CharSequence message, View view, DialogInterface.OnClickListener okListener,
+      DialogInterface.OnClickListener cancelListener) {
+    AlertDialog.Builder builder = new AlertDialog.Builder(context)
+        .setCancelable(true)
+        .setIcon(android.R.drawable.ic_dialog_alert)
+        .setNegativeButton(android.R.string.cancel, cancelListener)
+        .setPositiveButton(android.R.string.ok, okListener)
+        .setTitle(R.string.generic_confirm_title);
+    if (message != null) {
+      builder.setMessage(message);
+    }
+    if (view != null) {
+      builder.setView(view);
+    }
+    
+    return builder.create();
+  }
+  
+  public static Dialog createConfirmationDialog(
+      Context context, CharSequence message, DialogInterface.OnClickListener okListener) {
+    return createConfirmationDialog(context, message, null, okListener, null);
   }
 
   /**

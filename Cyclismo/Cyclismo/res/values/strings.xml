@@ -3125,12 +3125,58 @@ limitations under the License.
     An Error has occurred communicating with your Turbo Trainer. Would you like to delete
     this recording?
   </string>
-  
-    
+ 
   <string name="settings_ant_diagnostic_logging_summary_on">Ant logging enabled</string>
   <string name="settings_ant_diagnostic_logging_summary_off">Ant logging disabled</string>    
   <string name="settings_ant_diagnostic_logging_state">Enable ANT+ logging</string>  
   <string name="settings_ant_diagnostic">Diagnostic</string> 
   <string name="settings_ant">ANT+</string>
   <string name="settings_ant_allow_logging_confirm_message">This should only be enabled for diagnostic purposes. Are you sure you want to enable this setting?</string>
+  
+  <string name="generic_weight">Weight</string>
+  <string name="generic_weight_kg">Weight in kg</string>
+  <string name="generic_weight_lbs">Weight in lbs</string>
+  <string name="user_edit">Edit User</string>
+  <string name="user_create">Create User</string>
+  <string name="user_edit_name_error">Please enter your name</string>
+  <string name="user_edit_weight_error">Please enter your weight</string>
+  
+  <string name="bike_edit">Edit Bike</string>
+  <string name="bike_create">Create Bike</string>
+  <string name="bike_shared_checkbox_text">Shared</string>
+  <string name="bike_edit_name_error">Please enter the bikes name</string>
+  <string name="bike_edit_weight_error">Please enter the bikes weight</string>
+  
+  <string name="generic_list_right_button_placeholder">Right button</string>
+  <string name="generic_list_left_button_placeholder">Left button</string>
+  <string name="generic_list_title_placeholder">Title</string>
+  <string name="generic_list_empty_message">No items</string>
+  
+  <string name="settings_turbotrainer_generic">Turbo Trainer Settings</string>
+  <string name="settings_turbotrainer_generic_scale_factor_summary">Multiplys positive gradients by this value</string>
+  <string name="settings_turbotrainer_generic_scale_factor_title">Scale factor</string>
+  
+  <string name="settings_select_user_title">Select User</string>
+  
+  <string name="user_list_right_button">Add new user</string>
+  <string name="user_list_title">Select a user</string>
+  <string name="user_list_empty_message">Please add a user to continue</string>
+  <string name="user_list_delete_user_confirmation_message">Are you sure you want to delete the user: %1$s?</string>
+  <string name="user_list_delete_all_users_confirmation_message">Are you sure you want to delete all users?</string>
+  <string name="user_list_unable_to_peform_operation">Unable to perform operation. Are you recording?</string>
+  <string name="user_list_new_user_selected">Selected new user: %1$s</string>
+  <string name="user_edit_units">Change units</string>
+  
+  <string name="settings_select_bike_title">Select Bike</string>
+  <string name="bike_list_right_button">Add new bike</string>
+  <string name="bike_list_title">Select a bike</string>
+  <string name="bike_list_empty_message">Please add a bike to continue</string>
+  <string name="bike_list_delete_single_confirmation_message">Are you sure you want to delete the bike: %1$s?</string>
+  <string name="bike_list_delete_all_confirmation_message">Are you sure you want to delete all bikes?</string>
+  <string name="bike_list_unable_to_peform_operation">Unable to perform operation. Are you recording?</string>
+  <string name="bike_list_new_user_selected">Selected new bike: %1$s</string>
+  
+  <string name="settings_courses_bike_select_title">Bike</string>
+  <string name="settings_courses_bike_select_summary">Select a bike</string>
+  
 </resources>

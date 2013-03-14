@@ -8,6 +8,6 @@
 	<classpathentry kind="src" path="/CyclismoLib"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/google-play-services_lib"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JFormica - core"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/JTurbo"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/JTurbo"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

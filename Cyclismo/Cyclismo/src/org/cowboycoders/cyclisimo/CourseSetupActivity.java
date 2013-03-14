@@ -33,6 +33,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.cowboycoders.cyclisimo.content.Bike;
 import org.cowboycoders.cyclisimo.fragments.CourseSetupFragment;
 import org.cowboycoders.cyclisimo.fragments.CourseSetupFragment.CourseSetupObserver;
 import org.cowboycoders.cyclisimo.services.ITrackRecordingService;
@@ -173,6 +174,7 @@ public class CourseSetupActivity extends Activity {
     
   };
   private boolean startNewRecording = false;
+  private Bike bike;
 
   protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -221,6 +223,12 @@ public class CourseSetupActivity extends Activity {
           validate();
           
         }
+
+        @Override
+        public void onBikeUpdate(Bike bikeIn) {
+          setBike(bikeIn);
+          validate();
+        }
       };
       
        getFragmentManager().beginTransaction().replace(R.id.course_select_preferences,
@@ -229,7 +237,15 @@ public class CourseSetupActivity extends Activity {
   
   
   
+  private synchronized void setBike(Bike bike) {
+    this.bike = bike;
+ 
+  }
   
+  private synchronized Bike getBike() {
+    return bike;
+  }
+
   /* (non-Javadoc)
    * @see android.app.Activity#onStart()
    */
@@ -261,6 +277,12 @@ public class CourseSetupActivity extends Activity {
     String mode = getModeString();
     
     boolean valid = true;
+    
+    // must have selected a bike
+    if (getBike() == null) {
+      updateUi(false);
+      return;
+    }
     
     if (mode.equals(getString(R.string.settings_courses_mode_simulation_value))) {
    
@@ -301,9 +323,17 @@ public class CourseSetupActivity extends Activity {
     trackRecordingServiceConnection.unbind();
   }
 
-  private void updateUi(boolean valid) {
+  private void updateUi(final boolean valid) {
     Log.d(TAG,"updating ui: " + valid);
-    goButton.setEnabled(valid);
+    this.runOnUiThread(new Runnable() {
+
+      @Override
+      public void run() {
+        goButton.setEnabled(valid);
+      }
+      
+    });
+
   }
 
   private boolean validateSimulationMode() {

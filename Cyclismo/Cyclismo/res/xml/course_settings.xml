@@ -15,27 +15,36 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-  android:title="@string/course_select_title" >
-  <ListPreference
-    android:defaultValue="@string/settings_courses_mode_simulation"
-    android:key="@string/course_mode"
-    android:summary="@string/settings_courses_mode_summary"
-    android:title="@string/settings_courses_mode_title" 
-    android:entries="@array/course_mode_select_options"
-    android:entryValues="@array/course_mode_select_values"
-    
-    
-    />
-  <PreferenceCategory android:title="@string/settings_courses_route_section_title" >
+    android:title="@string/course_select_title" >
+
+    <ListPreference
+        android:defaultValue="@string/settings_courses_mode_simulation_value"
+        android:entries="@array/course_mode_select_options"
+        android:entryValues="@array/course_mode_select_values"
+        android:key="@string/course_mode"
+        android:summary="@string/settings_courses_mode_summary"
+        android:title="@string/settings_courses_mode_title" />
+
     <PreferenceScreen
-        android:key="@string/course_track_id"
-        android:title="@string/settings_courses_route_title"
-        android:summary="@string/settings_courses_route_summary">
+        android:key="@string/course_bike_id"
+        android:summary="@string/settings_courses_bike_select_summary"
+        android:title="@string/settings_courses_bike_select_title" >
         <intent
-             android:action="android.intent.action.VIEW"
-             android:targetPackage="org.cowboycoders.cyclisimo"
-             android:targetClass="org.cowboycoders.cyclisimo.CourseListActivity" />         
+            android:action="android.intent.action.VIEW"
+            android:targetClass="org.cowboycoders.cyclisimo.BikeListActivity"
+            android:targetPackage="org.cowboycoders.cyclisimo" />
     </PreferenceScreen>
-  </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_courses_route_section_title" >
+        <PreferenceScreen
+            android:key="@string/course_track_id"
+            android:summary="@string/settings_courses_route_summary"
+            android:title="@string/settings_courses_route_title" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.cowboycoders.cyclisimo.CourseListActivity"
+                android:targetPackage="org.cowboycoders.cyclisimo" />
+        </PreferenceScreen>
+    </PreferenceCategory>
 
 </PreferenceScreen>

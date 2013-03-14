@@ -68,7 +68,7 @@ public class MyTracksProvider extends ContentProvider {
   private static final String TAG = MyTracksProvider.class.getSimpleName();
   @VisibleForTesting
   static final String DATABASE_NAME = "cyclismo.db";
-  private static final int DATABASE_VERSION = 21;
+  private static final int DATABASE_VERSION = 23;
 
   /**
    * Database helper for creating and upgrading the database.
@@ -97,7 +97,7 @@ public class MyTracksProvider extends ContentProvider {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
       Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
-      if (oldVersion <= 20) {
+      if (oldVersion <= 22) {
         Log.w(TAG, "Deleting all old data.");
         db.execSQL("DROP TABLE IF EXISTS " + TrackPointsColumns.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TracksColumns.TABLE_NAME);

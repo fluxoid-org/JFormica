@@ -35,8 +35,6 @@
 
 package org.cowboycoders.cyclisimo.util;
 
-import org.cowboycoders.cyclisimo.R;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.SearchManager;
@@ -55,6 +53,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import org.cowboycoders.cyclisimo.ContextualActionModeCallback;
+import org.cowboycoders.cyclisimo.R;
 
 /**
  * API level 11 specific implementation of the {@link ApiAdapter}.
@@ -89,6 +88,48 @@ public class Api11Adapter extends Api10Adapter {
           @Override
           public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.list_context_menu, menu);
+            return true;
+          }
+          @Override
+          public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            // Return false to indicate no change.
+            return false;
+          }
+          @Override
+          public void onDestroyActionMode(ActionMode mode) {
+            actionMode = null;
+          }
+          @Override
+          public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            mode.finish();
+            return contextualActionModeCallback.onClick(item.getItemId(), position, id);
+          }
+        });
+        TextView textView = (TextView) view.findViewById(R.id.list_item_name);
+        if (textView != null) {
+          actionMode.setTitle(textView.getText());
+        }
+        view.setSelected(true);
+        return true;
+      }
+    });
+  };
+  
+  @Override
+  public void configureListViewContextualMenu(final Activity activity, ListView listView,
+      final ContextualActionModeCallback contextualActionModeCallback, final int contextMenuId) {
+    listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+      ActionMode actionMode;
+      @Override
+      public boolean onItemLongClick(
+          AdapterView<?> parent, View view, final int position, final long id) {
+        if (actionMode != null) {
+          return false;
+        }
+        actionMode = activity.startActionMode(new ActionMode.Callback() {
+          @Override
+          public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(contextMenuId, menu);
             return true;
           }
           @Override

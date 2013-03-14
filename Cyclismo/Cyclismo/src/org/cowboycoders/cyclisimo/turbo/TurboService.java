@@ -59,6 +59,7 @@ import org.cowboycoders.cyclisimo.util.TrackRecordingServiceConnectionUtils;
 import org.cowboycoders.cyclisimo.util.UnitConversions;
 import org.cowboycoders.location.LatLongAlt;
 import org.cowboycoders.turbotrainers.CourseTracker;
+import org.cowboycoders.turbotrainers.Mode;
 import org.cowboycoders.turbotrainers.Parameters;
 import org.cowboycoders.turbotrainers.TooFewAntChannelsAvailableException;
 import org.cowboycoders.turbotrainers.TurboCommunicationException;
@@ -372,6 +373,7 @@ public class TurboService extends Service {
       new Thread() {
         public void run() {
           try {
+            turboTrainer.setMode(Mode.TARGET_SLOPE);
             // slight hack to get around timeout errors on my tablet 
             retryErrorProneCall(startTurbo,10);
             turboTrainer.registerDataListener(dataListener);

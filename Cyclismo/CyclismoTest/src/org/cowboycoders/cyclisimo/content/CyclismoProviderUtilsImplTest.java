@@ -989,9 +989,12 @@ public class CyclismoProviderUtilsImplTest extends AndroidTestCase {
   public void test_updateUser() {
     User user = providerUtils.getUser(dummyUser.getId());
     final String newName = "clarence";
+    final long bikeId = 32434536;
     user.setName(newName);
+    user.setCurrentlySelectedBike(bikeId);
     providerUtils.updateUser(user);
     assertEquals(newName, providerUtils.getUser(user.getId()).getName());
+    assertEquals(bikeId, providerUtils.getUser(user.getId()).getCurrentlySelectedBike());
     // TODO: update other fields
   }
   

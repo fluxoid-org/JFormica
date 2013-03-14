@@ -142,6 +142,7 @@ public interface ApiAdapter {
    * @param listView the list view
    * @param contextualActionModeCallback the callback when an item is selected
    *          in the contextual action mode
+   * @param userListContextMenu 
    */
   public void configureListViewContextualMenu(Activity activity, ListView listView,
       ContextualActionModeCallback contextualActionModeCallback);
@@ -189,5 +190,9 @@ public interface ApiAdapter {
    * 
    * @param menu the search menu
    */
-  public boolean handleSearchKey(MenuItem menu);  
+  public boolean handleSearchKey(MenuItem menu);
+
+  public void configureListViewContextualMenu(Activity activity, ListView listView,
+      ContextualActionModeCallback contextualActionModeCallback, int contextMenuId);
+
 }
