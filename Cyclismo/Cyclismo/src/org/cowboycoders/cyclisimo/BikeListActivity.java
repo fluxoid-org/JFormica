@@ -395,7 +395,7 @@ public static final class DeleteAllBikesCallback implements DialogCallback,Parce
         String [] args = new String[] {Long.toString(ownerId),Integer.toString(1)};
         
         return new CursorLoader(BikeListActivity.this, BikeInfoColumns.CONTENT_URI, PROJECTION,
-            selection, args, BikeInfoColumns._ID + " DESC");
+            selection, args, "LOWER(" + BikeInfoColumns.NAME + ")");
       }
      
 
@@ -557,7 +557,6 @@ public static final class DeleteAllBikesCallback implements DialogCallback,Parce
     Bike bike = providerUtils.createBike((Cursor) listView.getItemAtPosition(position), false);
     switch (itemId) {
       case R.id.list_context_menu_edit:
-        //TOD: change to editbike
         intent = IntentUtils.newIntent(this, BikeEditActivity.class).putExtra(
             BikeEditActivity.EXTRA_BIKE, bike);
         startActivity(intent);
