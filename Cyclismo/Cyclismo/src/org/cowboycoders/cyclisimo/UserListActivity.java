@@ -40,6 +40,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
@@ -73,6 +74,7 @@ import org.cowboycoders.cyclisimo.fragments.ConfirmationDialogFragment.DialogCal
 import org.cowboycoders.cyclisimo.util.ApiAdapterFactory;
 import org.cowboycoders.cyclisimo.util.IntentUtils;
 import org.cowboycoders.cyclisimo.util.PreferencesUtils;
+import org.cowboycoders.cyclisimo.util.SettingsUtils;
 
 /**
  * An activity displaying a list of user.
@@ -337,22 +339,26 @@ public static final class DeleteAllUsersCallback implements DialogCallback,Parce
               onUnableToPerformOperation();
             } else {
               
-              new Thread() {
-                public void run() {
-                  PreferencesUtils.setLong(UserListActivity.this, R.string.settings_select_user_current_selection_key, user.getId());
-                }
-                
-              }.start();
+//              new Thread() {
+//                public void run() {
+//                  PreferencesUtils.setLong(UserListActivity.this, R.string.settings_select_user_current_selection_key, user.getId());
+//                }
+//                
+//              }.start();
+//              
+//              Intent intent = IntentUtils.newIntent(UserListActivity.this,
+//              TrackListActivity.class);
+//              intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+//              intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//              intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//              startActivity(intent);
+//              String unformated = getString(R.string.user_list_new_user_selected);
+//              Toast.makeText(UserListActivity.this, String.format(unformated, user.getName()), Toast.LENGTH_SHORT).show();
+//              UserListActivity.this.finish();
               
-              Intent intent = IntentUtils.newIntent(UserListActivity.this,
-              TrackListActivity.class);
-              intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-              intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-              intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-              startActivity(intent);
-              String unformated = getString(R.string.user_list_new_user_selected);
-              Toast.makeText(UserListActivity.this, String.format(unformated, user.getName()), Toast.LENGTH_SHORT).show();
-              UserListActivity.this.finish();
+              getSyncSettingsTask().execute(user.getId());
+              
+              
             }
             
           }
@@ -373,7 +379,7 @@ public static final class DeleteAllUsersCallback implements DialogCallback,Parce
       @Override
       public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
         return new CursorLoader(UserListActivity.this, UserInfoColumns.CONTENT_URI, PROJECTION,
-            null, null, UserInfoColumns._ID + " DESC");
+            null, null, "LOWER(" + UserInfoColumns.NAME + ")");
       }
 
       @Override
@@ -391,6 +397,64 @@ public static final class DeleteAllUsersCallback implements DialogCallback,Parce
     this.contextMenu = (ContextMenu) findViewById(R.menu.user_list_context_menu);
     
 
+  }
+  
+  private User loadUser(long id) {
+    return MyTracksProviderUtils.Factory.getCyclimso(UserListActivity.this).getUser(id);
+  }
+  
+  private AsyncTask<Object, Integer, User> getSyncSettingsTask() {
+    AsyncTask<Object, Integer, User> task = new AsyncTask<Object, Integer, User>() {
+
+      @Override
+      protected User doInBackground(Object... params) {
+        
+        Long newId = (Long) params[0];
+        
+        if (newId == -1L) {
+          return null;
+        }
+        
+        
+        final long oldId = PreferencesUtils.getLong(UserListActivity.this,
+            R.string.settings_select_user_current_selection_key);
+        
+        PreferencesUtils.setLong(UserListActivity.this, R.string.settings_select_user_current_selection_key, newId);
+        
+        // save previous users settings
+        if (oldId != -1L) {
+          User user = loadUser(oldId);
+          SettingsUtils.saveSettings(UserListActivity.this, user);
+        }
+        
+        User user = loadUser(newId);
+        SettingsUtils.restoreSettings(UserListActivity.this, user);
+        return user;
+        
+      }
+
+      @Override
+      protected void onPostExecute(User result) {
+        Context context = UserListActivity.this;
+        UserListActivity.this.finish();
+        if (result == null) {
+          Intent intent = IntentUtils.newIntent(context, UserListActivity.class);
+          UserListActivity.this.startActivity(intent);
+        } else {
+          Intent intent = IntentUtils.newIntent(UserListActivity.this,
+          TrackListActivity.class);
+          intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+          intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+          intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+          startActivity(intent);
+          String unformated = getString(R.string.user_list_new_user_selected);
+          Toast.makeText(UserListActivity.this, String.format(unformated, result.getName()), Toast.LENGTH_SHORT).show();
+        }
+      }
+
+    };
+
+    return task;
   }
 
   private void initCancelButton() {

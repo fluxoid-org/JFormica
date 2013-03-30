@@ -93,7 +93,6 @@ import org.cowboycoders.cyclisimo.io.file.SaveActivity;
 import org.cowboycoders.cyclisimo.io.file.TrackWriterFactory.TrackFileFormat;
 import org.cowboycoders.cyclisimo.services.TrackRecordingServiceConnection;
 import org.cowboycoders.cyclisimo.settings.SettingsActivity;
-import org.cowboycoders.cyclisimo.turbo.SharedPrefTest;
 import org.cowboycoders.cyclisimo.util.AnalyticsUtils;
 import org.cowboycoders.cyclisimo.util.ApiAdapterFactory;
 import org.cowboycoders.cyclisimo.util.EulaUtils;
@@ -725,10 +724,6 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
       protected User doInBackground(Object... params) {
         long userId = PreferencesUtils.getLong(TrackListActivity.this,
             R.string.settings_select_user_current_selection_key);
-        
-        //FIXME: remove this!!!!
-        SharedPrefTest test = new SharedPrefTest(TrackListActivity.this);
-        test.write();
         
         if (userId == -1L)
           return null;

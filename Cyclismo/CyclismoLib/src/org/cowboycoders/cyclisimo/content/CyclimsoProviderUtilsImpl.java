@@ -20,15 +20,18 @@ public class CyclimsoProviderUtilsImpl extends MyTracksProviderUtilsImpl impleme
     int idIndex = cursor.getColumnIndexOrThrow(UserInfoColumns._ID);
     int nameIndex;
     int weightIndex; 
-    int currentBikeIndex; 
+    int currentBikeIndex;
+    int settingsIndex;
     if (allFieldsMustBePresent) {
       nameIndex = cursor.getColumnIndexOrThrow(UserInfoColumns.NAME);
       weightIndex = cursor.getColumnIndexOrThrow(UserInfoColumns.WEIGHT);
       currentBikeIndex = cursor.getColumnIndexOrThrow(UserInfoColumns.CURRENT_BIKE);
+      settingsIndex = cursor.getColumnIndexOrThrow(UserInfoColumns.SETTINGS);
     } else {
       nameIndex = cursor.getColumnIndex(UserInfoColumns.NAME);
       weightIndex = cursor.getColumnIndex(UserInfoColumns.WEIGHT);
       currentBikeIndex = cursor.getColumnIndex(UserInfoColumns.CURRENT_BIKE);
+      settingsIndex = cursor.getColumnIndex(UserInfoColumns.SETTINGS);
     }
     
     User user = new User();
@@ -43,6 +46,9 @@ public class CyclimsoProviderUtilsImpl extends MyTracksProviderUtilsImpl impleme
     }
     if (currentBikeIndex > 0 && !cursor.isNull(currentBikeIndex)) {
       user.setCurrentlySelectedBike(cursor.getLong(currentBikeIndex));
+    }
+    if (settingsIndex > 0 && !cursor.isNull(settingsIndex)) {
+      user.setSettings(cursor.getBlob(settingsIndex));
     }
 
     return user;
@@ -192,6 +198,7 @@ public class CyclimsoProviderUtilsImpl extends MyTracksProviderUtilsImpl impleme
     values.put(UserInfoColumns.NAME, user.getName());
     values.put(UserInfoColumns.WEIGHT, user.getWeight());
     values.put(UserInfoColumns.CURRENT_BIKE, user.getCurrentlySelectedBike());
+    values.put(UserInfoColumns.SETTINGS,user.getSettings());
     
     return values;
   }

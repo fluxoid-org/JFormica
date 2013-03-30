@@ -37,7 +37,7 @@ public interface UserInfoColumns extends BaseColumns {
   public static final String NAME = "name"; // user name
   public static final String WEIGHT = "weight"; // weight in kilos
   public static final String CURRENT_BIKE = "current_bike"; // currently selected bike
-
+  public static final String SETTINGS = "settings"; // currently selected bike
   
   
   
@@ -45,7 +45,8 @@ public interface UserInfoColumns extends BaseColumns {
       + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
       + NAME + " STRING, " 
       + WEIGHT + " FLOAT, "
-      + CURRENT_BIKE + " INTEGER"
+      + CURRENT_BIKE + " INTEGER, "
+      + SETTINGS + " BLOB"
       + ");";
 
   public static final String[] COLUMNS = {
@@ -53,6 +54,7 @@ public interface UserInfoColumns extends BaseColumns {
       NAME,
       WEIGHT,
       CURRENT_BIKE,
+      SETTINGS,
   };
 
   public static final byte[] COLUMN_TYPES = {
@@ -60,5 +62,6 @@ public interface UserInfoColumns extends BaseColumns {
       ContentTypeIds.STRING_TYPE_ID, // name
       ContentTypeIds.FLOAT_TYPE_ID, // weight
       ContentTypeIds.LONG_TYPE_ID, // currently selected bike
+      ContentTypeIds.BLOB_TYPE_ID, // user settings
     };
 }
