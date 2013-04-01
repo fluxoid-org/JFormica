@@ -81,12 +81,23 @@ public class BushidoPolynomialBrakeController implements TurboTrainerDataListene
 	
 	/**
 	 *  Periodically updates the virtual speed which is required for estimating the brake resistance
+	 *  
+	 *  This is called frequently for two reasons:
+	 *  
+	 *  1. We want to  ensure that the most recent resistance estimate is 
+	 *     is always available to be sent to the brake.
+	 *  2. The power model requires updating in sub-second intervals for the integration
+	 *     technique to work with reasonable accuracy.
+	 *  
 	 */
 	private UpdateCallback updateVirtualSpeed  = new UpdateCallback() {
 		@Override
 		public void onUpdate(Object newValue) {
 			double virtualSpeed = powerModel.updatePower((Double) newValue);
 			bushidoDataModel.setVirtualSpeed(virtualSpeed);
+			
+			// Update the brake resistance from the current virtual speed
+			bushidoDataModel.setResistance(getBrakeResistanceFromPolynomialFit());
 		}
 	};
 	private FixedPeriodUpdater powerModelUpdater = new FixedPeriodUpdater(new Double(0),updateVirtualSpeed,POWER_MODEL_UPDATE_PERIOD_MS);
@@ -95,12 +106,10 @@ public class BushidoPolynomialBrakeController implements TurboTrainerDataListene
 	@Override
 	public void onPowerChange(double power) {
 		
+		// Update the power with which the power model is updated with
 		powerModelUpdater.update(new Double (power));
 		// Only starts once
 		powerModelUpdater.start();
-		
-		// Update the brake resistance from the current virtual speed
-		bushidoDataModel.setResistance(getBrakeResistanceFromPolynomialFit());
 		
 	}
 	
