@@ -83,7 +83,7 @@ public class BushidoTargetSlopeModel extends AbstractBushidoModel {
 	
 	// Sets weight bits in a packet
 	private byte[] injectWeight(byte[] dc01Packet) {
-		dc01Packet[WEIGHT_BYTE] = (byte) getWeight();
+		dc01Packet[WEIGHT_BYTE] = (byte) getTotalWeight();
 		return dc01Packet;
 	}
 	
@@ -97,7 +97,7 @@ public class BushidoTargetSlopeModel extends AbstractBushidoModel {
 		} catch (ClassCastException e) {
 			throw new IllegalArgumentException("Expecting target slope",e);
 		}
-		setWeight(castParameters.getTotalWeight());
+		setTotalWeight(castParameters.getTotalWeight());
 		setSlope(castParameters.getSlope());
 		
 	}

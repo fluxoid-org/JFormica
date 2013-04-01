@@ -370,7 +370,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
    */
   public double getRealDistance() {
     synchronized (model) {
-      return model.getDistance();
+      return model.getCompensatedDistance();
     }
   }
  
@@ -526,7 +526,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
       
       startTimeStamp = System.nanoTime();
       synchronized(model) {
-        while (model.getDistance() > 0.000001) {
+        while (model.getCompensatedDistance() > 0.000001) {
           channel.sendAndWaitForMessage(msg, AntUtils.CONDITION_CHANNEL_TX, 10L, TimeUnit.SECONDS, null);
           long currentTimestamp = System.nanoTime();
           long timeLeft = RESET_ODOMETER_TIMEOUT - (currentTimestamp - startTimeStamp);

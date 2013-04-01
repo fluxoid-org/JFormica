@@ -18,7 +18,7 @@ import org.cowboycoders.utils.FixedPeriodUpdater;
 import org.cowboycoders.utils.SlopeTimeAverager;
 import org.cowboycoders.utils.UpdateCallback;
 
-public class PowrModelSlopeController implements TurboTrainerDataListener {
+public class PowerModelSlopeController implements TurboTrainerDataListener {
 	
 	private static final int  POWER_MODEL_UPDATE_PERIOD_MS = 100; // milli-seconds
 	
@@ -42,7 +42,7 @@ public class PowrModelSlopeController implements TurboTrainerDataListener {
 	
 	private PowerModel powerModel = new PowerModel();
 	
-	private BushidoData bushidoDataModel;
+	private BrakeModel bushidoDataModel;
 	
 	private Lock speedUpdateLock = new ReentrantLock();
 
@@ -54,7 +54,7 @@ public class PowrModelSlopeController implements TurboTrainerDataListener {
 	
 	private SlopeTimeAverager actualSpeedSlopeAverager = new SlopeTimeAverager();
 	
-	public PowrModelSlopeController(BushidoData bushidoModel) {
+	public PowerModelSlopeController(BrakeModel bushidoModel) {
 		this.bushidoDataModel = bushidoModel;
 		bushidoDataModel.setResistance(getEstimatedResistance());
 		actualSpeedSlopeAverager.setThreshold(ACTUAL_SPEED_STEADY_STATE_THRESHOLD, -ACTUAL_SPEED_STEADY_STATE_THRESHOLD);
@@ -102,7 +102,7 @@ public class PowrModelSlopeController implements TurboTrainerDataListener {
 		 */
 		@Override
 		public double getMaxOutput() {
-			return BushidoData.RESISTANCE_MAX - getEstimatedResistance();
+			return BrakeModel.RESISTANCE_MAX - getEstimatedResistance();
 		}
 		
 		/**
@@ -110,7 +110,7 @@ public class PowrModelSlopeController implements TurboTrainerDataListener {
 		 */
 		@Override
 		public double getMinOutput() {
-			return BushidoData.RESISTANCE_MIN - getEstimatedResistance();
+			return BrakeModel.RESISTANCE_MIN - getEstimatedResistance();
 		}
 
 
@@ -222,7 +222,7 @@ public class PowrModelSlopeController implements TurboTrainerDataListener {
 		// double non-atomic?
 		try {
 			speedUpdateLock.lock();
-			PowrModelSlopeController.this.predictedSpeed = newValue;
+			PowerModelSlopeController.this.predictedSpeed = newValue;
 			// gradient averager
 			predictedSpeedSlopeAverager.add(predictedSpeed);
 		} finally {
@@ -245,7 +245,7 @@ public class PowrModelSlopeController implements TurboTrainerDataListener {
 		// double non-atomic?
 		try {
 			speedUpdateLock.lock();
-			PowrModelSlopeController.this.actualSpeed = newValue;
+			PowerModelSlopeController.this.actualSpeed = newValue;
 			actualSpeedSlopeAverager.add(actualSpeed);
 		} finally {
 			speedUpdateLock.unlock();
