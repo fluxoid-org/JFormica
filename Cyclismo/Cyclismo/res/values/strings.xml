@@ -3153,7 +3153,7 @@ limitations under the License.
   <string name="generic_list_empty_message">No items</string>
   
   <string name="settings_turbotrainer_generic">Turbo Trainer Settings</string>
-  <string name="settings_turbotrainer_generic_scale_factor_summary">Multiplys positive gradients by this value</string>
+  <string name="settings_turbotrainer_generic_scale_factor_summary">Multiplies positive gradients by this value</string>
   <string name="settings_turbotrainer_generic_scale_factor_title">Scale factor</string>
   
   <string name="settings_select_user_title">Select User</string>
@@ -3178,5 +3178,8 @@ limitations under the License.
   
   <string name="settings_courses_bike_select_title">Bike</string>
   <string name="settings_courses_bike_select_summary">Select a bike</string>
+  
+  <string name="settings_turbo_scale_factor_invalid">Invalid input</string>
+  <string name="settings_turbo_scale_factor_help">Must be between 0.0 and 1.0</string>
   
 </resources>

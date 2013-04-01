@@ -84,6 +84,12 @@ public class LocationUtils {
     return d;
   }
   
+  public static double gradientCorrectedDistance(LatLongAlt point1, LatLongAlt point2) {
+	    double horizontalDistance = distance(point1,point2);
+	    double heightDifference = point2.getAltitude() - point1.getAltitude();
+	    return Math.sqrt(Math.pow(heightDifference,2) + Math.pow(horizontalDistance, 2));
+  }
+  
 
   public static List<LatLongAlt> interpolatePoints(List<LatLongAlt> locations, double maximumDistance) {
     List<LatLongAlt> rtn = new ArrayList<LatLongAlt>();
@@ -126,9 +132,9 @@ public class LocationUtils {
    * @return gradient in percent
    */
   public static double getLocalisedGradient(LatLongAlt point1, LatLongAlt point2) {
-    double distance = distance(point1,point2);
+    double horizontalDistance = distance(point1,point2);
     double heightDifference = point2.getAltitude() - point1.getAltitude();
-    return (heightDifference / distance) * 100;
+    return (heightDifference / horizontalDistance) * 100;
   }
   
   public static void main(String[] args) {

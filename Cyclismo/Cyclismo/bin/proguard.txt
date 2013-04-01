@@ -1,4 +1,4 @@
-# view AndroidManifest.xml #generated:270
+# view AndroidManifest.xml #generated:271
 -keep class com.ipaulpro.afilechooser.FileChooserActivity { <init>(...); }
 
 # view AndroidManifest.xml #generated:159
@@ -13,7 +13,7 @@
 # view AndroidManifest.xml #generated:235
 -keep class org.cowboycoders.cyclisimo.BikeListActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:302
+# view AndroidManifest.xml #generated:303
 -keep class org.cowboycoders.cyclisimo.BootReceiver { <init>(...); }
 
 # view AndroidManifest.xml #generated:205
@@ -70,13 +70,13 @@
 # view AndroidManifest.xml #generated:230
 -keep class org.cowboycoders.cyclisimo.UserListActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:329
+# view AndroidManifest.xml #generated:330
 -keep class org.cowboycoders.cyclisimo.content.MyTracksCourseProvider { <init>(...); }
 
-# view AndroidManifest.xml #generated:323
+# view AndroidManifest.xml #generated:324
 -keep class org.cowboycoders.cyclisimo.content.MyTracksProvider { <init>(...); }
 
-# view AndroidManifest.xml #generated:336
+# view AndroidManifest.xml #generated:337
 -keep class org.cowboycoders.cyclisimo.content.SearchEngineProvider { <init>(...); }
 
 # view AndroidManifest.xml #generated:241
@@ -115,13 +115,13 @@
 # view AndroidManifest.xml #generated:253
 -keep class org.cowboycoders.cyclisimo.io.sendtogoogle.UploadResultActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:289
+# view AndroidManifest.xml #generated:290
 -keep class org.cowboycoders.cyclisimo.services.ControlRecordingService { <init>(...); }
 
-# view AndroidManifest.xml #generated:292
+# view AndroidManifest.xml #generated:293
 -keep class org.cowboycoders.cyclisimo.services.RemoveTempFilesService { <init>(...); }
 
-# view AndroidManifest.xml #generated:294
+# view AndroidManifest.xml #generated:295
 -keep class org.cowboycoders.cyclisimo.services.TrackRecordingService { <init>(...); }
 
 # view AndroidManifest.xml #generated:259
@@ -151,15 +151,18 @@
 # view AndroidManifest.xml #generated:262
 -keep class org.cowboycoders.cyclisimo.settings.StatsSettingsActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:293
+# view AndroidManifest.xml #generated:263
+-keep class org.cowboycoders.cyclisimo.settings.TurboSettingsActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:294
 -keep class org.cowboycoders.cyclisimo.turbo.AntHubService { <init>(...); }
 
-# view AndroidManifest.xml #generated:286
+# view AndroidManifest.xml #generated:287
 -keep class org.cowboycoders.cyclisimo.turbo.TurboService { <init>(...); }
 
-# view AndroidManifest.xml #generated:263
+# view AndroidManifest.xml #generated:264
 -keep class org.cowboycoders.cyclisimo.widgets.TrackWidgetConfigActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:307
+# view AndroidManifest.xml #generated:308
 -keep class org.cowboycoders.cyclisimo.widgets.TrackWidgetProvider { <init>(...); }
 

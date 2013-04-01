@@ -260,6 +260,7 @@ limitations under the License.
         <activity android:name="org.cowboycoders.cyclisimo.settings.SettingsActivity" />
         <activity android:name="org.cowboycoders.cyclisimo.settings.SharingSettingsActivity" />
         <activity android:name="org.cowboycoders.cyclisimo.settings.StatsSettingsActivity" />
+        <activity android:name="org.cowboycoders.cyclisimo.settings.TurboSettingsActivity" />
         <activity
             android:name="org.cowboycoders.cyclisimo.widgets.TrackWidgetConfigActivity"
             android:label="@string/track_widget_config_title" >

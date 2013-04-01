@@ -1197,6 +1197,8 @@ containing a value of this type.
         /**   Settings Switch Account 
          */
         public static final int settings_switch_account=0x7f060207;
+        public static final int settings_turbo_scale_factor_help=0x7f0602f9;
+        public static final int settings_turbo_scale_factor_invalid=0x7f0602f8;
         public static final int settings_turbotrainer_generic=0x7f0602e2;
         /**  Generic turbo preferences screen keys 
          */

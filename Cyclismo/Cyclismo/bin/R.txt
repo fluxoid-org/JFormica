@@ -922,6 +922,8 @@ int string settings_stats_units_imperial 0x7f060204
 int string settings_stats_units_metric 0x7f060205
 int string settings_stats_units_title 0x7f060206
 int string settings_switch_account 0x7f060207
+int string settings_turbo_scale_factor_help 0x7f0602f9
+int string settings_turbo_scale_factor_invalid 0x7f0602f8
 int string settings_turbotrainer_generic 0x7f0602e2
 int string settings_turbotrainer_generic_root_key 0x7f06008e
 int string settings_turbotrainer_generic_scale_factor_key 0x7f060090

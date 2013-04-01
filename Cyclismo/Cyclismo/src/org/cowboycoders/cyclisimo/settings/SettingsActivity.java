@@ -130,6 +130,18 @@ public class SettingsActivity extends AbstractSettingsActivity {
         return true;
       }
     });
+    
+    Preference turboPreference = findPreference(getString(R.string.settings_generic_turbo_key));
+    turboPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+        @Override
+      public boolean onPreferenceClick(Preference preference) {
+        Intent intent = IntentUtils.newIntent(
+            SettingsActivity.this, TurboSettingsActivity.class);
+        startActivity(intent);
+        return true;
+      }
+    });
+
 
     Preference sharingPreference = findPreference(getString(R.string.settings_sharing_key));
     sharingPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {

@@ -29,6 +29,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
@@ -50,6 +52,7 @@ import org.cowboycoders.ant.interfaces.AndroidAntTransceiver;
 import org.cowboycoders.ant.interfaces.AntRadioPoweredOffException;
 import org.cowboycoders.ant.interfaces.AntRadioServiceNotInstalledException;
 import org.cowboycoders.ant.interfaces.ServiceAlreadyClaimedException;
+import org.cowboycoders.cyclisimo.Constants;
 import org.cowboycoders.cyclisimo.R;
 import org.cowboycoders.cyclisimo.TrackEditActivity;
 import org.cowboycoders.cyclisimo.content.Bike;
@@ -101,6 +104,8 @@ public class TurboService extends Service {
   // private List<LatLongAlt> latLongAlts;
 
   private boolean running = false;
+  
+  private float scaleFactor = 1.0f; //multiply positive gradients by this value
   
   private AndroidAntTransceiver transceiver;
 
@@ -210,6 +215,10 @@ public class TurboService extends Service {
       double gradient = courseTracker.getCurrentGradient(); // returns 0.0 if
                                                             // finished for warm
                                                             // down
+      if (gradient > 0) {
+        gradient = gradient * scaleFactor;
+      }
+      
       try {
         parameterBuilderLock.lock();
         turboTrainer.setParameters(parameterBuilder.buildTargetSlope(gradient));
@@ -248,6 +257,8 @@ public class TurboService extends Service {
 
   private long recordingTrackId;
 
+  private SharedPreferences preferences;
+
   public void doFinish() {
     // if (recordingTrackId != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
     Intent intent = IntentUtils.newIntent(getBaseContext(), TrackEditActivity.class)
@@ -282,6 +293,10 @@ public class TurboService extends Service {
       return;
     }
     running = true;
+    
+    preferences = context.getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
+    
+    syncScaleFactor();
     
     
     // accessing database so should be put into a task
@@ -718,6 +733,25 @@ public class TurboService extends Service {
  
   }
   
+  /*
+   * Note that sharedPreferenceChangeListenr cannot be an anonymous inner class.
+   * Anonymous inner class will get garbage collected.
+   */
+  private final OnSharedPreferenceChangeListener sharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
+      if (key == getString(R.string.settings_turbotrainer_generic_scale_factor_key)) {
+        syncScaleFactor();
+      }
+      
+    }
+  
+  };
+  
+  private void syncScaleFactor() {
+    scaleFactor = Float.parseFloat(preferences.getString(getString(R.string.settings_turbotrainer_generic_scale_factor_key), "1.0"));
+  }
+ 
 
   // if
   // (context.getString(R.string.track_paused_broadcast_action).equals(action)
