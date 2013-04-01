@@ -1,6 +1,5 @@
 package org.cowboycoders.turbotrainers.bushido.brake;
 
-import java.util.concurrent.locks.Lock;
 import org.cowboycoders.turbotrainers.PowerModel;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.utils.FixedPeriodUpdater;
@@ -61,19 +60,16 @@ public class SpeedResistanceMapper implements
 	 */
 	public double getBrakeResistanceFromPolynomialFit() {
 
-		double slope = bushidoDataModel.getSlope();// Look in headunit and make
-													// slope model
+		double slope = bushidoDataModel.getSlope();
 		double totalWeight = bushidoDataModel.getTotalWeight();
-		double speed = bushidoDataModel.getSpeed();
+		double virtualSpeed = bushidoDataModel.getVirtualSpeed();
 
 		// Use a polynomial fit to data ripped from the head unit to estimate
-		// brake resistance from
-		// total weight, speed and slope
-
+		// brake resistance from total weight, speed and slope
 		double brakeResistance = slope * POLY_A + totalWeight * POLY_B
-				+ totalWeight * slope * POLY_C + speed * POLY_D
-				+ Math.pow(speed, 2) * POLY_E + POLY_F + slope * speed * POLY_G
-				+ totalWeight * speed * POLY_H + slope * totalWeight * speed
+				+ totalWeight * slope * POLY_C + virtualSpeed * POLY_D
+				+ Math.pow(virtualSpeed, 2) * POLY_E + POLY_F + slope * virtualSpeed * POLY_G
+				+ totalWeight * virtualSpeed * POLY_H + slope * totalWeight * virtualSpeed
 				* POLY_I;
 
 		return brakeResistance;
@@ -95,9 +91,9 @@ public class SpeedResistanceMapper implements
 	private UpdateCallback updateVirtualSpeed = new UpdateCallback() {
 		@Override
 		public void onUpdate(Object newValue) {
+			
 			double virtualSpeed = powerModel.updatePower((Double) newValue);
 			bushidoDataModel.setVirtualSpeed(virtualSpeed);
-
 			// Update the brake resistance from the current virtual speed
 			bushidoDataModel
 					.setResistance(getBrakeResistanceFromPolynomialFit());
@@ -108,7 +104,7 @@ public class SpeedResistanceMapper implements
 
 	@Override
 	public void onPowerChange(double power) {
-
+		
 		// Update the power with which the power model is updated with
 		powerModelUpdater.update(new Double(power));
 		// Only starts once
