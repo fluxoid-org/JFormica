@@ -52,6 +52,10 @@ import org.cowboycoders.ant.interfaces.AntRadioServiceNotInstalledException;
 import org.cowboycoders.ant.interfaces.ServiceAlreadyClaimedException;
 import org.cowboycoders.cyclisimo.R;
 import org.cowboycoders.cyclisimo.TrackEditActivity;
+import org.cowboycoders.cyclisimo.content.Bike;
+import org.cowboycoders.cyclisimo.content.CyclismoProviderUtils;
+import org.cowboycoders.cyclisimo.content.MyTracksProviderUtils;
+import org.cowboycoders.cyclisimo.content.User;
 import org.cowboycoders.cyclisimo.services.TrackRecordingServiceConnection;
 import org.cowboycoders.cyclisimo.util.IntentUtils;
 import org.cowboycoders.cyclisimo.util.PreferencesUtils;
@@ -68,6 +72,10 @@ import org.cowboycoders.turbotrainers.TurboTrainerInterface;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoHeadunit;
 
 public class TurboService extends Service {
+
+  private static final int DEFAULT_BIKE_WEIGHT = 7;
+
+  private static final int DEFAULT_USER_WEIGHT = 60;
 
   private static final int RESULT_ERROR = 0;
 
@@ -275,8 +283,31 @@ public class TurboService extends Service {
     }
     running = true;
     
-    //FIXME: use real weight / bike weight
-    setParameterBuilder(new Parameters.Builder(70,7));
+    
+    // accessing database so should be put into a task
+    double userWeight;
+    double bikeWeight;
+    Bike selectedBike;
+    
+    CyclismoProviderUtils providerUtils = MyTracksProviderUtils.Factory.getCyclimso(context);
+    User currentUser = providerUtils.getUser(PreferencesUtils.getLong(context, R.string.settings_select_user_current_selection_key));
+    if (currentUser!= null) {
+      userWeight = currentUser.getWeight();
+      selectedBike = providerUtils.getBike(PreferencesUtils.getLong(context, R.string.settings_select_bike_current_selection_key));
+    } else {
+      Log.w(TAG, "using default user weight");
+      userWeight = DEFAULT_USER_WEIGHT; //kg
+      selectedBike = null;
+    }
+    if (selectedBike != null) {
+      bikeWeight = selectedBike.getWeight();
+    } else {
+      Log.w(TAG, "using default bike weight");
+      bikeWeight = DEFAULT_BIKE_WEIGHT; //kg
+    }
+    setParameterBuilder(new Parameters.Builder(userWeight,bikeWeight));
+    Log.d(TAG,"user weight: " + userWeight);
+    Log.d(TAG,"bike weight: " + bikeWeight);
     
     attachAntLogger = PreferencesUtils.getBoolean(context,R.string.settings_ant_diagnostic_logging_state_key, false);
 

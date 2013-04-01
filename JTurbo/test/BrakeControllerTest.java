@@ -171,7 +171,8 @@ public class BrakeControllerTest {
 		//	return new GainParameters(2,0.5,0);
 		//}
 		//return new GainParameters(-1.8,-0.5,-0.2);
-		return new GainParameters(-4.6,-0.8,-0.3);
+		//return new GainParameters(-4.6,-0.8,-0.3); /ok
+		return new GainParameters(-4.6,-5,25.0);
 	}
 	  
   };

@@ -24,8 +24,11 @@ public class User implements Parcelable {
     name = in.readString();
     weight = in.readDouble();
     currentlySelectedBike = in.readLong();
-    settings = new byte[in.readInt()];
-    in.readByteArray(settings);
+    int settingsLength = in.readInt();
+    if (settingsLength > 0) {
+      settings = new byte[in.readInt()];
+      in.readByteArray(settings);
+    }
   }
   
   
@@ -40,8 +43,12 @@ public class User implements Parcelable {
     dest.writeString(name);
     dest.writeDouble(weight);
     dest.writeLong(currentlySelectedBike);
-    dest.writeInt(settings.length);
-    dest.writeByteArray(settings);
+    
+    dest.writeInt(settings == null ? 0 : settings.length);
+    if (settings != null) {
+      dest.writeByteArray(settings);
+    }
+
   }
   
   public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
