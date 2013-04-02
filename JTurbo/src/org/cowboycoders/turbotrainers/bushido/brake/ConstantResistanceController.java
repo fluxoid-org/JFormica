@@ -62,12 +62,9 @@ public class ConstantResistanceController extends AbstractController {
 		this.resistance = newVal;
 	}
 	
-	public void start(BrakeModel model) {
-		boolean started = isStarted();
-		super.start(model);
-		if (!started) {
-			getDataModel().setAbsoluteResistance(resistance);
-		}
+	@Override
+	public void onStart() {
+		getDataModel().setAbsoluteResistance(resistance);
 	}
 
 }

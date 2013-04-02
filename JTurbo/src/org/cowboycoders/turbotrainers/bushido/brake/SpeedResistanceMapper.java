@@ -156,12 +156,9 @@ public class SpeedResistanceMapper extends AbstractController {
 
 	}
 	
-	public void start(BrakeModel model) {
-		boolean started = isStarted();
-		super.start(model);
-		if (!started) {
-			getDataModel().setResistance(INITIAL_BRAKE_RESISTANCE);
-		}
+	@Override
+	public void onStart() {
+		getDataModel().setResistance(INITIAL_BRAKE_RESISTANCE);
 	}
 
 	public void stop() {

@@ -19,16 +19,19 @@ public abstract class AbstractController implements TurboTrainerDataListener {
 		return started;
 	}
 
-	public void start(BrakeModel bushidoModel) {
+	public void final start(BrakeModel bushidoModel) {
 		if (started) return;
 		started  = true;
 		setDataModel(bushidoModel);
+		onStart();
 	}
 	
 	public void stop() {
 		if (!started) return;
 		started = false;
 	}
+	
+	public abstract void onStart();
 	
 	
 

@@ -260,14 +260,11 @@ public class PidBrakeController extends AbstractController {
 		return resistancePidController;
 	}
 	
-	public void start(BrakeModel model) {
-		boolean started = isStarted();
-		super.start(model);
+	@Override
+	public void onStart() {
 		BrakeModel bushidoDataModel = getDataModel();
-		if (!started) {
-			bushidoDataModel.setResistance(getEstimatedResistance());
-			actualSpeedSlopeAverager.setThreshold(ACTUAL_SPEED_STEADY_STATE_THRESHOLD, -ACTUAL_SPEED_STEADY_STATE_THRESHOLD);
-		}
+		bushidoDataModel.setResistance(getEstimatedResistance());
+		actualSpeedSlopeAverager.setThreshold(ACTUAL_SPEED_STEADY_STATE_THRESHOLD, -ACTUAL_SPEED_STEADY_STATE_THRESHOLD);
 	}
 	
 
