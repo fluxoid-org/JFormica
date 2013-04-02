@@ -18,7 +18,7 @@ import org.cowboycoders.utils.FixedPeriodUpdater;
 import org.cowboycoders.utils.SlopeTimeAverager;
 import org.cowboycoders.utils.UpdateCallback;
 
-public class PowerModelSlopeController implements TurboTrainerDataListener {
+public class PidBrakeController extends AbstractController {
 	
 	private static final int  POWER_MODEL_UPDATE_PERIOD_MS = 100; // milli-seconds
 	
@@ -42,8 +42,6 @@ public class PowerModelSlopeController implements TurboTrainerDataListener {
 	
 	private PowerModel powerModel = new PowerModel();
 	
-	private BrakeModel bushidoDataModel;
-	
 	private Lock speedUpdateLock = new ReentrantLock();
 
 	private double predictedSpeed = -1; // metres/s
@@ -54,11 +52,11 @@ public class PowerModelSlopeController implements TurboTrainerDataListener {
 	
 	private SlopeTimeAverager actualSpeedSlopeAverager = new SlopeTimeAverager();
 	
-	public PowerModelSlopeController(BrakeModel bushidoModel) {
-		this.bushidoDataModel = bushidoModel;
-		bushidoDataModel.setResistance(getEstimatedResistance());
-		actualSpeedSlopeAverager.setThreshold(ACTUAL_SPEED_STEADY_STATE_THRESHOLD, -ACTUAL_SPEED_STEADY_STATE_THRESHOLD);
-	}
+//	public PidBrakeController(BrakeModel bushidoModel) {
+//		this.bushidoDataModel = bushidoModel;
+//		bushidoDataModel.setResistance(getEstimatedResistance());
+//		actualSpeedSlopeAverager.setThreshold(ACTUAL_SPEED_STEADY_STATE_THRESHOLD, -ACTUAL_SPEED_STEADY_STATE_THRESHOLD);
+//	}
 	
 	private UpdateCallback powerModelUpdateCallback  = new UpdateCallback() {
 
@@ -88,6 +86,7 @@ public class PowerModelSlopeController implements TurboTrainerDataListener {
 
 		@Override
 		public void setOutput(double resistance) {
+			BrakeModel bushidoDataModel = getDataModel();
 			// enforce estimated resistance for first update
 			if (needsSync) {
 				bushidoDataModel.setResistance(getEstimatedResistance());
@@ -133,6 +132,7 @@ public class PowerModelSlopeController implements TurboTrainerDataListener {
 
 	@Override
 	public void onSpeedChange(double speed) {
+		BrakeModel bushidoDataModel = getDataModel();
 		setActualSpeed(speed* Conversions.KM_PER_HOUR_TO_METRES_PER_SECOND);
 		double predictedSpeed = getPredictedSpeed();
 		double actualSpeed = getActualSpeed();
@@ -222,7 +222,7 @@ public class PowerModelSlopeController implements TurboTrainerDataListener {
 		// double non-atomic?
 		try {
 			speedUpdateLock.lock();
-			PowerModelSlopeController.this.predictedSpeed = newValue;
+			PidBrakeController.this.predictedSpeed = newValue;
 			// gradient averager
 			predictedSpeedSlopeAverager.add(predictedSpeed);
 		} finally {
@@ -245,7 +245,7 @@ public class PowerModelSlopeController implements TurboTrainerDataListener {
 		// double non-atomic?
 		try {
 			speedUpdateLock.lock();
-			PowerModelSlopeController.this.actualSpeed = newValue;
+			PidBrakeController.this.actualSpeed = newValue;
 			actualSpeedSlopeAverager.add(actualSpeed);
 		} finally {
 			speedUpdateLock.unlock();
@@ -259,6 +259,18 @@ public class PowerModelSlopeController implements TurboTrainerDataListener {
 	public PidParameterController getPidParameterController() {
 		return resistancePidController;
 	}
+	
+	public void start(BrakeModel model) {
+		boolean started = isStarted();
+		super.start(model);
+		BrakeModel bushidoDataModel = getDataModel();
+		if (!started) {
+			bushidoDataModel.setResistance(getEstimatedResistance());
+			actualSpeedSlopeAverager.setThreshold(ACTUAL_SPEED_STEADY_STATE_THRESHOLD, -ACTUAL_SPEED_STEADY_STATE_THRESHOLD);
+		}
+	}
+	
+
 	
 
 }

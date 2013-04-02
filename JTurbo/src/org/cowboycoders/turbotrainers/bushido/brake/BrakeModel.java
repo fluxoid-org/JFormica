@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.cowboycoders.ant.utils.BigIntUtils;
 import org.cowboycoders.turbotrainers.DataPacketProvider;
+import org.cowboycoders.turbotrainers.Parameters.CommonParametersInterface;
 import org.cowboycoders.turbotrainers.TurboBaseModel;
 import org.cowboycoders.utils.LoopingListIterator;
 import org.cowboycoders.utils.TrapezoidIntegrator;
@@ -35,7 +36,7 @@ import org.cowboycoders.utils.TrapezoidIntegrator;
  * 
  * @author will
  */
-public class BrakeModel extends TurboBaseModel {
+public abstract class BrakeModel extends TurboBaseModel {
 
 	private static final byte RESISTANCE_PACKET_IDENTIFER = 0x01;
 	private static final int RESISTANCE_PACKET_IDENTIFER_INDEX = 0x00;
@@ -48,7 +49,7 @@ public class BrakeModel extends TurboBaseModel {
 	public static final double RESISTANCE_MAX = 100;
 	public static final double RESISTANCE_MIN = 0;
 
-	private double resistance;
+	private int resistance;
 	private double powerBalance = 50;
 	private double brakeTemperature;
 	private long counter = 0;
@@ -93,6 +94,13 @@ public class BrakeModel extends TurboBaseModel {
 	 * @return brake resistance as percent
 	 */
 	public double getResistance() {
+		return ((double)(getAbsoluteResistance() - RESISTANCE_LOW_LIMIT) / (double)(RESISTANCE_HIGH_LIMIT - RESISTANCE_LOW_LIMIT)) * 100.0;
+	}
+	
+	/**
+	 * @return absolute brake resistance 
+	 */
+	public int getAbsoluteResistance() {
 		return resistance;
 	}
 
@@ -106,6 +114,19 @@ public class BrakeModel extends TurboBaseModel {
 			resistance = RESISTANCE_MAX;
 		if (resistance < RESISTANCE_MIN)
 			resistance = RESISTANCE_MIN;
+		int absolute = (int) (((resistance / 100) * (RESISTANCE_HIGH_LIMIT - RESISTANCE_LOW_LIMIT)) + RESISTANCE_LOW_LIMIT);
+		this.resistance = absolute;
+	}
+	
+	/**
+	 * Sets absolute resistance between RESISTANCE_HIGH_LIMIT and RESISTANCE_LOW_LIMIT
+	 * @param resistance absolute value for resistance
+	 */
+	public void setAbsoluteResistance(int resistance) {
+		if (resistance > RESISTANCE_HIGH_LIMIT)
+			resistance = RESISTANCE_HIGH_LIMIT;
+		if (resistance < RESISTANCE_LOW_LIMIT)
+			resistance = RESISTANCE_LOW_LIMIT;
 		this.resistance = resistance;
 	}
 
@@ -186,10 +207,8 @@ public class BrakeModel extends TurboBaseModel {
 	}
 
 	protected byte[] injectResistance(byte[] resistancePacket) {
-		double percentage = getResistance();
-		long resistanceBrakeValue = (int) (((percentage / 100) * (RESISTANCE_HIGH_LIMIT - RESISTANCE_LOW_LIMIT)) + RESISTANCE_LOW_LIMIT);
 		BigInteger bigResistance = BigIntUtils
-				.convertLong(resistanceBrakeValue);
+				.convertInt(getAbsoluteResistance());
 		byte[] bytes = BigIntUtils.clipToByteArray(bigResistance, 2);
 		resistancePacket[1] = bytes[0];
 		resistancePacket[2] = bytes[1];
@@ -209,11 +228,13 @@ public class BrakeModel extends TurboBaseModel {
 		bi = new BigInteger(new byte[] { (byte) 0x0c, (byte) 0xff });
 		System.out.println("resistance high: " + bi);
 		System.out.println();
-		BrakeModel bd = new BrakeModel();
-		bd.setResistance(0);
-		print(bd.getDataPacket());
-		bd.setResistance(100);
-		print(bd.getDataPacket());
+//		BrakeModel bd = new BrakeModel();
+//		bd.setResistance(0);
+//		print(bd.getDataPacket());
+//		bd.setResistance(100);
+//		print(bd.getDataPacket());
 	}
+
+
 
 }

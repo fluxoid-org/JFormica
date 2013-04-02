@@ -2,7 +2,9 @@ package org.cowboycoders.turbotrainers.bushido.brake;
 
 import org.cowboycoders.turbotrainers.PowerModel;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
+import org.cowboycoders.utils.Conversions;
 import org.cowboycoders.utils.FixedPeriodUpdater;
+import org.cowboycoders.utils.SimpleCsvLogger;
 import org.cowboycoders.utils.UpdateCallback;
 
 /**
@@ -15,14 +17,17 @@ import org.cowboycoders.utils.UpdateCallback;
  *         observations of the head unit behavior.
  * 
  */
-public class SpeedResistanceMapper implements
-		TurboTrainerDataListener {
+public class SpeedResistanceMapper extends AbstractController {
+
+	private static final String ABSOLUTE_RESISTANCE_HEADING = "Absolute Resistance";
+
+	private static final String VIRTUAL_SPEED_HEADING = "Virtual Speed";
+
+	private static final String ACTUAL_SPEED_HEADING = "Actual Speed";
 
 	// Period at which the virtual speed will be updated (ms)
 	private static final int POWER_MODEL_UPDATE_PERIOD_MS = 100;
-
-	// To stop furious pedaling at the start we choose a reasonable initial
-	// resistance
+	
 	private static final int INITIAL_BRAKE_RESISTANCE = 20;
 
 	// Coefficients from polynomial fit to brake resistance -> speed
@@ -38,14 +43,15 @@ public class SpeedResistanceMapper implements
 
 	// Model to estimate bike speed from power
 	private PowerModel powerModel = new PowerModel();
+	
+	private SimpleCsvLogger logger;
 
-	// Holds simulation specific data, eg. current power, rider weight etc.
-	private BrakeModel bushidoDataModel;
+	
 
-	public SpeedResistanceMapper(BrakeModel bushidoModel) {
-		this.bushidoDataModel = bushidoModel;
-		bushidoDataModel.setResistance(INITIAL_BRAKE_RESISTANCE);
-	}
+//	public SpeedResistanceMapper(BrakeModel bushidoModel) {
+//		this.bushidoDataModel = bushidoModel;
+//		bushidoDataModel.setResistance(INITIAL_BRAKE_RESISTANCE);
+//	}
 
 	/**
 	 * Calculates a brake resistance from the current virtual speed.
@@ -59,17 +65,17 @@ public class SpeedResistanceMapper implements
 	 * @return - estimated brake resistance
 	 */
 	public double getBrakeResistanceFromPolynomialFit() {
-
+		BrakeModel bushidoDataModel = getDataModel();
 		double slope = bushidoDataModel.getSlope();
 		double totalWeight = bushidoDataModel.getTotalWeight();
-		double virtualSpeed = bushidoDataModel.getVirtualSpeed();
+		double actualSpeed = bushidoDataModel.getActualSpeed();
 
 		// Use a polynomial fit to data ripped from the head unit to estimate
 		// brake resistance from total weight, speed and slope
 		double brakeResistance = slope * POLY_A + totalWeight * POLY_B
-				+ totalWeight * slope * POLY_C + virtualSpeed * POLY_D
-				+ Math.pow(virtualSpeed, 2) * POLY_E + POLY_F + slope * virtualSpeed * POLY_G
-				+ totalWeight * virtualSpeed * POLY_H + slope * totalWeight * virtualSpeed
+				+ totalWeight * slope * POLY_C + actualSpeed * POLY_D
+				+ Math.pow(actualSpeed, 2) * POLY_E + POLY_F + slope * actualSpeed * POLY_G
+				+ totalWeight * actualSpeed * POLY_H + slope * totalWeight * actualSpeed
 				* POLY_I;
 
 		return brakeResistance;
@@ -91,16 +97,26 @@ public class SpeedResistanceMapper implements
 	private UpdateCallback updateVirtualSpeed = new UpdateCallback() {
 		@Override
 		public void onUpdate(Object newValue) {
-			
-			double virtualSpeed = powerModel.updatePower((Double) newValue);
+			BrakeModel bushidoDataModel = getDataModel();
+			double virtualSpeed = powerModel.updatePower((Double) newValue) * Conversions.METRES_PER_SECOND_TO_KM_PER_HOUR;
 			bushidoDataModel.setVirtualSpeed(virtualSpeed);
 			// Update the brake resistance from the current virtual speed
 			bushidoDataModel
-					.setResistance(getBrakeResistanceFromPolynomialFit());
+					.setAbsoluteResistance((int)getBrakeResistanceFromPolynomialFit());
+			synchronized (this) {
+				if (logger != null) {
+					logger.update(VIRTUAL_SPEED_HEADING, virtualSpeed);
+					logger.update(ABSOLUTE_RESISTANCE_HEADING, bushidoDataModel.getAbsoluteResistance());
+				}
+			}
 		}
 	};
 	private FixedPeriodUpdater powerModelUpdater = new FixedPeriodUpdater(
 			new Double(0), updateVirtualSpeed, POWER_MODEL_UPDATE_PERIOD_MS);
+
+
+
+
 
 	@Override
 	public void onPowerChange(double power) {
@@ -114,6 +130,11 @@ public class SpeedResistanceMapper implements
 
 	@Override
 	public void onSpeedChange(double speed) {
+		synchronized (this) {
+			if (logger != null) {
+				logger.update(ACTUAL_SPEED_HEADING, speed);
+			}
+		}
 		// Not interested
 	}
 
@@ -134,9 +155,23 @@ public class SpeedResistanceMapper implements
 		// Not interested
 
 	}
+	
+	public void start(BrakeModel model) {
+		boolean started = isStarted();
+		super.start(model);
+		if (!started) {
+			getDataModel().setResistance(INITIAL_BRAKE_RESISTANCE);
+		}
+	}
 
 	public void stop() {
 		powerModelUpdater.stop();
+	}
+	
+	public synchronized void enableLogging(String dir, String filename) {
+		this.logger = new SimpleCsvLogger(dir,filename,ACTUAL_SPEED_HEADING,VIRTUAL_SPEED_HEADING,ABSOLUTE_RESISTANCE_HEADING);
+		this.logger.addTime(true);
+		this.logger.append(true);
 	}
 
 }

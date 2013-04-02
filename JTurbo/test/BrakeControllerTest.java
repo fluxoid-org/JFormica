@@ -56,8 +56,11 @@ import org.cowboycoders.ant.utils.SimplePidLogger;
 import org.cowboycoders.pid.GainController;
 import org.cowboycoders.pid.GainParameters;
 import org.cowboycoders.pid.OutputControlParameters;
+import org.cowboycoders.turbotrainers.Mode;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
-import org.cowboycoders.turbotrainers.bushido.brake.BushidoBrakeController;
+import org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake;
+import org.cowboycoders.turbotrainers.bushido.brake.PidBrakeController;
+import org.cowboycoders.turbotrainers.bushido.brake.SpeedResistanceMapper;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoBroadcastDataListener;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressListener;
@@ -141,7 +144,7 @@ public class BrakeControllerTest {
     
   };
 
-  BushidoBrakeController b;
+  BushidoBrake b;
   
   AntLoggerImpl antLogger = new AntLoggerImpl();
   
@@ -149,7 +152,9 @@ public class BrakeControllerTest {
   public void testRequestVersion() throws InterruptedException, TimeoutException {
     Node n = new Node(BrakeControllerTest.antchip);
     n.registerAntLogger(antLogger);
-    b = new BushidoBrakeController(n);
+    PidBrakeController pid = new PidBrakeController();
+    b = new BushidoBrake(n,pid);
+    b.setMode(Mode.TARGET_SLOPE);
     b.registerDataListener(dataListener);
     b.startConnection();
     
@@ -177,17 +182,19 @@ public class BrakeControllerTest {
 	  
   };
   
-  @Test
+  //@Test
   public void testBrakeSlopeCOntroller() throws InterruptedException, TimeoutException {
     Node n = new Node(BrakeControllerTest.antchip);
     n.registerAntLogger(antLogger);
     SimplePidLogger pidLogger = new SimplePidLogger();
-    b = new BushidoBrakeController(n);
+    PidBrakeController pid = new PidBrakeController();
+    b = new BushidoBrake(n,pid);
+    b.setMode(Mode.TARGET_SLOPE);
     b.registerDataListener(dataListener);
     b.startConnection();
-    b.getPidParamaterController().registerPidUpdateLister(pidLogger);
-    b.getPidParamaterController().setGainController(gainController);
-    pidLogger.newLog(b.getPidParamaterController());
+    pid.getPidParameterController().registerPidUpdateLister(pidLogger);
+    pid.getPidParameterController().setGainController(gainController);
+    pidLogger.newLog(pid.getPidParameterController());
 
     Thread.sleep(60000);
     
@@ -195,6 +202,22 @@ public class BrakeControllerTest {
     n.stop();
   }
   
+  @Test
+  public void testPolynomialCOntroller() throws InterruptedException, TimeoutException {
+    Node n = new Node(BrakeControllerTest.antchip);
+    n.registerAntLogger(antLogger);
+    SpeedResistanceMapper mapper = new SpeedResistanceMapper();
+    mapper.enableLogging("logs", "polylog");
+    b = new BushidoBrake(n,mapper);
+    b.setMode(Mode.TARGET_SLOPE);
+    b.registerDataListener(dataListener);
+    b.startConnection();
+
+    Thread.sleep(60000);
+    
+    b.stop();
+    n.stop();
+  }
   
   
   

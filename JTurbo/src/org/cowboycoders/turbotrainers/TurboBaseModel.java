@@ -2,6 +2,7 @@ package org.cowboycoders.turbotrainers;
 
 import java.util.logging.Logger;
 
+import org.cowboycoders.turbotrainers.Parameters.CommonParametersInterface;
 import org.cowboycoders.turbotrainers.bushido.headunit.AbstractBushidoModel;
 import org.cowboycoders.utils.Constants;
 import org.cowboycoders.utils.TrapezoidIntegrator;
@@ -126,6 +127,15 @@ abstract public class TurboBaseModel {
 	 * @return actual distance in m
 	 */
 	public double getActualDistance() {
+		return actualDistance;
+	}
+	
+	/**
+	 * @param userIntegral result obtained through integrating actual speed
+	 * @return actual distance in m
+	 */
+	public double getActualDistance(boolean useIntegral) {
+		if (useIntegral == false) return getActualDistance();
 		return integralActualSpeed.getIntegral();
 	}
 
@@ -162,5 +172,18 @@ abstract public class TurboBaseModel {
 		}
 		this.totalWeight = totalWeight;
 	}
+	
+	/**
+	 * 
+	 * @param parameters
+	 * @throws IllegalArgumentException if cannot be cast to desired type
+	 */
+	public abstract void setParameters(CommonParametersInterface parameters) throws IllegalArgumentException;
+	
+	/**
+	 * Returns latest bounded target
+	 * @return
+	 */
+	public abstract double getTarget();
 
 }

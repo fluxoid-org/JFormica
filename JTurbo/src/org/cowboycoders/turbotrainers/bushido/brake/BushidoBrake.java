@@ -48,18 +48,19 @@ import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.utils.IterationOperator;
 import org.cowboycoders.utils.IterationUtils;
 
-public class BushidoBrakeController extends AntTurboTrainer {
+public class BushidoBrake extends AntTurboTrainer {
 	
 	  public static final Mode [] SUPPORTED_MODES = new Mode [] {
 		  	Mode.TARGET_SLOPE
 		  };
 	  
-	  {
+	  {	
+		  //switch on controller type (different controllers support diff modes)
 		  setSupportedModes(SUPPORTED_MODES);
 	  }
 
 	public final static Logger LOGGER = Logger
-			.getLogger(BushidoBrakeController.class.getName());
+			.getLogger(BushidoBrake.class.getName());
 	
 	public static final byte[] PACKET_REQUEST_VERSION = AntUtils.padToDataLength(new int [] {(byte) 0xAc, 0x02});
 
@@ -73,7 +74,7 @@ public class BushidoBrakeController extends AntTurboTrainer {
 
 	private Lock requestDataLock = new ReentrantLock();
 	private boolean requestDataInProgess = false;
-	private PowerModelSlopeController slopeController; 
+	private AbstractController resistanceController; 
 
 	private Runnable requestDataCallback = new Runnable() {
 
@@ -149,7 +150,7 @@ public class BushidoBrakeController extends AntTurboTrainer {
 			// receive values directly
 			// manually update with new value obtained through integration
 			synchronized (model) {
-				this.onDistanceChange(model.getActualDistance());
+				this.onDistanceChange(model.getActualDistance(true));
 			}
 
 		}
@@ -261,17 +262,11 @@ public class BushidoBrakeController extends AntTurboTrainer {
 
 	};
 
-	public double getSlope() {
-		return 0;
-		// FIXME: implement
-	}
 
-	public void setSlope(double slope) {
-		// FIXME: implement
-	}
 
-	public BushidoBrakeController(Node node) {
+	public BushidoBrake(Node node, AbstractController controller) {
 		super(node);
+		this.resistanceController = controller;
 		this.node = node;
 		this.key = new NetworkKey(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 				0x00);
@@ -331,23 +326,27 @@ public class BushidoBrakeController extends AntTurboTrainer {
 
 		// startCycling();
 
-		this.model = new BrakeModel();
+		if (getCurrentMode() == Mode.TARGET_SLOPE) {
+			this.model = new TargetSlopeModel();
+		}
+		
+		
 		BushidoUpdatesListener updatesListener = new BushidoUpdatesListener(
 				model, this.getMessageSender());
 		BushidoBrakeBroadcastDataListener dataListener = new BushidoBrakeBroadcastDataListener(
 				updatesListener);
 		this.registerChannelRxListener(dataListener, BroadcastDataMessage.class);
 		
-		slopeController = new PowerModelSlopeController(model);
+		resistanceController.start(model);
 		
-		this.registerDataListener(slopeController);
+		this.registerDataListener(resistanceController);
 	}
 
 	public String requestVersion() {
 		try {
 			getMessageSender().pause(true);
 			BroadcastDataMessage msg = new BroadcastDataMessage();
-			msg.setData(BushidoBrakeController.PACKET_REQUEST_VERSION);
+			msg.setData(BushidoBrake.PACKET_REQUEST_VERSION);
 			channel.sendAndWaitForMessage(msg, AntUtils.CONDITION_CHANNEL_TX, 10L,
 					TimeUnit.SECONDS, null);
 
@@ -399,8 +398,8 @@ public class BushidoBrakeController extends AntTurboTrainer {
 			}
 		}
 		
-		this.unregisterDataListener(slopeController);
-		slopeController.stop();
+		this.unregisterDataListener(resistanceController);
+		resistanceController.stop();
 		
 		// disconnect();
 		channel.close();
@@ -430,25 +429,21 @@ public class BushidoBrakeController extends AntTurboTrainer {
 		return false;
 	}
 	
-	public PowerModelManipulator getPowerModelManipulator() {
-		return slopeController.getPowerModelManipulator();
-	}
-	
-	public PidParameterController getPidParamaterController() {
-		return slopeController.getPidParameterController();
-	}
 
 	@Override
 	public void setParameters(CommonParametersInterface parameters)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+		synchronized (model) {
+			model.setParameters(parameters);
+		}
 		
 	}
 
 	@Override
 	public double getTarget() {
-		// TODO Auto-generated method stub
-		return 0;
+		synchronized (model) {
+			return model.getTarget();
+		}
 	}
 
 }

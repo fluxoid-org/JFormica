@@ -71,17 +71,5 @@ public abstract class AbstractBushidoModel extends TurboBaseModel {
 		return packetProvidersIterator.next().getDataPacket();
 	}
 	
-	/**
-	 * 
-	 * @param parameters
-	 * @throws IllegalArgumentException if cannot be cast to desired type
-	 */
-	public abstract void setParameters(CommonParametersInterface parameters) throws IllegalArgumentException;
-	
-	/**
-	 * Returns latest bounded target
-	 * @return
-	 */
-	public abstract double getTarget();
 
 }
