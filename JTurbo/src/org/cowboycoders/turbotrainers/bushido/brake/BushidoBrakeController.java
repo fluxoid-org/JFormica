@@ -131,7 +131,7 @@ public class BushidoBrakeController extends AntTurboTrainer {
 		@Override
 		public void onSpeedChange(final double speed) {
 			synchronized (model) {
-				model.setSpeed(speed);
+				model.setActualSpeed(speed);
 			}
 			synchronized (dataChangeListeners) {
 				IterationUtils.operateOnAll(dataChangeListeners,
@@ -149,7 +149,7 @@ public class BushidoBrakeController extends AntTurboTrainer {
 			// receive values directly
 			// manually update with new value obtained through integration
 			synchronized (model) {
-				this.onDistanceChange(model.getCompensatedDistance());
+				this.onDistanceChange(model.getActualDistance());
 			}
 
 		}
