@@ -59,6 +59,7 @@ import org.cowboycoders.pid.OutputControlParameters;
 import org.cowboycoders.turbotrainers.Mode;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake;
+import org.cowboycoders.turbotrainers.bushido.brake.ConstantResistanceController;
 import org.cowboycoders.turbotrainers.bushido.brake.PidBrakeController;
 import org.cowboycoders.turbotrainers.bushido.brake.SpeedResistanceMapper;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoBroadcastDataListener;
@@ -202,12 +203,30 @@ public class BrakeControllerTest {
     n.stop();
   }
   
-  @Test
+  //@Test
   public void testPolynomialCOntroller() throws InterruptedException, TimeoutException {
     Node n = new Node(BrakeControllerTest.antchip);
     n.registerAntLogger(antLogger);
     SpeedResistanceMapper mapper = new SpeedResistanceMapper();
     mapper.enableLogging("logs", "polylog");
+    b = new BushidoBrake(n,mapper);
+    b.setMode(Mode.TARGET_SLOPE);
+    b.registerDataListener(dataListener);
+    b.startConnection();
+
+    Thread.sleep(60000);
+    
+    b.stop();
+    n.stop();
+  }
+  
+  @Test
+  public void testFixedResistanceCOntroller() throws InterruptedException, TimeoutException {
+    Node n = new Node(BrakeControllerTest.antchip);
+    n.registerAntLogger(antLogger);
+    ConstantResistanceController mapper = new ConstantResistanceController();
+    mapper.setAbsoluteResistance(1000);
+    mapper.enableLogging("logs", "constant_reslog");
     b = new BushidoBrake(n,mapper);
     b.setMode(Mode.TARGET_SLOPE);
     b.registerDataListener(dataListener);
