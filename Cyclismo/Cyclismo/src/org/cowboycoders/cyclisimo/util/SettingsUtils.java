@@ -22,17 +22,21 @@ public class SettingsUtils {
   }
   
   public static void restoreSettings(Context context, User user) {
-    byte [] settings;
-    if ((settings = user.getSettings()) == null) {
-      Log.e(TAG,"settings are null : ignorning");
-      return;
-    }
     
     SharedPreferences preferences = context.getSharedPreferences(
         Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
     
     // clear preferences
     preferences.edit().clear().apply();
+    
+    
+    byte [] settings;
+    if ((settings = user.getSettings()) == null) {
+      Log.e(TAG,"settings are null : ignorning");
+      preferences.edit().putLong(context.getString(R.string.settings_select_user_current_selection_key), user.getId()).apply();
+      return;
+    }
+    
     
     PreferenceBackupHelper importer = createPreferenceBackupHelper(context);
     try {

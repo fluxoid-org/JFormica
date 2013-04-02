@@ -48,10 +48,6 @@ public class CourseSetupActivity extends Activity {
     super();
   }
   
-  public CourseSetupActivity(String test) {
-    super();
-  }
-  
   private static final String TAG = "CourseSetupActivty";
   private CourseSetupObserver courseSetupObserver;
   
@@ -226,6 +222,8 @@ public class CourseSetupActivity extends Activity {
 
         @Override
         public void onBikeUpdate(Bike bikeIn) {
+          String bikeDesc = bikeIn == null ? "null" : bikeIn.getName();
+          Log.d(TAG,"new bike: " + bikeDesc);
           setBike(bikeIn);
           validate();
         }

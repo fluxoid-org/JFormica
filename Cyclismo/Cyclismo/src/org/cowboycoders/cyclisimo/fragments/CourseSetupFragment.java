@@ -276,6 +276,7 @@ public class CourseSetupFragment extends AbstractSettingsFragment {
           @Override
           protected Bike doInBackground(Object... params) {
             long bikeId = getCurrentBikeId();
+            //long bikeId = newValue;
             
             if (bikeId == -1L) {
               observer.onBikeUpdate(null);
@@ -304,8 +305,8 @@ public class CourseSetupFragment extends AbstractSettingsFragment {
       Long bikeId = (Long) value;
       String noneSelected = this.getString(R.string.course_not_selected);
       // the bikeid coming is from the shared preference / get current users bike
-      bikeId = getCurrentBikeId();
-      if (bikeId == -1) {
+     bikeId = getCurrentBikeId();
+      if (bikeId == -1L) {
         return noneSelected;
       }
       Bike bike = loadBike(bikeId);
