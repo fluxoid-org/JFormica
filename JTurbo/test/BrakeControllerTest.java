@@ -178,12 +178,12 @@ public class BrakeControllerTest {
 		//}
 		//return new GainParameters(-1.8,-0.5,-0.2);
 		//return new GainParameters(-4.6,-0.8,-0.3); /ok
-		return new GainParameters(-4.6,-5,25.0);
+		return new GainParameters(-15.0,-0.5,0.);
 	}
 	  
   };
   
-  //@Test
+  @Test
   public void testBrakeSlopeCOntroller() throws InterruptedException, TimeoutException {
     Node n = new Node(BrakeControllerTest.antchip);
     n.registerAntLogger(antLogger);
@@ -220,7 +220,7 @@ public class BrakeControllerTest {
     n.stop();
   }
   
-  @Test
+  //@Test
   public void testFixedResistanceCOntroller() throws InterruptedException, TimeoutException {
     Node n = new Node(BrakeControllerTest.antchip);
     n.registerAntLogger(antLogger);

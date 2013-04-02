@@ -28,7 +28,7 @@ public class PidBrakeController extends AbstractController {
 	
 	private static final double PID_PROPORTIONAL_GAIN = 0.5;
 	
-	private static final int STARTING_RESISTANCE = 10; // %
+	private static final int STARTING_RESISTANCE = 0; // %
 	
 	// if acceleration is +/- this value we assume we have reach a steady state. 
 	// This is when we try and sync actual wheel speed to prdicted wheel speed

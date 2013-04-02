@@ -42,7 +42,8 @@ public abstract class BrakeModel extends TurboBaseModel {
 	private static final int RESISTANCE_PACKET_IDENTIFER_INDEX = 0x00;
 
 	// limits upto and including
-	private static final int RESISTANCE_LOW_LIMIT = -414;
+	//private static final int RESISTANCE_LOW_LIMIT = -414;
+	private static final int RESISTANCE_LOW_LIMIT = 250; //capped at 250 as -414 til 250 appears to be a dead zone
 	private static final int RESISTANCE_HIGH_LIMIT = 3327;
 	public static final double BALANCE_MAX = 100;
 	public static final double BALANCE_MIN = 0;

@@ -39,6 +39,9 @@ public class TargetSlopeModel  extends BrakeModel{
 		bd.setResistance(50);
 		System.out.println(bd.getAbsoluteResistance());
 		System.out.println(bd.getResistance());
+		bd.setResistance(0);
+		System.out.println(bd.getAbsoluteResistance());
+		System.out.println(bd.getResistance());
 	}
 
 }
