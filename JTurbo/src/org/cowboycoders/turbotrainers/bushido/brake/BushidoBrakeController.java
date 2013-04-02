@@ -69,11 +69,11 @@ public class BushidoBrakeController extends AntTurboTrainer {
 	private NetworkKey key;
 	private Channel channel;
 	private EnqueuedMessageSender channelMessageSender;
-	private BushidoData model;
+	private BrakeModel model;
 
 	private Lock requestDataLock = new ReentrantLock();
 	private boolean requestDataInProgess = false;
-	private PowrModelSlopeController slopeController; 
+	private PowerModelSlopeController slopeController; 
 
 	private Runnable requestDataCallback = new Runnable() {
 
@@ -92,14 +92,14 @@ public class BushidoBrakeController extends AntTurboTrainer {
 
 	public class BushidoUpdatesListener implements BushidoBrakeInternalListener {
 
-		private BushidoData model;
+		private BrakeModel model;
 
 		/**
 		 * Only route responses through this member
 		 */
 		private ChannelMessageSender channelSender;
 
-		public BushidoUpdatesListener(BushidoData model,
+		public BushidoUpdatesListener(BrakeModel model,
 				ChannelMessageSender channelSender) {
 			this.model = model;
 			this.channelSender = channelSender;
@@ -131,7 +131,7 @@ public class BushidoBrakeController extends AntTurboTrainer {
 		@Override
 		public void onSpeedChange(final double speed) {
 			synchronized (model) {
-				model.setSpeed(speed);
+				model.setActualSpeed(speed);
 			}
 			synchronized (dataChangeListeners) {
 				IterationUtils.operateOnAll(dataChangeListeners,
@@ -149,7 +149,7 @@ public class BushidoBrakeController extends AntTurboTrainer {
 			// receive values directly
 			// manually update with new value obtained through integration
 			synchronized (model) {
-				this.onDistanceChange(model.getDistance());
+				this.onDistanceChange(model.getActualDistance());
 			}
 
 		}
@@ -331,14 +331,14 @@ public class BushidoBrakeController extends AntTurboTrainer {
 
 		// startCycling();
 
-		this.model = new BushidoData();
+		this.model = new BrakeModel();
 		BushidoUpdatesListener updatesListener = new BushidoUpdatesListener(
 				model, this.getMessageSender());
 		BushidoBrakeBroadcastDataListener dataListener = new BushidoBrakeBroadcastDataListener(
 				updatesListener);
 		this.registerChannelRxListener(dataListener, BroadcastDataMessage.class);
 		
-		slopeController = new PowrModelSlopeController(model);
+		slopeController = new PowerModelSlopeController(model);
 		
 		this.registerDataListener(slopeController);
 	}

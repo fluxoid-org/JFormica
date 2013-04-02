@@ -208,7 +208,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
     @Override
     public void onSpeedChange(final double speed) {
       synchronized(data) {
-        data.setSpeed(speed);
+        data.setVirtualSpeed(speed);
       }
       synchronized (dataChangeListeners) {
         IterationUtils.operateOnAll(dataChangeListeners, new IterationOperator<TurboTrainerDataListener>() {
@@ -258,7 +258,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
     @Override
     public void onDistanceChange(final double distance) {
       synchronized(data) {
-        data.setDistance(distance);
+        data.setActualDistance(distance);
         distanceUpdated = true;
         synchronized(model) {
           model.notifyAll();
@@ -269,7 +269,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
           @Override
           public void performOperation(TurboTrainerDataListener dcl) {
             synchronized(data) {
-              dcl.onDistanceChange(data.getCompensatedDistance());
+              dcl.onDistanceChange(data.getVirtualDistance());
             }
           }
           
@@ -280,7 +280,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
     @Override
     public void onHeartRateChange(final double heartRate) {
       synchronized(data) {
-        data.setHearRate(heartRate);
+        data.setHeartRate(heartRate);
       }
       synchronized (dataChangeListeners) {
         IterationUtils.operateOnAll(dataChangeListeners, new IterationOperator<TurboTrainerDataListener>() {
@@ -370,7 +370,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
    */
   public double getRealDistance() {
     synchronized (model) {
-      return model.getDistance();
+      return model.getVirtualDistance();
     }
   }
  
@@ -526,7 +526,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
       
       startTimeStamp = System.nanoTime();
       synchronized(model) {
-        while (model.getDistance() > 0.000001) {
+        while (model.getVirtualDistance() > 0.000001) {
           channel.sendAndWaitForMessage(msg, AntUtils.CONDITION_CHANNEL_TX, 10L, TimeUnit.SECONDS, null);
           long currentTimestamp = System.nanoTime();
           long timeLeft = RESET_ODOMETER_TIMEOUT - (currentTimestamp - startTimeStamp);

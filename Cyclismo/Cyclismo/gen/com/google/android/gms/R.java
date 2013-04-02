@@ -9,14 +9,14 @@ package com.google.android.gms;
 public final class R {
 	public static final class id {
 		public static final int terrain = 0x7f090003;
-		public static final int none = 0x7f090000;
 		public static final int satellite = 0x7f090002;
+		public static final int none = 0x7f090000;
 		public static final int normal = 0x7f090001;
 	}
 	public static final class string {
 		public static final int common_google_play_services_update_text = 0x7f06000d;
-		public static final int common_google_play_services_install_button = 0x7f060008;
 		public static final int common_google_play_services_install_title = 0x7f060005;
+		public static final int common_google_play_services_install_button = 0x7f060008;
 		public static final int common_google_play_services_install_text_phone = 0x7f060006;
 		public static final int common_google_play_services_update_button = 0x7f06000f;
 		public static final int common_google_play_services_enable_title = 0x7f060009;
@@ -29,14 +29,14 @@ public final class R {
 	public static final class styleable {
 		public static final int MapAttrs_uiCompass = 6;
 		public static final int MapAttrs_uiScrollGestures = 8;
-		public static final int MapAttrs_mapType = 0;
 		public static final int MapAttrs_cameraZoom = 5;
+		public static final int MapAttrs_mapType = 0;
 		public static final int MapAttrs_cameraBearing = 1;
 		public static final int MapAttrs_uiZoomControls = 10;
 		public static final int MapAttrs_zOrderOnTop = 13;
 		public static final int[] MapAttrs = { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007, 0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b, 0x7f01000c, 0x7f01000d };
-		public static final int MapAttrs_cameraTargetLat = 2;
 		public static final int MapAttrs_cameraTargetLng = 3;
+		public static final int MapAttrs_cameraTargetLat = 2;
 		public static final int MapAttrs_uiTiltGestures = 9;
 		public static final int MapAttrs_cameraTilt = 4;
 		public static final int MapAttrs_uiRotateGestures = 7;
