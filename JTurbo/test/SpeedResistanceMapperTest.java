@@ -2,6 +2,7 @@ import static org.junit.Assert.*;
 
 import org.cowboycoders.turbotrainers.bushido.brake.BrakeModel;
 import org.cowboycoders.turbotrainers.bushido.brake.SpeedResistanceMapper;
+import org.cowboycoders.turbotrainers.bushido.brake.TargetSlopeModel;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,8 +19,8 @@ import org.junit.Test;
 public class SpeedResistanceMapperTest {
 
 	//Container for brake data
-	private BrakeModel dataModel = new BrakeModel();
-	private SpeedResistanceMapper speedResistanceMapper = new SpeedResistanceMapper(dataModel);
+	private BrakeModel dataModel = new TargetSlopeModel();
+	private SpeedResistanceMapper speedResistanceMapper = new SpeedResistanceMapper();
 	
 	/**
 	 * Test method for {@link org.cowboycoders.turbotrainers.bushido.brake.SpeedResistanceMapper#getBrakeResistanceFromPolynomialFit()}.
@@ -27,11 +28,12 @@ public class SpeedResistanceMapperTest {
 	@Test
 	public void testGetBrakeResistanceFromPolynomialFit() {
 		
+		this.speedResistanceMapper.start(dataModel);
 		dataModel.setVirtualSpeed(46);
 		dataModel.setSlope(0.0);
 		dataModel.setTotalWeight(70);
 		double resistance = speedResistanceMapper.getBrakeResistanceFromPolynomialFit();
-		assertEquals(278, resistance, 10);
+		assertEquals(27.6, resistance, 10);
 		
 		dataModel.setVirtualSpeed(0);
 		dataModel.setSlope(0.0);
@@ -43,7 +45,7 @@ public class SpeedResistanceMapperTest {
 		dataModel.setSlope(20.0);
 		dataModel.setTotalWeight(70);
 		resistance = speedResistanceMapper.getBrakeResistanceFromPolynomialFit();
-		assertEquals(1982, resistance, 10);
+		assertEquals(1546, resistance, 10);
 		
 	}
 
