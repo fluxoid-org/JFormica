@@ -42,7 +42,7 @@ public class SpeedResistanceMapper extends AbstractController {
 	private static final double POLY_I = 4.917e-4;
 
 	// Model to estimate bike speed from power
-	private PowerModel powerModel = new PowerModel();
+	private final PowerModel powerModel = new PowerModel();
 	
 	private SimpleCsvLogger logger;
 
@@ -65,14 +65,14 @@ public class SpeedResistanceMapper extends AbstractController {
 	 * @return - estimated brake resistance
 	 */
 	public double getBrakeResistanceFromPolynomialFit() {
-		BrakeModel bushidoDataModel = getDataModel();
-		double slope = bushidoDataModel.getSlope();
-		double totalWeight = bushidoDataModel.getTotalWeight();
-		double actualSpeed = bushidoDataModel.getActualSpeed();
+		final BrakeModel bushidoDataModel = getDataModel();
+		final double slope = bushidoDataModel.getSlope();
+		final double totalWeight = bushidoDataModel.getTotalWeight();
+		final double actualSpeed = bushidoDataModel.getActualSpeed();
 
 		// Use a polynomial fit to data ripped from the head unit to estimate
 		// brake resistance from total weight, speed and slope
-		double brakeResistance = slope * POLY_A + totalWeight * POLY_B
+		final double brakeResistance = slope * POLY_A + totalWeight * POLY_B
 				+ totalWeight * slope * POLY_C + actualSpeed * POLY_D
 				+ Math.pow(actualSpeed, 2) * POLY_E + POLY_F + slope * actualSpeed * POLY_G
 				+ totalWeight * actualSpeed * POLY_H + slope * totalWeight * actualSpeed
@@ -94,11 +94,11 @@ public class SpeedResistanceMapper extends AbstractController {
 	 *    with reasonable accuracy.
 	 * 
 	 */
-	private UpdateCallback updateVirtualSpeed = new UpdateCallback() {
+	private final UpdateCallback updateVirtualSpeed = new UpdateCallback() {
 		@Override
-		public void onUpdate(Object newValue) {
-			BrakeModel bushidoDataModel = getDataModel();
-			double virtualSpeed = powerModel.updatePower((Double) newValue) * Conversions.METRES_PER_SECOND_TO_KM_PER_HOUR;
+		public void onUpdate(final Object newValue) {
+			final BrakeModel bushidoDataModel = getDataModel();
+			final double virtualSpeed = powerModel.updatePower((Double) newValue) * Conversions.METRES_PER_SECOND_TO_KM_PER_HOUR;
 			bushidoDataModel.setVirtualSpeed(virtualSpeed);
 			// Update the brake resistance from the current virtual speed
 			bushidoDataModel
@@ -111,7 +111,7 @@ public class SpeedResistanceMapper extends AbstractController {
 			}
 		}
 	};
-	private FixedPeriodUpdater powerModelUpdater = new FixedPeriodUpdater(
+	private final FixedPeriodUpdater powerModelUpdater = new FixedPeriodUpdater(
 			new Double(0), updateVirtualSpeed, POWER_MODEL_UPDATE_PERIOD_MS);
 
 
@@ -119,7 +119,7 @@ public class SpeedResistanceMapper extends AbstractController {
 
 
 	@Override
-	public double onPowerChange(double power) {
+	public double onPowerChange(final double power) {
 		
 		// Update the power with which the power model is updated with
 		powerModelUpdater.update(new Double(power));
@@ -130,7 +130,7 @@ public class SpeedResistanceMapper extends AbstractController {
 	}
 
 	@Override
-	public double onSpeedChange(double speed) {
+	public double onSpeedChange(final double speed) {
 		
 		synchronized (this) {
 			if (logger != null) {
@@ -138,7 +138,7 @@ public class SpeedResistanceMapper extends AbstractController {
 			}
 		}
 		
-		BrakeModel bushidoDataModel = getDataModel();
+		final BrakeModel bushidoDataModel = getDataModel();
 		// return virtual speed instead!
 		return bushidoDataModel.getVirtualSpeed();
 	}
@@ -154,7 +154,7 @@ public class SpeedResistanceMapper extends AbstractController {
 		powerModelUpdater.stop();
 	}
 	
-	public synchronized void enableLogging(String dir, String filename) {
+	public synchronized void enableLogging(final String dir, final String filename) {
 		this.logger = new SimpleCsvLogger(dir,filename,ACTUAL_SPEED_HEADING,VIRTUAL_SPEED_HEADING,ABSOLUTE_RESISTANCE_HEADING);
 		this.logger.addTime(true);
 		this.logger.append(true);

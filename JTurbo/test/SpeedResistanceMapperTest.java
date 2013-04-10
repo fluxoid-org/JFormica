@@ -19,8 +19,8 @@ import org.junit.Test;
 public class SpeedResistanceMapperTest {
 
 	//Container for brake data
-	private BrakeModel dataModel = new TargetSlopeModel();
-	private SpeedResistanceMapper speedResistanceMapper = new SpeedResistanceMapper();
+	private final BrakeModel dataModel = new TargetSlopeModel();
+	private final SpeedResistanceMapper speedResistanceMapper = new SpeedResistanceMapper();
 	
 	/**
 	 * Test method for {@link org.cowboycoders.turbotrainers.bushido.brake.SpeedResistanceMapper#getBrakeResistanceFromPolynomialFit()}.
