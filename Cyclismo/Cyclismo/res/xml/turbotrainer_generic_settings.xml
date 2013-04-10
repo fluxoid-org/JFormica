@@ -18,6 +18,14 @@ limitations under the License.
   android:key="@string/settings_turbotrainer_generic_root_key"
   android:title="@string/settings_turbotrainer_generic" >
   
+    <ListPreference
+      android:defaultValue="@string/turbotrainer_tacx_bushido_headunit_value"
+      android:entries="@array/turbotrainer_opions"
+      android:entryValues="@array/turbotrainer_values"
+      android:key="@string/turbotrainer_selected"
+      android:summary="@string/turbotrainer_select_summary"
+      android:title="@string/turbotrainer_select_title" />
+  
   <EditTextPreference
   android:name="@string/settings_turbotrainer_generic_scale_factor_name"
   android:enabled="true"

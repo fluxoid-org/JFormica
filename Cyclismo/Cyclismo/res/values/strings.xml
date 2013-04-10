@@ -3182,4 +3182,10 @@ limitations under the License.
   <string name="settings_turbo_scale_factor_invalid">Invalid input</string>
   <string name="settings_turbo_scale_factor_help">Must be between 0.0 and 1.0</string>
   
+    <string name="turbotrainer_tacx_bushido_headunit_option">Tacx Bushido Headunit</string>
+    <string name="turbotrainer_tacx_bushido_brake_headunit_simulation_option">Tacx Bushido Brake (Resistance curve)</string>
+    <string name="turbotrainer_tacx_bushido_brake_pid_control_option">Tacx Bushido Brake (PID)</string>
+    
+    <string name="turbotrainer_select_title">Select Turbo Trainer</string>
+  	<string name="turbotrainer_select_summary">Choose a turbo trainer to use</string>
 </resources>

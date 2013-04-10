@@ -72,6 +72,9 @@ import org.cowboycoders.turbotrainers.TooFewAntChannelsAvailableException;
 import org.cowboycoders.turbotrainers.TurboCommunicationException;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.turbotrainers.TurboTrainerInterface;
+import org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake;
+import org.cowboycoders.turbotrainers.bushido.brake.PidBrakeController;
+import org.cowboycoders.turbotrainers.bushido.brake.SpeedResistanceMapper;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoHeadunit;
 
 public class TurboService extends Service {
@@ -259,7 +262,10 @@ public class TurboService extends Service {
 
   private SharedPreferences preferences;
 
+  private String selectedTurboTrainer;
+
   public void doFinish() {
+    preferences.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
     // if (recordingTrackId != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
     Intent intent = IntentUtils.newIntent(getBaseContext(), TrackEditActivity.class)
         .putExtra(TrackEditActivity.EXTRA_TRACK_ID, recordingTrackId)
@@ -296,7 +302,13 @@ public class TurboService extends Service {
     
     preferences = context.getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
     
+    preferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
+    
     syncScaleFactor();
+    
+    this.selectedTurboTrainer = preferences.getString(context.getString(R.string.turbotrainer_selected), context.getString(R.string.turbotrainer_tacx_bushido_headunit_value));
+    
+    Log.d(TAG,selectedTurboTrainer);
     
     
     // accessing database so should be put into a task
@@ -414,7 +426,7 @@ public class TurboService extends Service {
         antNode.registerAntLogger(antLogger);
       }
       transceiver = s.getTransceiver();
-      TurboService.this.turboTrainer = new BushidoHeadunit(antNode);
+      TurboService.this.turboTrainer =  getTurboTrainer();
 
       new Thread() {
         public void run() {
@@ -459,6 +471,20 @@ public class TurboService extends Service {
   void doBindService() {
     bindService(new Intent(this, AntHubService.class), mConnection, Context.BIND_AUTO_CREATE);
     mIsBound = true;
+  }
+
+  protected TurboTrainerInterface getTurboTrainer() {
+    if (selectedTurboTrainer == getString(R.string.turbotrainer_tacx_bushido_headunit_value)) {
+      return new BushidoHeadunit(antNode);
+    } else if (selectedTurboTrainer == getString(R.string.turbotrainer_tacx_bushido_brake_headunit_simulation_value)) {
+      SpeedResistanceMapper mapper = new SpeedResistanceMapper();
+      return new BushidoBrake(antNode,mapper);
+    } else if (selectedTurboTrainer == getString(R.string.turbotrainer_tacx_bushido_brake_pid_control_value)) {
+      PidBrakeController pid = new PidBrakeController();
+      return new BushidoBrake(antNode,pid);
+    }
+    
+    return null;
   }
 
   private void startServiceInBackround() {
@@ -742,6 +768,8 @@ public class TurboService extends Service {
     public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
       if (key == getString(R.string.settings_turbotrainer_generic_scale_factor_key)) {
         syncScaleFactor();
+      } else if (key == getString(R.string.turbotrainer_selected)) {
+        selectedTurboTrainer = preferences.getString(getString(R.string.turbotrainer_selected),getString(R.string.turbotrainer_tacx_bushido_headunit_value));
       }
       
     }

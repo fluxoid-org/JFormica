@@ -263,4 +263,21 @@ limitations under the License.
     <string-array name="course_mode_select_values">
     <item>@string/settings_courses_mode_simulation_value</item>
   </string-array>
+  
+    <string-array name="turbotrainer_opions">
+    <item>@string/turbotrainer_tacx_bushido_headunit_option</item>
+    <item>@string/turbotrainer_tacx_bushido_brake_headunit_simulation_option</item>
+    <item>@string/turbotrainer_tacx_bushido_brake_pid_control_option</item>
+  </string-array>  
+  
+   <string-array name="turbotrainer_values">
+    <item>@string/turbotrainer_tacx_bushido_headunit_value</item>
+    <item>@string/turbotrainer_tacx_bushido_brake_headunit_simulation_value</item>
+    <item>@string/turbotrainer_tacx_bushido_brake_pid_control_value</item>
+  </string-array>  
+    
+    
+    
+    
+    
 </resources>

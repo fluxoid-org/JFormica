@@ -113,6 +113,8 @@ limitations under the License.
  <string name="settings_select_bike_current_selection_key">bikeCurrentSelection</string>
  
   <string name="bike_select_request_code">bikeSelectRequestCode</string>
+  
+  <string name="turbotrainer_selected">turboTrainerSelected</string>
  
  
  

@@ -32,7 +32,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.javatuples.Pair;
 
 public class PolyLineUtils {
 	

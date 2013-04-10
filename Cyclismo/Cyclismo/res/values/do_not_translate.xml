@@ -109,4 +109,9 @@ Google은 이용자에 대한 위치정보의 이용∙제공사실을 위치정
   <string name="turbo_service_action_exception_thrown">org.cowboycoders.cyclisimo.TURBO_SERVICE_EXCEPTION_THROWN</string>
   <string name="settings_bushido_antlog_filename">antlog</string>
   
+  <string name="turbotrainer_tacx_bushido_headunit_value">TACX_BUSHIDO_HEADUNIT</string>
+  <string name="turbotrainer_tacx_bushido_brake_headunit_simulation_value">TACX_BUSHIDO_BRAKE_RESISTANCE</string>
+  <string name="turbotrainer_tacx_bushido_brake_pid_control_value">TACX_BUSHIDO_BRAKE_PID</string>
+  
+  
 </resources>

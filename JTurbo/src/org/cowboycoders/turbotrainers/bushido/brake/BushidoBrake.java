@@ -19,7 +19,13 @@
  */
 package org.cowboycoders.turbotrainers.bushido.brake;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Lock;
@@ -35,7 +41,10 @@ import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.SlaveChannelType;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
+import org.cowboycoders.ant.temp.BushidoBrakeModel;
 import org.cowboycoders.ant.utils.AntUtils;
+import org.cowboycoders.ant.utils.ArrayUtils;
+import org.cowboycoders.ant.utils.BigIntUtils;
 import org.cowboycoders.ant.utils.ChannelMessageSender;
 import org.cowboycoders.ant.utils.EnqueuedMessageSender;
 import org.cowboycoders.pid.PidParameterController;
@@ -45,24 +54,35 @@ import org.cowboycoders.turbotrainers.Mode;
 import org.cowboycoders.turbotrainers.PowerModelManipulator;
 import org.cowboycoders.turbotrainers.TooFewAntChannelsAvailableException;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
+import org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake.CallibrationCallback;
 import org.cowboycoders.utils.IterationOperator;
 import org.cowboycoders.utils.IterationUtils;
 
 public class BushidoBrake extends AntTurboTrainer {
-	
-	  public static final Mode [] SUPPORTED_MODES = new Mode [] {
-		  	Mode.TARGET_SLOPE
-		  };
-	  
-	  {	
-		  //switch on controller type (different controllers support diff modes)
-		  setSupportedModes(SUPPORTED_MODES);
-	  }
 
-	public final static Logger LOGGER = Logger
-			.getLogger(BushidoBrake.class.getName());
+	public static final Mode[] SUPPORTED_MODES = new Mode[] { Mode.TARGET_SLOPE };
+
+	{
+		// switch on controller type (different controllers support diff modes)
+		setSupportedModes(SUPPORTED_MODES);
+	}
+
+	public final static Logger LOGGER = Logger.getLogger(BushidoBrake.class
+			.getName());
+
+	public static final byte[] PACKET_REQUEST_VERSION = AntUtils
+			.padToDataLength(new int[] { (byte) 0xAc, 0x02 });
 	
-	public static final byte[] PACKET_REQUEST_VERSION = AntUtils.padToDataLength(new int [] {(byte) 0xAc, 0x02});
+	public static final byte[] PACKET_START_CALIBRATION = AntUtils
+			.padToDataLength(new int[] { (byte) 0x23, 0x63 });
+//	public static final byte[] PACKET_REQUEST_CALIBRATION_STATUS = AntUtils
+//			.padToDataLength(new int[] { (byte) 0x23, 0x58 });
+	public static final byte[] PACKET_REQUEST_CALIBRATION_VALUE = AntUtils
+			.padToDataLength(new int[] { 0x23, 0x4d });
+	public static final byte[] PACKET_POST_RESTART_CALIBRATION_RERSUME = 
+			AntUtils.padToDataLength(new int[]{0x23,0x58});
+
+	private static final Byte[] PARTIAL_PACKET_CALIBRATION_STATUS = new Byte[] { 0x22 };
 
 	private ArrayList<BroadcastListener<? extends ChannelMessage>> listeners = new ArrayList<BroadcastListener<? extends ChannelMessage>>();
 
@@ -74,7 +94,7 @@ public class BushidoBrake extends AntTurboTrainer {
 
 	private Lock requestDataLock = new ReentrantLock();
 	private boolean requestDataInProgess = false;
-	private AbstractController resistanceController; 
+	private AbstractController resistanceController;
 
 	private Runnable requestDataCallback = new Runnable() {
 
@@ -262,8 +282,6 @@ public class BushidoBrake extends AntTurboTrainer {
 
 	};
 
-
-
 	public BushidoBrake(Node node, AbstractController controller) {
 		super(node);
 		this.resistanceController = controller;
@@ -329,16 +347,15 @@ public class BushidoBrake extends AntTurboTrainer {
 		if (getCurrentMode() == Mode.TARGET_SLOPE) {
 			this.model = new TargetSlopeModel();
 		}
-		
-		
+
 		BushidoUpdatesListener updatesListener = new BushidoUpdatesListener(
 				model, this.getMessageSender());
 		BushidoBrakeBroadcastDataListener dataListener = new BushidoBrakeBroadcastDataListener(
 				updatesListener);
 		this.registerChannelRxListener(dataListener, BroadcastDataMessage.class);
-		
+
 		resistanceController.start(model);
-		
+
 		this.registerDataListener(resistanceController);
 	}
 
@@ -347,8 +364,8 @@ public class BushidoBrake extends AntTurboTrainer {
 			getMessageSender().pause(true);
 			BroadcastDataMessage msg = new BroadcastDataMessage();
 			msg.setData(BushidoBrake.PACKET_REQUEST_VERSION);
-			channel.sendAndWaitForMessage(msg, AntUtils.CONDITION_CHANNEL_TX, 10L,
-					TimeUnit.SECONDS, null);
+			channel.sendAndWaitForMessage(msg, AntUtils.CONDITION_CHANNEL_TX,
+					10L, TimeUnit.SECONDS, null);
 
 		} catch (InterruptedException e) {
 			LOGGER.warning("interrupted waiting for version");
@@ -360,6 +377,539 @@ public class BushidoBrake extends AntTurboTrainer {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Callback to facilitate UI hooks
+	 * 
+	 * @author will
+	 * 
+	 */
+	public static interface CallibrationCallback {
+		/**
+		 * Called when user is required to speed up to 40 km/h
+		 */
+		void onRequestStartPedalling();
+
+		/**
+		 * Called once user has reached 25 mph (40 kmh). Must instruct user to
+		 * stop pedalling until requested.
+		 */
+		void onReachedCalibrationSpeed();
+
+		/**
+		 * Called after onReachedCalibrationSpeed() and once user has slowed
+		 * down to zero kmh. User must start pedalling to receive new
+		 * calibration value
+		 */
+		void onRequestResumePedalling();
+
+		/**
+		 * Only called on success
+		 * 
+		 * @param calibrationValue
+		 *            new calibration value
+		 */
+		void onSuccess(double calibrationValue);
+
+		/**
+		 * Only called if calibration fails
+		 * 
+		 * @param exception
+		 *            reason for failure, may be caused by:
+		 *            InterruptedException, TimeoutException
+		 */
+		void onFailure(CalibrationException exception);
+
+		void onBelowSpeedReminder(double speed);
+
+	}
+
+	/**
+	 * Thrown on calibration failure
+	 * 
+	 * @author will
+	 * 
+	 */
+	public static class CalibrationException extends Exception {
+
+		private static final long serialVersionUID = -5196590652828662691L;
+
+		private CalibrationException() {
+			super();
+		}
+
+		private CalibrationException(String message, Throwable cause) {
+			super(message, cause);
+		}
+
+		private CalibrationException(String message) {
+			super(message);
+		}
+
+		private CalibrationException(Throwable cause) {
+			super(cause);
+		}
+
+	}
+
+//	private class StatusPoller extends Thread {
+//		public void run() {
+//			BroadcastDataMessage msg = new BroadcastDataMessage();
+//			msg.setData(BushidoBrake.PACKET_REQUEST_CALIBRATION_STATUS);
+//			// while (true) {
+//			try {
+//				doSend(msg);
+//			} catch (InterruptedException e) {
+//				LOGGER.info("interrupted polling for calibration status");
+//				// break;
+//			}
+//			if (Thread.interrupted()) {
+//			}
+//			// break;
+//			// }
+//		}
+//
+//		protected void doSend(BroadcastDataMessage msg)
+//				throws InterruptedException {
+//			try {
+//				channel.sendAndWaitForMessage(msg,
+//						AntUtils.CONDITION_CHANNEL_TX, 2L, TimeUnit.SECONDS,
+//						null);
+//			} catch (TimeoutException e) {
+//				LOGGER.warning("timeout waiting for version");
+//			}
+//		}
+//	}
+	
+
+	/**
+	 * Compound class that controls CalibrationState transitions, as well as the "actions" that can be performed
+	 * on that state.
+	 * @author will
+	 *
+	 */
+	private static abstract class CalibrationStateAction {
+		
+		private final BushidoBrakeModel.CalibrationState state;
+		private final boolean allowNullTransition;
+		
+		public CalibrationStateAction(BushidoBrakeModel.CalibrationState state, boolean allowNullTransition) {
+			this.state = state;
+			this.allowNullTransition = allowNullTransition;
+		}
+		
+		public CalibrationStateAction(BushidoBrakeModel.CalibrationState state) {
+			this(state, false);
+		}
+		
+		public final BushidoBrakeModel.CalibrationState getMappedState() {
+			return state;
+		}
+		
+		public final boolean shouldAllowNullTransition() {
+			return allowNullTransition;
+		}
+		
+		public final boolean performTransition(BushidoBrakeModel.CalibrationState newState) throws IllegalStateException {
+			if (newState == state) return false;
+			if (!shouldAllowNullTransition() && newState == null) throw new IllegalStateException("Null state disallowed");
+			return onPerformTransition(newState);
+		}
+		
+		/**
+		 * Should perform any necessary operations to make the transition.
+		 * @param newState target state
+		 * @return false if no transition made, but was expect state. True, otherwise.
+		 * @throws IllegalStateException thrown if unexpected state is encountered.
+		 */
+		public abstract boolean onPerformTransition (
+				org.cowboycoders.ant.temp.BushidoBrakeModel.CalibrationState newState) throws IllegalStateException;
+		
+		/**
+		 * State dependent behaviour. Called once when transition to this state is first made.
+		 * @param data
+		 */
+		public abstract void processPacket(Byte[] data);
+	}
+	
+
+	private class CalibrationController {
+		
+		
+		private class CalibrationStateMachine {
+			
+			private final Map<BushidoBrakeModel.CalibrationState, CalibrationStateAction> wrappedStates =
+					new HashMap<BushidoBrakeModel.CalibrationState, CalibrationStateAction>();
+			private BushidoBrakeModel.CalibrationState currentState = null;
+			
+			{
+				addState(BushidoBrakeModel.CalibrationState.BELOW_SPEED, new CalibrationStateAction(BushidoBrakeModel.CalibrationState.BELOW_SPEED) {
+
+					@Override
+					public boolean onPerformTransition(
+							org.cowboycoders.ant.temp.BushidoBrakeModel.CalibrationState newState)
+							throws IllegalStateException {
+						// TODO Auto-generated method stub
+						return false;
+					}
+
+					@Override
+					public void processPacket(Byte[] data) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+				});
+			}
+			
+			private void addState(BushidoBrakeModel.CalibrationState state, CalibrationStateAction wrappedState )throws IllegalArgumentException {
+				if (wrappedState.getMappedState() != state) throw new IllegalArgumentException("wrapped state must match state it is wrapping");
+				wrappedStates.put(state, wrappedState);
+				
+			}
+			
+			public synchronized final void processPacket(Byte [] data) {
+				BushidoBrakeModel.CalibrationState newState = null; 
+				//FIXME : add if
+				CalibrationStateAction wrappedState = wrappedStates.get(currentState);
+				if (wrappedState == null) {
+					throw new IllegalStateException("State must be mapped to a wrapped value. State: " + currentState);
+				}
+				if (wrappedState.performTransition(newState)) {
+					currentState = newState;
+					wrappedState = wrappedStates.get(newState);
+					wrappedState.processPacket(data);
+				}
+				
+			}
+			
+			
+			public synchronized void reset() {
+				currentState = null;
+			}
+		}
+		
+
+		private abstract class AntHandler {
+
+			public abstract void doSend() throws InterruptedException,
+					TimeoutException;
+
+			public void send() {
+				try {
+					doSend();
+				} catch (InterruptedException e) {
+					LOGGER.warning("interrupted waiting for calibration start");
+					callback.onFailure(new CalibrationException(e));
+					stop();
+					return;
+				} catch (TimeoutException e) {
+					LOGGER.warning("timeout waiting for calibration start");
+					callback.onFailure(new CalibrationException(e));
+					stop();
+					return;
+				}
+			}
+			
+			public void sendOnDifferentThread() {
+				new Thread() {
+					public void run() {
+						send();
+					}
+				}.start();
+			}
+		}
+
+//		private StatusPoller statusPoller;
+		private boolean started = false;
+		private long timeout;
+		private Long startTimeStamp;
+		private Timer timer;
+		private CallibrationCallback callback;
+
+		private TimerTask timeOutMonitor;
+
+		private TimerTask stopDetector;
+
+		private BroadcastListener<BroadcastDataMessage> replyListener = new BroadcastListener<BroadcastDataMessage>() {
+
+			private Timer radioSilenceTimer;
+
+			private void newRadioSilenceTimer() {
+				radioSilenceTimer = new Timer();
+				stopDetector = new TimerTask() {
+
+					@Override
+					public void run() {
+						callback.onRequestResumePedalling();
+					}
+
+				};
+				timer.schedule(stopDetector, 1000);
+			}
+
+			@Override
+			public void receiveMessage(BroadcastDataMessage message) {
+				// if radio not quiet start a new timer (we assume quiet when timer successfully elapses)
+				synchronized (this) {
+					if (radioSilenceTimer != null) {
+						stopDetector.cancel();
+						radioSilenceTimer.cancel();
+						newRadioSilenceTimer();
+					}
+				}
+				Byte[] data = message.getData();
+				if (ArrayUtils.arrayStartsWith(
+						PARTIAL_PACKET_CALIBRATION_STATUS, data)) {
+					BushidoBrakeModel.CalibrationState state = null;
+					double calibrationValue = 0;
+					if (data[1] == 0x06 && data[3] == 0x02) {
+						state = BushidoBrakeModel.CalibrationState.BELOW_SPEED; // non-calibration
+																				// mode
+					} else if (data[1] == 0x06 && data[3] == 0x05) {
+						state = BushidoBrakeModel.CalibrationState.UP_TO_SPEED; // seems
+																				// to
+																				// only
+																				// get
+																				// sent
+																				// when
+																				// slowing
+																				// down
+																				// (does
+																				// it
+																				// mean
+																				// we
+																				// got
+																				// up
+																				// to
+																				// speed?!)
+						// callback.onReachedCalibrationSpeed();
+					} else if (data[1] == 0x06) {
+						state = BushidoBrakeModel.CalibrationState.CALIBRATION_REQUESTED; // calibration
+																							// mode
+						LOGGER.info("calibration request confirmed");
+						BushidoBrake.this.registerDataListener(speedListener);
+					} else if (data[1] == 0x03 && data[3] == 0x0c) {
+						state = BushidoBrakeModel.CalibrationState.NO_ERROR;
+						// we recieve this multiple times, make sure we only
+						// start one timer
+						synchronized (this) {
+							if (radioSilenceTimer == null) {
+								newRadioSilenceTimer();
+							}
+						}
+					} else if (data[1] == 0x03 && data[3] == 0x42) {
+						state = BushidoBrakeModel.CalibrationState.CALIBRATED;
+						BigInteger val = new BigInteger(new byte[] {0x00,data[4],data[5]});
+						calibrationValue = val.doubleValue() / 10.0;
+						callback.onSuccess(calibrationValue);
+						stop();
+
+					} else if (data[1] == 0x03 && data[3] == 0x4d) { // 22:03:00:4d:00:00:00:00
+						
+						LOGGER.info("Requesting calibration value");
+
+						final BroadcastDataMessage msg = new BroadcastDataMessage();
+						msg.setData(BushidoBrake.PACKET_REQUEST_CALIBRATION_VALUE);
+
+						new AntHandler() {
+
+							@Override
+							public void doSend() throws InterruptedException,
+									TimeoutException {
+								channel.sendAndWaitForMessage(msg,
+										AntUtils.CONDITION_CHANNEL_TX, 10L,
+										TimeUnit.SECONDS, null);
+
+							}
+
+						}.sendOnDifferentThread();
+						
+						//callback.onFailure(new CalibrationException(
+						//		"Error calibrating"));
+						//stop();
+					} else if (data[1] == 0x03) { // 22:03:00:00:00:00:00:00
+						LOGGER.info("calibration: post restart");
+						//new StatusPoller().start();
+						
+						final BroadcastDataMessage msg = new BroadcastDataMessage();
+						msg.setData(BushidoBrake.PACKET_POST_RESTART_CALIBRATION_RERSUME);
+
+						new AntHandler() {
+
+							@Override
+							public void doSend() throws InterruptedException,
+									TimeoutException {
+								
+								sendAndRetry(msg,
+										AntUtils.CONDITION_CHANNEL_TX,5,2L,
+										TimeUnit.SECONDS);
+
+							}
+
+						}.sendOnDifferentThread();
+						
+						
+						
+					}
+					else {
+						StringBuilder packet = new StringBuilder();
+						Formatter formatter = new Formatter(packet);
+						for (byte b : data) {
+							formatter.format("%02x:", b);
+						}
+						LOGGER.warning("unknown status packet: "
+								+ packet.toString());
+					}
+					String stateAsString = state == null ? "null" : state
+							.toString();
+					LOGGER.info("current state: " + stateAsString);
+				}
+
+			}
+
+		};
+
+		TurboTrainerDataListener speedListener = new TurboTrainerDataListener() {
+
+			@Override
+			public void onSpeedChange(double speed) {
+				if (speed >= 40) {
+					callback.onReachedCalibrationSpeed();
+				} else {
+					callback.onBelowSpeedReminder(speed);
+				}
+
+			}
+
+			@Override
+			public void onPowerChange(double power) {
+				// Not interested
+
+			}
+
+			@Override
+			public void onCadenceChange(double cadence) {
+				// Not interested
+
+			}
+
+			@Override
+			public void onDistanceChange(double distance) {
+				// Not interested
+
+			}
+
+			@Override
+			public void onHeartRateChange(double heartRate) {
+				// Not interested
+
+			}
+
+		};
+
+		public CalibrationController() {
+		}
+
+		public long nanosRemaining(Long defaultIfLess) {
+			long timeLeft;
+			timeLeft = timeout - (System.nanoTime() - startTimeStamp);
+			if (defaultIfLess != null && timeLeft > defaultIfLess)
+				return defaultIfLess;
+			return timeLeft;
+		}
+
+		public synchronized void start(CallibrationCallback callback,
+				long timeout) {
+			if (started)
+				throw new IllegalStateException(
+						"calibration already in progress");
+			if (callback == null)
+				throw new IllegalArgumentException("callback must be non null");
+			this.timeout = timeout;
+			this.callback = callback;
+
+			started = true;
+			getMessageSender().pause(true);
+
+			timer = new Timer();
+			timeOutMonitor = new TimerTask() {
+
+				@Override
+				public void run() {
+					stop();
+				}
+
+			};
+			timer.schedule(timeOutMonitor,
+					TimeUnit.NANOSECONDS.toMillis(timeout));
+			startTimeStamp = System.nanoTime();
+
+			final BroadcastDataMessage msg = new BroadcastDataMessage();
+			msg.setData(BushidoBrake.PACKET_START_CALIBRATION);
+			final long duration = nanosRemaining(TimeUnit.SECONDS.toNanos(2));
+
+			new AntHandler() {
+
+				@Override
+				public void doSend() throws InterruptedException,
+						TimeoutException {
+					channel.sendAndWaitForMessage(msg,
+							AntUtils.CONDITION_CHANNEL_TX, duration,
+							TimeUnit.NANOSECONDS, null);
+
+				}
+
+			}.send();
+
+			channel.registerRxListener(replyListener,
+					BroadcastDataMessage.class);
+
+//			statusPoller = new StatusPoller();
+//			statusPoller.start();
+
+			callback.onRequestStartPedalling();
+		}
+
+		public synchronized void stop() {
+			if (!started)
+				return;
+			timer.cancel();
+			started = false;
+			getMessageSender().pause(false);
+//			if (statusPoller != null) {
+//				statusPoller.interrupt();
+//				statusPoller = null;
+//			}
+			startTimeStamp = null;
+			timer = null;
+			channel.removeRxListener(replyListener);
+			BushidoBrake.this.unregisterDataListener(speedListener);
+		}
+
+	}
+
+	private CalibrationController calibrationController = new CalibrationController();
+
+/**
+	 * Asynchronously calibrates the brake.
+	 * @param callback various calibration hooks {@link BushidoBrake.CalibrationCallback)
+	 * @param timeout timeout for calibration to complete (in seconds)
+	 * @return new calibration value (as would be displayed on headunit)
+	 */
+	public double calibrate(CallibrationCallback callback, long timeout) {
+		double calibrationValue = 0;
+		calibrationController
+				.start(callback, TimeUnit.SECONDS.toNanos(timeout));
+		return calibrationValue;
+	}
+
+	private boolean checkWithinTimeLimit(long start, long timeout,
+			TimeUnit units) {
+		if (System.nanoTime() - start < units.toNanos(timeout))
+			return true;
+		return false;
 	}
 
 	// public void startCycling() throws InterruptedException, TimeoutException
@@ -397,10 +947,10 @@ public class BushidoBrake extends AntTurboTrainer {
 				unregisterRxListener(listener);
 			}
 		}
-		
+
 		this.unregisterDataListener(resistanceController);
 		resistanceController.stop();
-		
+
 		// disconnect();
 		channel.close();
 		channel.unassign();
@@ -428,7 +978,6 @@ public class BushidoBrake extends AntTurboTrainer {
 	public boolean supportsHeartRate() {
 		return false;
 	}
-	
 
 	@Override
 	public void setParameters(CommonParametersInterface parameters)
@@ -436,7 +985,7 @@ public class BushidoBrake extends AntTurboTrainer {
 		synchronized (model) {
 			model.setParameters(parameters);
 		}
-		
+
 	}
 
 	@Override

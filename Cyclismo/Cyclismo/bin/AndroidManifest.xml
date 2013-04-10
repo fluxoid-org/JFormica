@@ -237,6 +237,18 @@ limitations under the License.
         </activity>
         <activity android:name="org.cowboycoders.cyclisimo.BikeEditActivity" />
         
+<!--                 <activity -->
+<!--             android:name="org.cowboycoders.cyclisimo.TurboTrainerListActivity" -->
+<!--             android:launchMode="singleTop" > -->
+
+<!--             <intent-filter> -->
+<!--             <action android:name="android.intent.action.MAIN" /> -->
+<!--             <category android:name="android.intent.category.LAUNCHER" /> -->
+<!--             </intent-filter> -->
+<!--             <meta-data -->
+<!--             android:name="android.app.default_searchable" -->
+<!--             android:value="org.cowboycoders.cyclisimo.SearchListActivity" /> -->
+<!--         </activity> -->
         
         <activity android:name="org.cowboycoders.cyclisimo.io.backup.BackupActivity" />
         <activity android:name="org.cowboycoders.cyclisimo.io.backup.RestoreActivity" />

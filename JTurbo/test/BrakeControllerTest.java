@@ -183,7 +183,7 @@ public class BrakeControllerTest {
 	  
   };
   
-  @Test
+  //@Test
   public void testBrakeSlopeCOntroller() throws InterruptedException, TimeoutException {
     Node n = new Node(BrakeControllerTest.antchip);
     n.registerAntLogger(antLogger);
