@@ -131,7 +131,7 @@ public class PidBrakeController extends AbstractController {
 	private boolean needsSync = true;
 
 	@Override
-	public void onSpeedChange(double speed) {
+	public double onSpeedChange(double speed) {
 		BrakeModel bushidoDataModel = getDataModel();
 		setActualSpeed(speed* Conversions.KM_PER_HOUR_TO_METRES_PER_SECOND);
 		double predictedSpeed = getPredictedSpeed();
@@ -161,7 +161,7 @@ public class PidBrakeController extends AbstractController {
 			resistancePidController.adjustSetpoint(getPredictedSpeed());
 		}
 		
-
+		return speed;
 		//actualSpeedUpdated = true;
 	}
 	
@@ -174,31 +174,17 @@ public class PidBrakeController extends AbstractController {
 	}
 
 	@Override
-	public void onPowerChange(double power) {
+	public double onPowerChange(double power) {
 		
 		powerModelUpdater.update(new Double (power));
 		// only starts once
 		powerModelUpdater.start();
 		
-	}
-
-	@Override
-	public void onCadenceChange(double cadence) {
-		// Not interested
+		return power;
 		
 	}
 
-	@Override
-	public void onDistanceChange(double distance) {
-		// Not interested
-		
-	}
 
-	@Override
-	public void onHeartRateChange(double heartRate) {
-		// Not interested
-		
-	}
 	
 	public void stop() {
 		powerModelUpdater.stop();

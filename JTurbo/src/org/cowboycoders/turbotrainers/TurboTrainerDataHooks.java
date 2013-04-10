@@ -20,15 +20,37 @@
 package org.cowboycoders.turbotrainers;
 
 public interface TurboTrainerDataHooks {
-
-  public abstract void onSpeedChange(double speed);
-
-  public abstract void onPowerChange(double power);
-
-  public abstract void onCadenceChange(double cadence);
-
-  public abstract void onDistanceChange(double distance);
-
-  public abstract void onHeartRateChange(double heartRate);
+  
+	/**
+	 * Hook to control speed passed to listeners. 
+	 * 
+	 * @param speed the actual speed of the wheel. 
+	 * @return speed you want listeners to observe (e.g virtual speed)
+	 */	
+  public abstract double onSpeedChange(double speed);
+  
+	/**
+	 * Hook to control power passed to listeners. 
+	 * 
+	 * @param power the actual power from the turbo trainer. 
+	 * @return power you want listeners to observe (e.g virtual power)
+	 */	
+  public abstract double onPowerChange(double power);
+  
+	/**
+	 * Hook to control cadence passed to listeners. 
+	 * 
+	 * @param cadence the actual cadence from the turbo trainer. 
+	 * @return cadence you want listeners to observe (e.g virtual cadence)
+	 */	
+  public abstract double onCadenceChange(double cadence);
+  
+	/**
+	 * Hook to control distance passed to listeners. 
+	 * 
+	 * @param distance the actual distance from the turbo trainer. 
+	 * @return distance you want listeners to observe (e.g virtual distance)
+	 */	
+  public abstract double onDistanceChange(double distance);
 
 }

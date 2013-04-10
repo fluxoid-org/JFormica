@@ -119,37 +119,31 @@ public class SpeedResistanceMapper extends AbstractController {
 
 
 	@Override
-	public void onPowerChange(double power) {
+	public double onPowerChange(double power) {
 		
 		// Update the power with which the power model is updated with
 		powerModelUpdater.update(new Double(power));
 		// Only starts once
 		powerModelUpdater.start();
-
+		
+		return power;
 	}
 
 	@Override
-	public void onSpeedChange(double speed) {
-		// Not interested
+	public double onSpeedChange(double speed) {
+		
+		synchronized (this) {
+			if (logger != null) {
+				logger.update(ACTUAL_SPEED_HEADING, speed);
+			}
+		}
+		
+		BrakeModel bushidoDataModel = getDataModel();
+		// return virtual speed instead!
+		return bushidoDataModel.getVirtualSpeed();
 	}
 
-	@Override
-	public void onCadenceChange(double cadence) {
-		// Not interested
 
-	}
-
-	@Override
-	public void onDistanceChange(double distance) {
-		// Not interested
-
-	}
-
-	@Override
-	public void onHeartRateChange(double heartRate) {
-		// Not interested
-
-	}
 	
 	@Override
 	public void onStart() {
@@ -166,17 +160,6 @@ public class SpeedResistanceMapper extends AbstractController {
 		this.logger.append(true);
 	}
 	
-	@Override
-	public double onNotifyNewSpeed(double speed) {
-		
-		synchronized (this) {
-			if (logger != null) {
-				logger.update(ACTUAL_SPEED_HEADING, speed);
-			}
-		}
-		
-		BrakeModel bushidoDataModel = getDataModel();
-		return bushidoDataModel.getVirtualSpeed();
-	}
+
 
 }

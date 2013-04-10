@@ -12,7 +12,7 @@ public class ConstantResistanceController extends AbstractController {
 
 
 	@Override
-	public void onSpeedChange(double speed) {
+	public double onSpeedChange(double speed) {
 		synchronized (this) {
 			if (logger != null) {
 				getDataModel().setAbsoluteResistance(resistance);
@@ -20,37 +20,18 @@ public class ConstantResistanceController extends AbstractController {
 				logger.update(ACTUAL_SPEED_HEADING, speed);
 			}
 		}
-		
+		return speed;
 	}
 
 	@Override
-	public void onPowerChange(double power) {
+	public double onPowerChange(double power) {
 		synchronized (this) {
 			if (logger != null) {
 				logger.update(POWER_HEADING, power);
 			}
 		}
-		
+		return power;
 	}
-
-	@Override
-	public void onCadenceChange(double cadence) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onDistanceChange(double distance) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onHeartRateChange(double heartRate) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	
 	public synchronized void enableLogging(String dir, String filename) {
 		this.logger = new SimpleCsvLogger(dir,filename,ACTUAL_SPEED_HEADING,POWER_HEADING,ABSOLUTE_RESISTANCE_HEADING);

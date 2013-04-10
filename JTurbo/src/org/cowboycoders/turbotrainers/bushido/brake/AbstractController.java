@@ -1,8 +1,8 @@
 package org.cowboycoders.turbotrainers.bushido.brake;
 
-import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
+import org.cowboycoders.turbotrainers.TurboTrainerDataHooks;
 
-public abstract class AbstractController implements TurboTrainerDataListener {
+public abstract class AbstractController implements TurboTrainerDataHooks {
 
 	private BrakeModel bushidoDataModel;
 	private boolean started = false;
@@ -34,18 +34,38 @@ public abstract class AbstractController implements TurboTrainerDataListener {
 	public abstract void onStart();
 	
 	/**
-	 * Hook to control speed passed to listeners. Default implementation passes speed back unchanged.
-	 * 
-	 * If overriding, do not rely on
-	 * {@link TurboTrainerDataListener#onSpeedChange} being called before this as ordering of calls can not be guaranteed.
-	 * 
-	 * @param speed the actual speed of the wheel. 
-	 * @return speed you want listeners to observe (e.g virtual speed)
+	 * Default implementation passes value back unchanged, see: {@link TurboTrainerDataHooks#onSpeedChange(double)}
 	 */
-	
-	public double onNotifyNewSpeed(double speed) {
+	@Override
+	public double onSpeedChange(double speed) {
 		return speed;
 	}
+	
+	/**
+	 * Default implementation passes value back unchanged, see: {@link TurboTrainerDataHooks#onPowerChange(double)}
+	 */
+	@Override
+	public double onPowerChange(double power) {
+		return power;
+	}
+	
+	/**
+	 * Default implementation passes value back unchanged, see: {@link TurboTrainerDataHooks#onCadenceChange(double)}
+	 */
+	@Override
+	public double onCadenceChange(double cadence) {
+		return cadence;
+	}
+	
+	/**
+	 * Default implementation passes value back unchanged, see: {@link TurboTrainerDataHooks#onDistanceChange(double)}
+	 */
+	@Override
+	public double onDistanceChange(double distance) {
+		return distance;
+	}
+	
+	
 	
 	
 

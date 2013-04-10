@@ -165,7 +165,7 @@ public class BushidoBrake extends AntTurboTrainer {
 							public void performOperation(
 									TurboTrainerDataListener dcl) {
 								// allow hooks in controller to determine which speed we send
-								double speedToSend = resistanceController.onNotifyNewSpeed(speed);
+								double speedToSend = resistanceController.onSpeedChange(speed);
 								dcl.onSpeedChange(speedToSend);
 							}
 
@@ -192,7 +192,8 @@ public class BushidoBrake extends AntTurboTrainer {
 							@Override
 							public void performOperation(
 									TurboTrainerDataListener dcl) {
-								dcl.onPowerChange(power);
+								double powerToSend = resistanceController.onPowerChange(power);
+								dcl.onPowerChange(powerToSend);
 							}
 
 						});
@@ -211,7 +212,8 @@ public class BushidoBrake extends AntTurboTrainer {
 							@Override
 							public void performOperation(
 									TurboTrainerDataListener dcl) {
-								dcl.onCadenceChange(cadence);
+								double cadenceToSend = resistanceController.onCadenceChange(cadence);
+								dcl.onCadenceChange(cadenceToSend);
 							}
 
 						});
@@ -228,7 +230,8 @@ public class BushidoBrake extends AntTurboTrainer {
 							public void performOperation(
 									TurboTrainerDataListener dcl) {
 								synchronized (model) {
-									dcl.onDistanceChange(distance);
+									double distanceToSend = resistanceController.onDistanceChange(distance);
+									dcl.onDistanceChange(distanceToSend);
 								}
 							}
 
@@ -370,7 +373,6 @@ public class BushidoBrake extends AntTurboTrainer {
 
 		resistanceController.start(model);
 
-		this.registerDataListener(resistanceController);
 	}
 	
 	public static interface VersionRequestCallback {
@@ -1136,7 +1138,6 @@ public class BushidoBrake extends AntTurboTrainer {
 			}
 		}
 
-		this.unregisterDataListener(resistanceController);
 		resistanceController.stop();
 
 		// disconnect();
