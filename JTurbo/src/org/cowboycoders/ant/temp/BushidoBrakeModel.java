@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.cowboycoders.turbotrainers.DataPacketProvider;
 import org.cowboycoders.turbotrainers.bushido.BushidoUtils;
+import org.cowboycoders.turbotrainers.bushido.brake.CalibrationState;
 import org.cowboycoders.utils.LoopingListIterator;
 import org.cowboycoders.utils.TrapezoidIntegrator;
 
@@ -37,16 +38,6 @@ import org.cowboycoders.utils.TrapezoidIntegrator;
  * @author will
  */
 public class BushidoBrakeModel {
-  
-  public static enum CalibrationState {
-    CALIBRATION_REQUESTED,
-    BELOW_SPEED,
-    UP_TO_SPEED,
-    SLOWING_DOWN,
-    NO_ERROR,
-    CALIBRATED,
-    CALIBRATION_VALUE_READY,
-  }
   
   boolean calibrationStateSent = true; 
   
@@ -285,7 +276,7 @@ public class BushidoBrakeModel {
         case CALIBRATION_REQUESTED:
           packet[1] = 0x06;
           break;
-        case BELOW_SPEED:
+        case CALIBRATION_MODE:
           packet[1] = 0x06;
           packet[3] = 0x02;
           break;
@@ -449,7 +440,7 @@ public static void main(String [] args) {
       
     }
     
-    model.setCalibrationState(CalibrationState.BELOW_SPEED);
+    model.setCalibrationState(CalibrationState.CALIBRATION_MODE);
     
     
     

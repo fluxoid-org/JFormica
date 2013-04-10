@@ -33,6 +33,20 @@ public abstract class AbstractController implements TurboTrainerDataListener {
 	
 	public abstract void onStart();
 	
+	/**
+	 * Hook to control speed passed to listeners. Default implementation passes speed back unchanged.
+	 * 
+	 * If overriding, do not rely on
+	 * {@link TurboTrainerDataListener#onSpeedChange} being called before this as ordering of calls can not be guaranteed.
+	 * 
+	 * @param speed the actual speed of the wheel. 
+	 * @return speed you want listeners to observe (e.g virtual speed)
+	 */
+	
+	public double onNotifyNewSpeed(double speed) {
+		return speed;
+	}
+	
 	
 
 }

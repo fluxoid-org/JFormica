@@ -59,6 +59,7 @@ import org.cowboycoders.pid.OutputControlParameters;
 import org.cowboycoders.turbotrainers.Mode;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake;
+import org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake.VersionRequestCallback;
 import org.cowboycoders.turbotrainers.bushido.brake.ConstantResistanceController;
 import org.cowboycoders.turbotrainers.bushido.brake.PidBrakeController;
 import org.cowboycoders.turbotrainers.bushido.brake.SpeedResistanceMapper;
@@ -144,6 +145,16 @@ public class BrakeControllerTest {
     
     
   };
+  
+  VersionRequestCallback versionCallback = new VersionRequestCallback() {
+
+	@Override
+	public void onVersionReceived(String versionString) {
+		System.out.println(versionString);
+		
+	}
+	  
+  };
 
   BushidoBrake b;
   
@@ -160,7 +171,7 @@ public class BrakeControllerTest {
     b.startConnection();
     
     for (int i = 0 ; i< 100 ; i++) {
-    	b.requestVersion();
+    	b.requestVersion(versionCallback);
     	Thread.sleep(500);
     }
     

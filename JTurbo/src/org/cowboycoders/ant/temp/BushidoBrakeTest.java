@@ -44,12 +44,12 @@ import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.commands.ResetMessage;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
-import org.cowboycoders.ant.temp.BushidoBrakeModel.CalibrationState;
 import org.cowboycoders.ant.utils.AntLoggerImpl;
 import org.cowboycoders.ant.utils.ArrayUtils;
 import org.cowboycoders.ant.utils.ByteUtils;
 import org.cowboycoders.turbotrainers.Parameters;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
+import org.cowboycoders.turbotrainers.bushido.brake.CalibrationState;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoHeadunit;
 import org.cowboycoders.utils.SimpleCsvLogger;
 import org.junit.AfterClass;
@@ -88,7 +88,7 @@ public class BushidoBrakeTest {
   Thread speedUp = new Thread() {
     
     public void run() {
-      model.setCalibrationState(CalibrationState.BELOW_SPEED);
+      model.setCalibrationState(CalibrationState.CALIBRATION_MODE);
       doSpeedUp();
       
       model.setCalibrationState(CalibrationState.UP_TO_SPEED);

@@ -217,12 +217,10 @@ public class BrakeCalibrationHackingArena {
     b.registerDataListener(dataListener);
     b.startConnection();
     
-    Thread.sleep(10000);
-    
 	b.calibrate(callback, 100);
     
 
-    Thread.sleep(30000);
+    Thread.sleep(50000);
     
     b.stop();
     n.stop();

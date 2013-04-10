@@ -130,11 +130,6 @@ public class SpeedResistanceMapper extends AbstractController {
 
 	@Override
 	public void onSpeedChange(double speed) {
-		synchronized (this) {
-			if (logger != null) {
-				logger.update(ACTUAL_SPEED_HEADING, speed);
-			}
-		}
 		// Not interested
 	}
 
@@ -169,6 +164,19 @@ public class SpeedResistanceMapper extends AbstractController {
 		this.logger = new SimpleCsvLogger(dir,filename,ACTUAL_SPEED_HEADING,VIRTUAL_SPEED_HEADING,ABSOLUTE_RESISTANCE_HEADING);
 		this.logger.addTime(true);
 		this.logger.append(true);
+	}
+	
+	@Override
+	public double onNotifyNewSpeed(double speed) {
+		
+		synchronized (this) {
+			if (logger != null) {
+				logger.update(ACTUAL_SPEED_HEADING, speed);
+			}
+		}
+		
+		BrakeModel bushidoDataModel = getDataModel();
+		return bushidoDataModel.getVirtualSpeed();
 	}
 
 }
