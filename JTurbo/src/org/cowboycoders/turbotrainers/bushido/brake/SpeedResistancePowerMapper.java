@@ -54,7 +54,6 @@ public class SpeedResistancePowerMapper extends AbstractController {
 	 */
 	public double getBrakeResistanceFromSurfaceFit() {
 		BrakeModel bushidoDataModel = getDataModel();
-		double slope = bushidoDataModel.getSlope();
 		//double totalWeight = bushidoDataModel.getTotalWeight();
 		double actualSpeed = bushidoDataModel.getActualSpeed();
 		double brakePower = bushidoDataModel.getPower();
@@ -107,42 +106,27 @@ public class SpeedResistancePowerMapper extends AbstractController {
 			new Double(0), updateVirtualSpeed, POWER_MODEL_UPDATE_PERIOD_MS);
 	
 	@Override
-	public void onPowerChange(double power) {
+	public double onPowerChange(double power) {
 		
 		// Update the power with which the power model is updated with
 		powerModelUpdater.update(new Double(power));
 		// Only starts once
 		powerModelUpdater.start();
+		
+		return power;
 
 	}
 
 	@Override
-	public void onSpeedChange(double speed) {
+	public double onSpeedChange(double speed) {
 		synchronized (this) {
 			if (logger != null) {
 				logger.update(ACTUAL_SPEED_HEADING, speed);
 			}
 		}
-		// Not interested
+		return getDataModel().getVirtualSpeed();
 	}
 
-	@Override
-	public void onCadenceChange(double cadence) {
-		// Not interested
-
-	}
-
-	@Override
-	public void onDistanceChange(double distance) {
-		// Not interested
-
-	}
-
-	@Override
-	public void onHeartRateChange(double heartRate) {
-		// Not interested
-
-	}
 	
 	@Override
 	public void onStart() {
