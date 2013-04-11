@@ -136,9 +136,10 @@ public class DeleteOneTrackDialogFragment extends DialogFragment {
               intent = IntentUtils.newIntent(context, TrackListActivity.class);
             }
             
-            startActivity(intent);
             // Close the activity since its content can change after delete
             activity.finish();
+            
+            startActivity(intent);
 
           }
         });
