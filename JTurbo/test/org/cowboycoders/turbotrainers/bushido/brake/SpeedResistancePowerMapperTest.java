@@ -1,3 +1,4 @@
+package org.cowboycoders.turbotrainers.bushido.brake;
 import static org.junit.Assert.*;
 
 import org.cowboycoders.turbotrainers.bushido.brake.BrakeModel;
@@ -16,7 +17,7 @@ import org.junit.Test;
  * Basic test of polynomial speed-resistance map using some known values
  *
  */
-public class SpeedResistanceMapperTest {
+public class SpeedResistancePowerMapperTest {
 
 	//Container for brake data
 	private final BrakeModel dataModel = new TargetSlopeModel();

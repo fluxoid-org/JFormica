@@ -1049,7 +1049,7 @@ public class BushidoBrake extends AntTurboTrainer {
 			return timeLeft;
 		}
 
-		public synchronized void start(CallibrationCallback callback,
+		public synchronized void start(final CallibrationCallback callback,
 				long timeout) {
 			if (started)
 				throw new IllegalStateException(
@@ -1067,6 +1067,7 @@ public class BushidoBrake extends AntTurboTrainer {
 
 				@Override
 				public void run() {
+					callback.onFailure(new CalibrationException("max calibration time expired"));
 					stop();
 				}
 
@@ -1138,6 +1139,7 @@ public class BushidoBrake extends AntTurboTrainer {
 			}
 		}
 
+		
 		resistanceController.stop();
 
 		// disconnect();

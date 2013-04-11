@@ -220,7 +220,7 @@ public class BrakeCalibrationHackingArena {
 	b.calibrate(callback, 100);
     
 
-    Thread.sleep(50000);
+    Thread.sleep(45000);
     
     b.stop();
     n.stop();

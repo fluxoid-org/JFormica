@@ -1,5 +1,7 @@
 package org.cowboycoders.turbotrainers.bushido.brake;
 
+import java.io.File;
+
 import org.cowboycoders.turbotrainers.PowerModel;
 import org.cowboycoders.utils.Conversions;
 import org.cowboycoders.utils.FixedPeriodUpdater;
@@ -19,11 +21,6 @@ import org.cowboycoders.utils.UpdateCallback;
  */
 public class SpeedResistancePowerMapper extends AbstractController {
 
-	private SimpleCsvLogger logger;
-
-	private static final String ABSOLUTE_RESISTANCE_HEADING = "Absolute Resistance";
-	private static final String VIRTUAL_SPEED_HEADING = "Virtual Speed";
-	private static final String ACTUAL_SPEED_HEADING = "Actual Speed";
 
 	// Period at which the virtual speed will be updated (ms)
 	private static final int POWER_MODEL_UPDATE_PERIOD_MS = 100;
@@ -105,13 +102,11 @@ public class SpeedResistancePowerMapper extends AbstractController {
 			// Update the brake resistance from the current virtual speed
 			bushidoDataModel
 					.setAbsoluteResistance((int) getBrakeResistanceFromSurfaceFit());
-			synchronized (this) {
-				if (logger != null) {
-					logger.update(VIRTUAL_SPEED_HEADING, virtualSpeed);
-					logger.update(ABSOLUTE_RESISTANCE_HEADING,
-							bushidoDataModel.getAbsoluteResistance());
-				}
-			}
+			logToCsv(VIRTUAL_SPEED_HEADING, virtualSpeed);
+			logToCsv(ABSOLUTE_RESISTANCE_HEADING,
+					bushidoDataModel.getAbsoluteResistance());
+				
+			
 		}
 	};
 
@@ -132,11 +127,9 @@ public class SpeedResistancePowerMapper extends AbstractController {
 
 	@Override
 	public final double onSpeedChange(final double speed) {
-		synchronized (this) {
-			if (logger != null) {
-				logger.update(ACTUAL_SPEED_HEADING, speed);
-			}
-		}
+		
+		logToCsv(ACTUAL_SPEED_HEADING, speed);
+
 		return getDataModel().getVirtualSpeed();
 	}
 
@@ -149,11 +142,15 @@ public class SpeedResistancePowerMapper extends AbstractController {
 		powerModelUpdater.stop();
 	}
 
-	public synchronized void enableLogging(final String dir, final String filename) {
-		this.logger = new SimpleCsvLogger(dir, filename, ACTUAL_SPEED_HEADING,
+	@Override
+	protected SimpleCsvLogger getCsvLogger(File file) {
+		SimpleCsvLogger logger = new SimpleCsvLogger(file, ACTUAL_SPEED_HEADING,
 				VIRTUAL_SPEED_HEADING, ABSOLUTE_RESISTANCE_HEADING);
-		this.logger.addTime(true);
-		this.logger.append(true);
+		logger.addTime(true);
+		logger.append(true);
+		return logger;
 	}
+
+
 
 }

@@ -67,6 +67,11 @@ public class SimpleCsvLogger {
 		// write(HEADINGS);
 	}
 	
+	public SimpleCsvLogger(File file, String... headings) {
+		this(file.getParent() == null ? System.getProperty("user.dir") : file.getParent(), file.getName(),headings);
+	}
+	
+	
 	/**
 	 * @param append append to file or delete and recreate
 	 * Must be called before first update. Default false.
@@ -232,7 +237,9 @@ public class SimpleCsvLogger {
 	}
 
 	public static void main(String[] args) {
-		SimpleCsvLogger log = new SimpleCsvLogger("logs", "metrics.log", "power","speed");
+		//SimpleCsvLogger log = new SimpleCsvLogger("logs", "metrics.log", "power","speed");
+		File file = new File("./logs/hi.log");
+		SimpleCsvLogger log = new SimpleCsvLogger(file, "power","speed");
 		log.addTime(false);
 		log.append(false);
 		log.setComment("hi there");

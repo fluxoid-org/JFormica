@@ -1,5 +1,6 @@
 package org.cowboycoders.turbotrainers.bushido.brake;
 
+import java.io.File;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -15,6 +16,7 @@ import org.cowboycoders.turbotrainers.PowerModelManipulator;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
 import org.cowboycoders.utils.Conversions;
 import org.cowboycoders.utils.FixedPeriodUpdater;
+import org.cowboycoders.utils.SimpleCsvLogger;
 import org.cowboycoders.utils.SlopeTimeAverager;
 import org.cowboycoders.utils.UpdateCallback;
 
@@ -93,6 +95,9 @@ public class PidBrakeController extends AbstractController {
 				needsSync = false;
 				return;
 			}
+			
+			logToCsv(ABSOLUTE_RESISTANCE_HEADING, bushidoDataModel.getAbsoluteResistance());
+			
 			bushidoDataModel.setResistance(resistance + getEstimatedResistance());
 		}
 		
@@ -175,7 +180,7 @@ public class PidBrakeController extends AbstractController {
 
 	@Override
 	public double onPowerChange(double power) {
-		
+		logToCsv(POWER_HEADING, power);
 		powerModelUpdater.update(new Double (power));
 		// only starts once
 		powerModelUpdater.start();
@@ -205,6 +210,7 @@ public class PidBrakeController extends AbstractController {
 	
 	
 	protected  void setPredictedSpeed(double newValue) {
+		logToCsv(VIRTUAL_SPEED_HEADING, newValue);
 		// double non-atomic?
 		try {
 			speedUpdateLock.lock();
@@ -228,6 +234,7 @@ public class PidBrakeController extends AbstractController {
 	
 	
 	protected  void setActualSpeed(double newValue) {
+		logToCsv(ACTUAL_SPEED_HEADING, newValue);
 		// double non-atomic?
 		try {
 			speedUpdateLock.lock();
@@ -252,6 +259,17 @@ public class PidBrakeController extends AbstractController {
 		bushidoDataModel.setResistance(getEstimatedResistance());
 		actualSpeedSlopeAverager.setThreshold(ACTUAL_SPEED_STEADY_STATE_THRESHOLD, -ACTUAL_SPEED_STEADY_STATE_THRESHOLD);
 	}
+
+	@Override
+	protected SimpleCsvLogger getCsvLogger(File file) {
+		SimpleCsvLogger logger = new SimpleCsvLogger(file, ACTUAL_SPEED_HEADING,
+				VIRTUAL_SPEED_HEADING, POWER_HEADING, ABSOLUTE_RESISTANCE_HEADING);
+		logger.addTime(true);
+		logger.append(true);
+		return logger;
+	}
+
+	
 	
 
 	

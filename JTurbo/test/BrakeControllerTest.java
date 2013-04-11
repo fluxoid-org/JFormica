@@ -21,6 +21,7 @@
 import static org.junit.Assert.*;
 
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -63,6 +64,7 @@ import org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake.VersionRequestC
 import org.cowboycoders.turbotrainers.bushido.brake.ConstantResistanceController;
 import org.cowboycoders.turbotrainers.bushido.brake.PidBrakeController;
 import org.cowboycoders.turbotrainers.bushido.brake.SpeedResistanceMapper;
+import org.cowboycoders.turbotrainers.bushido.brake.SpeedResistancePowerMapper;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoBroadcastDataListener;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor;
 import org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressListener;
@@ -219,7 +221,7 @@ public class BrakeControllerTest {
     Node n = new Node(BrakeControllerTest.antchip);
     n.registerAntLogger(antLogger);
     SpeedResistanceMapper mapper = new SpeedResistanceMapper();
-    mapper.enableLogging("logs", "polylog");
+    mapper.enableLogging(new File("./logs/polylog"));
     b = new BushidoBrake(n,mapper);
     b.setMode(Mode.TARGET_SLOPE);
     b.registerDataListener(dataListener);
@@ -231,13 +233,30 @@ public class BrakeControllerTest {
     n.stop();
   }
   
+  @Test
+  public void testSurfaceFitController() throws InterruptedException, TimeoutException {
+	    Node n = new Node(BrakeControllerTest.antchip);
+	    n.registerAntLogger(antLogger);
+	    SpeedResistancePowerMapper mapper = new SpeedResistancePowerMapper();
+	    mapper.enableLogging(new File("./logs/surfacelog"));
+	    b = new BushidoBrake(n,mapper);
+	    b.setMode(Mode.TARGET_SLOPE);
+	    b.registerDataListener(dataListener);
+	    b.startConnection();
+
+	    Thread.sleep(60000);
+	    
+	    b.stop();
+	    n.stop();
+	  }
+  
   //@Test
   public void testFixedResistanceCOntroller() throws InterruptedException, TimeoutException {
     Node n = new Node(BrakeControllerTest.antchip);
     n.registerAntLogger(antLogger);
     ConstantResistanceController mapper = new ConstantResistanceController();
     mapper.setAbsoluteResistance(1000);
-    mapper.enableLogging("logs", "constant_reslog");
+    mapper.enableLogging(new File("./logs/constant_reslog"));
     b = new BushidoBrake(n,mapper);
     b.setMode(Mode.TARGET_SLOPE);
     b.registerDataListener(dataListener);
