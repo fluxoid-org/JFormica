@@ -1,11 +1,23 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from pylab import polyfit
+from mpl_toolkits.mplot3d import Axes3D
 
 from polynomial_tools import PolyFit
 
+"""
+Created on Apr 14, 2013
+
+@author: Doug Szumski, Will Szumski
+
+A tool to map speed, resistance and power for the Bushido 
+
+Assumes data in the format of the example calibration file
+
+Prints coefficients which are used in JTurbo and plots the raw data and surface fit 
+
+"""
 def getCalibrationData(filename):
     """
     Reads calibration data in, creating nested lists for each fixed resistance. 
@@ -13,7 +25,7 @@ def getCalibrationData(filename):
     """
     resistance_series = []
     speed_power_measurement = []
-    c_res = 0.0;
+    c_res = 0.0
     with open(filename) as f:
         for line in f:
             line = line.split(";")
