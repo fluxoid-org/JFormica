@@ -25,16 +25,30 @@ public class SpeedResistancePowerMapper extends AbstractController {
 	// Period at which the virtual speed will be updated (ms)
 	private static final int POWER_MODEL_UPDATE_PERIOD_MS = 100;
 
-	// Initial brake resistance
-	private static final int INITIAL_BRAKE_RESISTANCE = 0;
-
+	// Brake resistance upon power up of the brake
+	private static final int INITIAL_BRAKE_RESISTANCE = 250;
+	// Below this limit power-speed characteristics 
+	// don' change appreciably for the brake
+	private static final int MINIMUM_BRAKE_RESISTANCE = 250;
+	// It becomes very hard to pedal around ~700 
+	// and the tyre starts slipping even with high tension in the brake. 
+	private static final int MAXIMUM_BRAKE_RESISTANCE = 1000;
+	// Minimum simulation speed. Used in conjunction with minimum simulation power.
+	// Below this pedaling speed we drop to minimum resistance
+	// Currently the surface fit doesn't map well below about this value for lowe powers and 
+	// the brake also switches off at some speed > 0
+	private static final int MINIMUM_SIMULATION_SPEED = 10;
+	// The surface fit works at higher power for slow speeds. This is 
+	private static final int MINIMUM_SIMULATION_SPEED_OVERRIDE_POWER = 250;
+	
 	// 16 coefficients from polynomial surface fit mapping speed and power to
 	// brake resistance
-	private static final double[] SURF_COEFFS = {-1.26245135e+02,
-			-1.75248240e-01, 1.16057178e-03, -1.05642895e-06, 1.89452066e+01,
-			2.53875165e-02, -7.82709342e-05, 7.02887221e-08, -4.44753771e-01,
-			-7.38460610e-04, 2.72192310e-06, -1.43856918e-09, 4.67359862e-03,
-			6.13101536e-06, -2.62701814e-08, 2.21264118e-11};
+	private static final double[] SURF_COEFFS = { 
+		   7.62670239e+02,   8.36403498e+00,  -1.93426172e-02,   1.19616898e-05,
+		  -1.26187201e+02,  -3.08275665e-02,   5.64269493e-04,  -4.42943697e-07,
+		   3.74310573e+00,  -5.51901879e-03,  -2.52126663e-06,   4.64788059e-09,
+		  -4.24931219e-02,   1.11216056e-04,  -8.58263602e-08,   1.58166813e-11
+		  };
 
 	// Model to estimate speed from power
 	private final PowerModel powerModel = new PowerModel();
@@ -61,6 +75,12 @@ public class SpeedResistancePowerMapper extends AbstractController {
 
 		final double actualPower = bushidoDataModel.getPower();
 		final double virtualSpeed = bushidoDataModel.getVirtualSpeed();
+		
+		// If the speed is too low, just send back the minimum resistance. 
+		// Only do this if the power is also low
+		if ((virtualSpeed < MINIMUM_SIMULATION_SPEED) && (actualPower < MINIMUM_SIMULATION_SPEED_OVERRIDE_POWER)) {
+			return MINIMUM_BRAKE_RESISTANCE;
+		}
 
 		// Order of the polynomial fit
 		final int order = (int) Math.sqrt(SURF_COEFFS.length) - 1;
@@ -76,7 +96,14 @@ public class SpeedResistancePowerMapper extends AbstractController {
 						* Math.pow(actualPower, j);
 			}
 		}
-
+		
+		// Bound the brake resistance to sensible limits
+		if (brakeResistance < MINIMUM_BRAKE_RESISTANCE) {
+			brakeResistance = MINIMUM_BRAKE_RESISTANCE;
+		} else if (brakeResistance > MAXIMUM_BRAKE_RESISTANCE) {
+			brakeResistance = MAXIMUM_BRAKE_RESISTANCE;
+		}
+ 
 		return brakeResistance;
 	}
 
