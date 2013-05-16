@@ -26,11 +26,11 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import org.cowboycoders.ant.SharedThreadPool;
 
 /**
  * Stores ant messages with thread safe access
@@ -40,7 +40,15 @@ import org.cowboycoders.ant.SharedThreadPool;
  */
 public class BroadcastMessenger<V> {
 	
-  private static final ExecutorService SHARED_SINGLE_THREAD_EXECUTOR = Executors.newSingleThreadExecutor();
+  private static final ExecutorService SHARED_SINGLE_THREAD_EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactory() {
+	   @Override
+	   public Thread newThread(Runnable runnable) {
+	      Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+	      thread.setName("BroadcastMessengerThread");
+	      thread.setDaemon(true);
+	      return thread;
+	   }
+	});
   
   /**
    * Used to concurrently notify listeners
