@@ -18,14 +18,11 @@
  */
 package org.cowboycoders.ant;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Lock;
@@ -35,7 +32,6 @@ import java.util.logging.Logger;
 import org.cowboycoders.ant.defines.AntDefine;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.events.EventMachine;
-import org.cowboycoders.ant.events.FixedSizeBuffer;
 import org.cowboycoders.ant.events.MessageCondition;
 import org.cowboycoders.ant.events.MessageConditionFactory;
 import org.cowboycoders.ant.messages.ChannelMessage;
@@ -56,10 +52,12 @@ import org.cowboycoders.ant.messages.data.BurstDataMessage;
 import org.cowboycoders.ant.messages.responses.ChannelResponse;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
 import org.cowboycoders.ant.utils.BurstMessageSequenceGenerator;
-import org.cowboycoders.ant.utils.MiscUtils;
+import org.cowboycoders.ant.utils.ByteUtils;
 
 
-public class Channel extends BufferedNodeComponent {
+public class Channel {
+	
+  public static final int SEARCH_TIMEOUT_NEVER = 255;
   
   public final static Logger LOGGER = Logger.getLogger(EventMachine.class .getName()); 
   
@@ -133,8 +131,11 @@ public class Channel extends BufferedNodeComponent {
   private final MessageSender channelSender = new MessageSender() {
 
     @Override
-    public MessageMetaWrapper<StandardMessage> send(StandardMessage msg) {
-      return Channel.this.send((ChannelMessage)msg);
+    public List<MessageMetaWrapper<? extends StandardMessage>> send(StandardMessage msg) {
+  	MessageMetaWrapper<StandardMessage> sentMeta = Channel.this.send((ChannelMessage)msg);
+  	List<MessageMetaWrapper<? extends StandardMessage>> rtn = new ArrayList<MessageMetaWrapper<? extends StandardMessage>>(1);
+  	rtn.add(sentMeta);
+  	return rtn;
       
     }
     
@@ -163,7 +164,6 @@ public class Channel extends BufferedNodeComponent {
   }
   
   public Channel(Node parent, int number) {
-    super(new ChannelInstanceCondition(number),new ChannelResponseCondition(number));
     setParent(parent);
     setNumber(number);
     
@@ -334,7 +334,7 @@ public class Channel extends BufferedNodeComponent {
     ChannelIdMessage id = new ChannelIdMessage(0, deviceNumber, deviceType, transmissionType, setPairingFlag);
     MessageCondition condition = MessageConditionFactory.newResponseCondition(id.getId(), ResponseCode.RESPONSE_NO_ERROR);
     try {
-      sendAndWaitForAck(id, condition, 1L, TimeUnit.SECONDS, null,null);
+      sendAndWaitForMessage(id, condition, 1L, TimeUnit.SECONDS, null);
     } catch (InterruptedException e) {
       handleTimeOutException(e);
     } catch (TimeoutException e) {
@@ -350,7 +350,7 @@ public class Channel extends BufferedNodeComponent {
     ChannelFrequencyMessage freq = new ChannelFrequencyMessage(0,channelFrequency);
     MessageCondition condition = MessageConditionFactory.newResponseCondition(freq.getId(), ResponseCode.RESPONSE_NO_ERROR);
     try {
-      sendAndWaitForAck(freq, condition, 1L, TimeUnit.SECONDS, null,null);
+      sendAndWaitForMessage(freq, condition, 1L, TimeUnit.SECONDS, null);
     } catch (InterruptedException e) {
       handleTimeOutException(e);
     } catch (TimeoutException e) {
@@ -365,7 +365,7 @@ public class Channel extends BufferedNodeComponent {
     ChannelPeriodMessage periodMsg = new ChannelPeriodMessage(0,period);
     MessageCondition condition = MessageConditionFactory.newResponseCondition(periodMsg.getId(), ResponseCode.RESPONSE_NO_ERROR);
     try {
-      sendAndWaitForAck(periodMsg, condition, 1L, TimeUnit.SECONDS, null,null);
+      sendAndWaitForMessage(periodMsg, condition, 1L, TimeUnit.SECONDS, null);
     } catch (InterruptedException e) {
       handleTimeOutException(e);
     } catch (TimeoutException e) {
@@ -384,7 +384,7 @@ public class Channel extends BufferedNodeComponent {
     ChannelSearchTimeoutMessage msg = new ChannelSearchTimeoutMessage(0,timeout);
     MessageCondition condition = MessageConditionFactory.newResponseCondition(msg.getId(), ResponseCode.RESPONSE_NO_ERROR);
     try {
-      sendAndWaitForAck(msg, condition, 1L, TimeUnit.SECONDS, null,null);
+      sendAndWaitForMessage(msg, condition, 1L, TimeUnit.SECONDS, null);
     } catch (InterruptedException e) {
       handleTimeOutException(e);
     } catch (TimeoutException e) {
@@ -392,31 +392,29 @@ public class Channel extends BufferedNodeComponent {
     }
   }
   
-  
+  /**
+   * Not thread safe
+   * @param msg
+   * @param condition
+   * @param timeout
+   * @param timeoutUnit
+   * @param receipt
+   * @return
+   * @throws InterruptedException
+   * @throws TimeoutException
+   */
   public StandardMessage sendAndWaitForMessage(
       final ChannelMessage msg, 
       final MessageCondition condition,
       final Long timeout, final TimeUnit timeoutUnit,
-      final Long cutOffTimestamp,
       final Receipt receipt) 
           throws InterruptedException, TimeoutException {
     
 
-    return parent.sendAndWaitForMessage(msg, condition, timeout, timeoutUnit, cutOffTimestamp, this,channelSender, receipt);
+    return parent.sendAndWaitForMessage(msg, condition, timeout, timeoutUnit, channelSender, receipt);
 
   }
   
-  public StandardMessage sendAndWaitForAck(
-      final ChannelMessage msg, 
-      final MessageCondition condition,
-      final Long timeout, final TimeUnit timeoutUnit,
-      final Long cutOffTimestamp,
-      final Receipt receipt) 
-          throws InterruptedException, TimeoutException {
-    
-    return parent.sendAndWaitForAck(msg, condition, timeout, timeoutUnit, cutOffTimestamp, this, channelSender, receipt);
-
-  }
   
 //  /**
 //   * Queues a msg to be sent in the channelExectuor. Next message in queue is only
@@ -475,7 +473,7 @@ public class Channel extends BufferedNodeComponent {
     ChannelMessage msg = new ChannelUnassignMessage(getNumber());
     MessageCondition condition = MessageConditionFactory.newResponseCondition(msg.getId(), ResponseCode.RESPONSE_NO_ERROR);
     try {
-      sendAndWaitForAck(msg, condition, 1L, TimeUnit.SECONDS, null,null);
+      sendAndWaitForMessage(msg, condition, 1L, TimeUnit.SECONDS, null);
     } catch (InterruptedException e) {
       handleTimeOutException(e);
     } catch (TimeoutException e) {
@@ -495,43 +493,21 @@ public class Channel extends BufferedNodeComponent {
     
     MessageCondition condition = MessageConditionFactory.newResponseCondition(assignMessage.getId(), ResponseCode.RESPONSE_NO_ERROR);
     try {
-      sendAndWaitForAck(assignMessage, condition, 1L, TimeUnit.SECONDS, null,null);
+      sendAndWaitForMessage(assignMessage, condition, 1L, TimeUnit.SECONDS, null);
     } catch (InterruptedException e) {
       handleTimeOutException(e);
     } catch (TimeoutException e) {
-      logBuffers();
       handleTimeOutException(e);
     }
     
   }
   
-  
-  private void logBuffers() {
-    FixedSizeBuffer<MessageMetaWrapper<StandardMessage>> msgBuffer = this.getMsgBuffer().getMsgBuffer();
-    FixedSizeBuffer<MessageMetaWrapper<ChannelResponse>> ackBuffer = this.getAckBuffer().getMsgBuffer();
-    LOGGER.finer("Log buffers: start");
-    int count =0 ;
-    for (MessageMetaWrapper<StandardMessage> wrapper : msgBuffer) {
-      LOGGER.finer("msgBuffer , index: " + count + " :" + wrapper.unwrap());
-      count ++;
-    }
-    LOGGER.finer("Log buffers: end msgBuffer");
-    count =0 ;
-    for (MessageMetaWrapper<ChannelResponse> wrapper : ackBuffer) {
-      LOGGER.finer("ackBuffer , index: " + count + " :" + wrapper.unwrap());
-      count ++;
-    }
-    LOGGER.finer("Log buffers: end ackBuffer");
-    LOGGER.finer("Log buffers: return");
-    
-    
-  }
 
   public synchronized void open() {
     ChannelMessage msg = new ChannelOpenMessage(0);
     MessageCondition condition = MessageConditionFactory.newResponseCondition(msg.getId(), ResponseCode.RESPONSE_NO_ERROR);
     try {
-      sendAndWaitForAck(msg, condition, 1L, TimeUnit.SECONDS, null, null);
+      sendAndWaitForMessage(msg, condition, 1L, TimeUnit.SECONDS, null);
     } catch (InterruptedException e) {
       handleTimeOutException(e);
     } catch (TimeoutException e) {
@@ -541,12 +517,12 @@ public class Channel extends BufferedNodeComponent {
   
   public synchronized void close() {
     ChannelMessage msg = new ChannelCloseMessage(0);
-    MessageCondition condition = MessageConditionFactory.newResponseCondition(msg.getId(), ResponseCode.RESPONSE_NO_ERROR);
+    MessageCondition noError = MessageConditionFactory.newResponseCondition(msg.getId(), ResponseCode.RESPONSE_NO_ERROR);
+    MessageCondition channelClosed = MessageConditionFactory.newResponseCondition(MessageId.EVENT, ResponseCode.EVENT_CHANNEL_CLOSED);
+    MessageCondition chainedCondition = MessageConditionFactory.newChainedCondition(noError,channelClosed);
     Receipt receipt = new Receipt();
     try {
-      sendAndWaitForAck(msg, condition, 1L, TimeUnit.SECONDS, null, receipt);
-      condition = MessageConditionFactory.newResponseCondition(MessageId.EVENT, ResponseCode.EVENT_CHANNEL_CLOSED);
-      parent.getEvm().waitForAcknowledgement(this, condition, 1L, TimeUnit.SECONDS, null, receipt.getRxTimestamp());  
+      sendAndWaitForMessage(msg, chainedCondition, 1L, TimeUnit.SECONDS,receipt);
     } catch (InterruptedException e) {
       handleTimeOutException(e);
     } catch (TimeoutException e) {
@@ -557,7 +533,7 @@ public class Channel extends BufferedNodeComponent {
   
   public void sendBurst(byte[] data, Long timeout, TimeUnit timeoutUnit) 
       throws InterruptedException, TimeoutException, TransferException {
-    final List<byte[]> list = MiscUtils.splitByteArray(data, AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE);
+    final List<byte[]> list = ByteUtils.splitByteArray(data, AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE);
     final BurstMessageSequenceGenerator generator = new BurstMessageSequenceGenerator();
     try {
       sendLock.lock();
@@ -597,25 +573,24 @@ public class Channel extends BufferedNodeComponent {
       MessageSender massSender = new MessageSender() {
 
         @Override
-        public MessageMetaWrapper<StandardMessage> send(StandardMessage msgIn) {
-          MessageMetaWrapper<StandardMessage> rtn = null;
+        public ArrayList<MessageMetaWrapper<? extends StandardMessage>> send(StandardMessage msgIn) {
+          ArrayList<MessageMetaWrapper<? extends StandardMessage>> sentMessages = new ArrayList<MessageMetaWrapper<? extends StandardMessage>>(list.size());
+          
+          // handle all but last
           for (int i = 0; i < list.size() -1 ; i++) {
             BurstDataMessage msg = new BurstDataMessage();
             msg.setData(list.get(i));
             msg.setSequenceNumber(generator.next());
-            if (rtn == null) {
-            rtn = Channel.this.send(msg);
-            } else {
-              Channel.this.send(msg);
-            }
+            sentMessages.add(Channel.this.send(msg));
+
           }
           
           BurstDataMessage msg = new BurstDataMessage();
           msg.setData(list.get(list.size() -1));
           msg.setSequenceNumber(generator.finish());
-          Channel.this.send(msg);
+          sentMessages.add(Channel.this.send(msg));
           
-          return rtn;
+          return sentMessages;
 
         }
         
@@ -623,7 +598,7 @@ public class Channel extends BufferedNodeComponent {
       
       try {
       
-      parent.sendAndWaitForAck(null, condition, timeout, timeoutUnit, null, this, massSender, null);
+      parent.sendAndWaitForMessage(null, condition, timeout, timeoutUnit, massSender, null);
       
       } catch (RuntimeException e) {
         //two levels deep

@@ -16,18 +16,29 @@
  *     You should have received a copy of the GNU General Public License
  *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.cowboycoders.ant.utils;
-
+package org.cowboycoders.ant.messages;
 
 /**
- * A hotchpotch of utils
+ * Standard interface for all org.cowboycoders.ant message decorators.
+ * The standard is wrap all ant messages, so this allows us to recover 
+ * the original.
+ * 
  * @author will
  *
  */
-public class MiscUtils {
+public interface MessageDecorator {
   
-  private MiscUtils() {
-    
-  }
+  /**
+   * Returns the <code>Message</code> class doing the leg work.
+   * This can be one of: 
+   * Message -for standard ant messages,
+   * LegacyMessage - for legacy extended messages
+   * ExtendedMessage -for extended messages
+   * 
+   * These classes can provide additional functionality.
+   * 
+   * @return the message used as the backend
+   */
+  public Message getBackendMessage();
 
 }

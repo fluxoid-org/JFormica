@@ -18,52 +18,63 @@
  */
 package org.cowboycoders.ant;
 
-import org.cowboycoders.ant.utils.TimestampContainer;
-import org.cowboycoders.ant.utils.TimestampQueryable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.cowboycoders.ant.messages.MessageMetaWrapper;
+import org.cowboycoders.ant.messages.StandardMessage;
 
 public class Receipt {
-  
-  private long rxTimestamp;
-  private long txTimestamp;
-  
-  /**
-   * Compare this with object timestamp
-   * @return the current timestamp
-   */
-  public static long getCurrentTimestamp() {
-    return System.nanoTime();
-  }
+	
+  public static Logger LOGGER = Logger.getLogger(Receipt.class.getName());
 
-
-  public long getRxTimestamp() {
-    return rxTimestamp;
+  private LinkedList<MessageMetaWrapper<? extends StandardMessage>> sentMessages = new LinkedList<MessageMetaWrapper<? extends StandardMessage>>();
+  private LinkedList<MessageMetaWrapper<? extends StandardMessage>> receivedMessages = new LinkedList<MessageMetaWrapper<? extends StandardMessage>>();
+  
+  public void addReceived(MessageMetaWrapper<? extends StandardMessage> receivedMeta) {
+	  if (receivedMeta == null) {
+		  LOGGER.warning("passed null message, ignoring");
+		  return;
+	  }
+	  receivedMessages.add(receivedMeta);
   }
   
-  public long getTxTimestamp() {
-    return txTimestamp;
-  }
-
-  /**
-   * @param rxTimestamp the rxTimestamp to set
-   */
-  public void setRxTimestamp(long rxTimestamp) {
-    this.rxTimestamp = rxTimestamp;
-  }
-
-  /**
-   * @param txTimestamp the txTimestamp to set
-   */
-  public void setTxTimestamp(long txTimestamp) {
-    this.txTimestamp = txTimestamp;
+  public void addSent(MessageMetaWrapper<? extends StandardMessage> msg) {
+	  if (msg == null) {
+		  LOGGER.warning("passed null message, ignoring");
+		  return;
+	  }
+	  sentMessages.add(msg);
   }
   
-  public void stampRx() {
-    setRxTimestamp(System.nanoTime());
+  public void addSent(List<MessageMetaWrapper<? extends StandardMessage>> msgs) {
+	  if (msgs == null) {
+		  LOGGER.warning("passed null list, ignoring");
+		  return;
+	  }
+	  for (MessageMetaWrapper<? extends StandardMessage> msg : msgs) {
+		  addSent(msg);
+	  }
   }
   
-  public void stampTx() {
-    setTxTimestamp(System.nanoTime());
-  }
+ public MessageMetaWrapper<? extends StandardMessage> getLastSent() {
+	 return sentMessages.getLast();
+ }
+ 
+ public MessageMetaWrapper<? extends StandardMessage> getLastReceived() {
+	 return receivedMessages.getLast();
+ }
+
+protected LinkedList<MessageMetaWrapper<? extends StandardMessage>> getSentMessages() {
+	return sentMessages;
+}
+
+protected LinkedList<MessageMetaWrapper<? extends StandardMessage>> getReceivedMessages() {
+	return receivedMessages;
+}
+  
+  
   
 }
   

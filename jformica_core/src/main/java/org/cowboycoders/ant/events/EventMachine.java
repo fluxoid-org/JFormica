@@ -38,7 +38,8 @@ import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.responses.ChannelResponse;
-import org.cowboycoders.ant.utils.SharedBuffer;
+import org.cowboycoders.ant.utils.FixedSizeFifo;
+import org.cowboycoders.ant.utils.FixedSizeQueue;
 
 
 
@@ -63,46 +64,8 @@ public class EventMachine  {
   
   private BroadcastMessenger<StandardMessage> convertedMessenger;
   
-  
-  private Set<SharedBuffer<MessageMetaWrapper<ChannelResponse>>> ackBuffers = 
-      Collections.newSetFromMap(new WeakHashMap<SharedBuffer<MessageMetaWrapper<ChannelResponse>>,Boolean>());
-  
-  private Set<SharedBuffer<MessageMetaWrapper<StandardMessage>>> msgBuffers = 
-      Collections.newSetFromMap(new WeakHashMap<SharedBuffer<MessageMetaWrapper<StandardMessage>>,Boolean>());
-  
-  /**
-   * Shred lock for all buffers
-   */
-  private Lock bufferLock = new ReentrantLock();
-  
-  
-  public void registerBufferedNodeComponent(BufferedNodeComponent component) {
-    try {
-      bufferLock.lock();
-      ackBuffers.add(component.getAckBuffer());
-      msgBuffers.add(component.getMsgBuffer());
-      
-    } finally {
-      bufferLock.unlock();
-    }
-    
-  }
-  
-  public void unregisterBufferedNodeComponent(BufferedNodeComponent component) {
-    try {
-      bufferLock.lock();
-      ackBuffers.remove(component.getAckBuffer());
-      msgBuffers.remove(component.getMsgBuffer());
-      
-    } finally {
-      bufferLock.unlock();
-    }
-    
-  }
-  
   private boolean running = false;
   
-
   
   private class EventPump implements BroadcastListener<byte []> {
 
@@ -125,107 +88,67 @@ public class EventMachine  {
     
   }
   
-  private interface BufferUpdater<V extends StandardMessage> {
-    public abstract void updateBuffer(V msg, SharedBuffer<MessageMetaWrapper<V>> buffer );
-    
-  }
-  
-
-  private <V extends StandardMessage> void updateAllBuffers(V msg, Set<SharedBuffer<MessageMetaWrapper<V>>> buffers, 
-      BufferUpdater<V> updater) {
-    try{
-      bufferLock.lock();
-      
-      for (SharedBuffer<MessageMetaWrapper<V>> buffer : buffers) {
-        LOGGER.finer("updating buffer :" + buffer.toString());
-        updater.updateBuffer(msg, buffer);
-      }
-      
-      
-    } finally {
-      bufferLock.unlock();
-    }
-    
-
-  }
-  
-  
-  private class AckListener implements BroadcastListener<StandardMessage> {
+  private class IncomingMessageListener implements BroadcastListener<StandardMessage> {
+	
+	private MessageMetaWrapper<StandardMessage> wrappedMessage;
+	private Lock messageUpdateLock;
+	private Condition replyRecieved;
+	private MessageCondition condition;
+	
+	public IncomingMessageListener(Lock messageUpdateLock, MessageCondition condition){
+		this.condition = condition;
+		this.messageUpdateLock = messageUpdateLock;
+		this.replyRecieved = messageUpdateLock.newCondition();
+	}
 
     @Override
     public void receiveMessage(StandardMessage message) {
-      if (message instanceof ChannelResponse) {
-        
-        updateAllBuffers((ChannelResponse)message, ackBuffers, new BufferUpdater<ChannelResponse>() {
+    	
+    	if(!condition.test(message)) return;
+      
+	    MessageMetaWrapper<StandardMessage> wrappedMessage =
+	         new MessageMetaWrapper<StandardMessage>(message);
+	    
+	    try {
+	    	messageUpdateLock.lock();
+	    	this.wrappedMessage = wrappedMessage;
+	    	replyRecieved.signalAll();
+	    } finally {
+	    	messageUpdateLock.unlock();
+	    }
 
-          @Override
-          public void updateBuffer(ChannelResponse msg, SharedBuffer<MessageMetaWrapper<ChannelResponse>> buffer) {
-            Lock lock = buffer.getLock();
-            Condition contentsChanged = buffer.getContentsChanged();
-            FixedSizeBuffer<MessageMetaWrapper<ChannelResponse>> fixedBuffer = 
-                buffer.getMsgBuffer();
-            try {
-              lock.lock();
-              MessageMetaWrapper<ChannelResponse> wrappedMessage =
-                   new MessageMetaWrapper<ChannelResponse>(msg);
-              fixedBuffer.offer(wrappedMessage);
-              //LOGGER.finer(fixedBuffer.toString());
-              contentsChanged.signalAll();
-              
-            } finally {
-              lock.unlock();
-            }
-            
-          }
           
-        });
+     }
+    
+    public MessageMetaWrapper<StandardMessage> getReply(Long timeout, TimeUnit timeoutUnit) throws InterruptedException, TimeoutException {
+        final long timeoutNano = timeout != null ? TimeUnit.NANOSECONDS.convert(timeout, timeoutUnit) : 0L;
+        final long initialTimeStamp = MessageMetaWrapper.getCurrentTimestamp();
+	    try {
+	    	messageUpdateLock.lock();
+	    	while (wrappedMessage == null) {
+	            if (timeout != null) {
+	                long timeoutRemaining = timeoutNano - (MessageMetaWrapper.getCurrentTimestamp() - initialTimeStamp);
+	                if(!replyRecieved.await(timeoutRemaining, TimeUnit.NANOSECONDS)) {
+	                  throw new TimeoutException("timeout waiting for message");
+	                }
+	              } else {
+	            	  replyRecieved.await();
+	              }
+	    	}
+	    } finally {
+	    	messageUpdateLock.unlock();
+	    }
+	    
+	    return wrappedMessage;
+    }
         
 
-      }
-      
-    }
-    
-  }
-  
-  private class MessageListener implements BroadcastListener<StandardMessage> {
-
-    @Override
-    public void receiveMessage(StandardMessage message) {
-      
-      updateAllBuffers(message, msgBuffers, new BufferUpdater<StandardMessage>() {
-
-        @Override
-        public void updateBuffer(StandardMessage msg, SharedBuffer<MessageMetaWrapper<StandardMessage>> buffer) {
-          Lock lock = buffer.getLock();
-          Condition contentsChanged = buffer.getContentsChanged();
-          FixedSizeBuffer<MessageMetaWrapper<StandardMessage>> fixedBuffer = 
-              buffer.getMsgBuffer();
-          try {
-            lock.lock();
-            MessageMetaWrapper<StandardMessage> wrappedMessage =
-                 new MessageMetaWrapper<StandardMessage>(msg);
-            fixedBuffer.offer(wrappedMessage);
-            LOGGER.finer(fixedBuffer.toString());
-            contentsChanged.signalAll();
-            
-          } finally {
-            lock.unlock();
-          }
-          
-        }
-        
-      });
-      
-    }
-    
   }
 
   public EventMachine(AntChipInterface chipInterface) {
     this.chipInterface = chipInterface;
     this.rawMessenger = new BroadcastMessenger<byte []>();
     this.convertedMessenger = new BroadcastMessenger<StandardMessage>();
-    this.convertedMessenger.addBroadcastListener(new AckListener());
-    this.convertedMessenger.addBroadcastListener(new MessageListener());
     chipInterface.registerRxMesenger(rawMessenger);
     rawMessenger.addBroadcastListener(new EventPump());
   }
@@ -242,44 +165,20 @@ public class EventMachine  {
     return LOGGER;
   }
   
-
-  public MessageMetaWrapper<StandardMessage> waitForMessage(BufferedNodeComponent component,
-      MessageCondition msgCondition, Long timeout, TimeUnit timeoutUnit,
-      LockExchangeContainer lockExchanger, Long cutOffTimestamp) 
-          throws InterruptedException, TimeoutException {
-    return waitForCondition(component.getMsgBuffer(),msgCondition, timeout, timeoutUnit, lockExchanger, cutOffTimestamp);
-    
-  }
   
-  public MessageMetaWrapper<ChannelResponse> waitForAcknowledgement(BufferedNodeComponent component,
-      MessageCondition msgCondition, Long timeout, TimeUnit timeoutUnit,
-      LockExchangeContainer lockExchanger, Long cutOffTimestamp) 
-          throws InterruptedException, TimeoutException {
-    return waitForCondition(component.getAckBuffer(),msgCondition, timeout, timeoutUnit, lockExchanger, cutOffTimestamp);
-    
-  }
-  
-  public <V extends StandardMessage> MessageMetaWrapper<V> waitForCondition( 
-      SharedBuffer<MessageMetaWrapper<V>> sharedBuffer,
-      MessageCondition msgCondition, Long timeout, TimeUnit timeoutUnit,
-      LockExchangeContainer lockExchanger, Long cutOffTimestamp) 
+  public MessageMetaWrapper<StandardMessage> waitForCondition( 
+      MessageCondition msgCondition,
+      Long timeout, TimeUnit timeoutUnit, LockExchangeContainer lockExchanger) 
           throws InterruptedException, TimeoutException {
     
+    Lock msgLock = new ReentrantLock();
     
-    //tim = clearBuffer == null ? true : false;
-    
-    MessageMetaWrapper<V> message = null;
-    FixedSizeBuffer<MessageMetaWrapper<V>> buffer = sharedBuffer.getMsgBuffer();
-    Condition bufferChanged = sharedBuffer.getContentsChanged();
-    Lock msgLock = sharedBuffer.getLock();
-    
-    
-    final long timeoutNano = timeout != null ? TimeUnit.NANOSECONDS.convert(timeout, timeoutUnit) : 0L;
-    final long initialTimeStamp = MessageMetaWrapper.getCurrentTimestamp();
-    cutOffTimestamp = cutOffTimestamp == null ? initialTimeStamp : cutOffTimestamp;
-       
     try {
       msgLock.lock();
+      
+      IncomingMessageListener listener = new IncomingMessageListener(msgLock, msgCondition);
+      
+      registerRxListener(listener);
       
       
       if(lockExchanger != null) {
@@ -292,49 +191,12 @@ public class EventMachine  {
         }
       }
       
-
+      MessageMetaWrapper<StandardMessage> rtn = listener.getReply(timeout, timeoutUnit);
       
-      while(message == null) {
-        
-
-        for (MessageMetaWrapper<V> meta : buffer) {
-          // what if we want to wait for multiple messages - one might come in
-          // before we are waiting
-          //if (!ignoreTimeStamps && meta.getTimestamp() < initialTimeStamp ) {
-          //  continue;
-          //}
-          if (cutOffTimestamp != null && meta.getTimestamp() < cutOffTimestamp) {
-            continue;
-          }
-          StandardMessage msg = meta.unwrap();
-          if (msgCondition.test(msg)) {
-            message = meta;
-            break;
-          }
-        }
-        
-        //buffer.clear();
-        
-        if (message != null) {
-          //buffer.remove(message);
-          //buffer.clear();
-          break;
-        }
-        
-        if (timeout != null) {
-          long timeoutRemaining = timeoutNano - (MessageMetaWrapper.getCurrentTimestamp() - initialTimeStamp);
-          if(!bufferChanged.await(timeoutRemaining, TimeUnit.NANOSECONDS)) {
-            throw new TimeoutException("timeout waiting for message");
-          }
-        } else {
-          bufferChanged.await();
-        }
-        
-        LOGGER.finest("waitForMessage :woken up");
-        
-      }
+      removeRxListener(listener);
       
-      return message;
+      return rtn;
+    
       
     } finally {
       msgLock.unlock();

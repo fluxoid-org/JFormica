@@ -133,12 +133,18 @@ public class MessageConditionFactory {
     
     MessageCondition condition = new MessageCondition () {
       private int currentIndex = 0;
+      private boolean success = false;
       
       @Override
       public boolean test(StandardMessage msg) {
+    	// if we are re-testing after all conditions have returned true  
+    	if (!(currentIndex < conditions.length)) {
+    		return success;
+    	}
         if (conditions[currentIndex].test(msg)) {
           currentIndex++;
           if (currentIndex >= conditions.length)  {
+        	success = true;
             return true;
           }
         }

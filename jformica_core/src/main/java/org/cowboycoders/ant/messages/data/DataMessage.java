@@ -27,7 +27,7 @@ import org.cowboycoders.ant.messages.Message;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.Constants.DataElements;
-import org.cowboycoders.ant.utils.ArrayUtils;
+import org.cowboycoders.ant.utils.ByteUtils;
 
 /**
  * Common functionality for all data messages
@@ -118,7 +118,7 @@ public abstract class DataMessage extends ChannelMessage {
    * @return the payload as an int []
    */
   public int[] getUnsignedData() {
-    return ArrayUtils.unsignedBytesToInts(getData());
+    return ByteUtils.unsignedBytesToInts(getData());
   }
   
 

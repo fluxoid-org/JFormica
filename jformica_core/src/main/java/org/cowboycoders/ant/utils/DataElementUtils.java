@@ -61,7 +61,7 @@ public class DataElementUtils {
     }
     
     boolean completed = false;
-    List<Byte> insertionBytes = ByteMerger.lsbSplit(value, element.getLength());
+    List<Byte> insertionBytes = ByteUtils.lsbSplit(value, element.getLength());
     
     completed = insertElementBytes(payload, messageElements, element, insertionBytes, offset,skip);
     
@@ -141,7 +141,7 @@ public class DataElementUtils {
     for (DataElements e : messageElements) {
       if (e == element) {
         if (elementCount == skip) {
-          rtn = ByteMerger.lsbMerge(payload.subList(index, index += e.getLength()));
+          rtn = ByteUtils.lsbMerge(payload.subList(index, index += e.getLength()));
           break;
         }
         elementCount++;

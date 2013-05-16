@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.cowboycoders.ant.defines.AntMesg;
 import org.cowboycoders.ant.messages.Constants.DataElements;
-import org.cowboycoders.ant.utils.ByteMerger;
+import org.cowboycoders.ant.utils.ByteUtils;
 
 /**
  * 
@@ -213,7 +213,7 @@ public class LegacyMessage extends Message
     int index = EXTENDED_OFFSET;
     for (DataElements e : extendedElements) {
       if (e == element) {
-        rtn = ByteMerger.lsbMerge(payload.subList(index, index += e.getLength()));
+        rtn = ByteUtils.lsbMerge(payload.subList(index, index += e.getLength()));
         break;
       }
       index += e.getLength();
@@ -289,7 +289,7 @@ public class LegacyMessage extends Message
     
     boolean completed = false;
     validateExtendedData(element, value);
-    List<Byte> insertionBytes = ByteMerger.lsbSplit(value, element.getLength());
+    List<Byte> insertionBytes = ByteUtils.lsbSplit(value, element.getLength());
     
     completed = insertExtendedBytes(element, insertionBytes);
     

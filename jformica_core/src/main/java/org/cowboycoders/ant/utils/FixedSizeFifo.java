@@ -16,29 +16,29 @@
  *     You should have received a copy of the GNU General Public License
  *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.cowboycoders.ant.messages;
+package org.cowboycoders.ant.utils;
 
-/**
- * Standard interface for all org.cowboycoders.ant message decorators.
- * The standard is wrap all ant messages, so this allows us to recover 
- * the original.
- * 
- * @author will
- *
- */
-public interface MessageDecoratorable {
-  
-  /**
-   * Returns the <code>Message</code> class doing the leg work.
-   * This can be one of: 
-   * Message -for standard ant messages,
-   * LegacyMessage - for legacy extended messages
-   * ExtendedMessage -for extended messages
-   * 
-   * These classes can provide additional functionality.
-   * 
-   * @return the message used as the backend
-   */
-  public Message getBackendMessage();
+import java.util.Iterator;
+
+public class FixedSizeFifo<V> extends AbstractFixedSizeQueue<V>  {
+
+	public FixedSizeFifo(int maxSize) {
+		super(maxSize);
+	}
+
+	@Override
+	public V peek() {
+		return queue.peek();
+	}
+
+	@Override
+	public V poll() {
+		return queue.poll();
+	}
+
+	@Override
+	public Iterator<V> iterator() {
+		return queue.iterator();
+	}
 
 }

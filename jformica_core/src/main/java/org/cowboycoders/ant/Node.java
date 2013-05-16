@@ -18,6 +18,7 @@
  */
 package org.cowboycoders.ant;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,7 +41,6 @@ import org.cowboycoders.ant.AntLogger.LogDataContainer;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.events.BroadcastMessenger;
 import org.cowboycoders.ant.events.EventMachine;
-import org.cowboycoders.ant.events.FixedSizeBuffer;
 import org.cowboycoders.ant.events.LockExchangeContainer;
 import org.cowboycoders.ant.events.LockExchanger;
 import org.cowboycoders.ant.events.MessageCondition;
@@ -59,8 +59,9 @@ import org.cowboycoders.ant.messages.responses.CapabilityResponse;
 import org.cowboycoders.ant.messages.responses.Capability;
 import org.cowboycoders.ant.messages.responses.ChannelResponse;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
+import org.cowboycoders.ant.utils.FixedSizeFifo;
 
-public class Node extends BufferedNodeComponent {
+public class Node {
   
   class ThreadedWait implements Callable<MessageMetaWrapper<? extends StandardMessage>> {
     
@@ -190,28 +191,26 @@ public class Node extends BufferedNodeComponent {
   public synchronized void start() throws AntError {
     if (running) return ;//throw new AntError("already started");
     evm.start();
-    registerSelf(true);
     antChipInterface.start();
     antChipInterface.registerStatusMessenger(mStatusMessenger);
     evm.registerRxListener(new MessageListener());
     init();
-    registerChannels(true);
 
     running=true;
   }
   
-  private void registerChannels(boolean add) {
-    for (Channel channel : channels) {
-      if (add) evm.registerBufferedNodeComponent(channel);
-      else evm.unregisterBufferedNodeComponent(channel);
-    }
-    
-  }
+//  private void registerChannels(boolean add) {
+//    for (Channel channel : channels) {
+//      if (add) evm.registerBufferedNodeComponent(channel);
+//      else evm.unregisterBufferedNodeComponent(channel);
+//    }
+//    
+//  }
   
-  private void registerSelf(boolean add) {
-    if (add) evm.registerBufferedNodeComponent(this);
-    else evm.unregisterBufferedNodeComponent(this);
-  }
+//  private void registerSelf(boolean add) {
+//    if (add) evm.registerBufferedNodeComponent(this);
+//    else evm.unregisterBufferedNodeComponent(this);
+//  }
 
   private CapabilityResponse getCapabilityResponse(final int maxRetries) throws InterruptedException, TimeoutException {
     StandardMessage capabilitiesMessage = new ChannelRequestMessage(
@@ -226,8 +225,7 @@ public class Node extends BufferedNodeComponent {
             condition,
             10L,TimeUnit.SECONDS, 
             null,
-            null,
-            null, null
+            null
             );
       } catch  (TimeoutException e){
         e.printStackTrace();
@@ -306,7 +304,7 @@ public class Node extends BufferedNodeComponent {
     StandardMessage msg = new NetworkKeyMessage(network,key.getKey());
     MessageCondition condition = MessageConditionFactory.newResponseCondition(msg.getId(),ResponseCode.RESPONSE_NO_ERROR);
       try {
-        sendAndWaitForAck(msg,condition, 5L,TimeUnit.SECONDS, null,null,null, null);
+        sendAndWaitForMessage(msg,condition, 5L,TimeUnit.SECONDS, null,null);
       } catch (InterruptedException e) {
         throw new AntError(e);
       } catch (TimeoutException e) {
@@ -353,9 +351,11 @@ public class Node extends BufferedNodeComponent {
   private final MessageSender nodeSender = new MessageSender() {
 
     @Override
-    public MessageMetaWrapper<StandardMessage> send(StandardMessage msg) {
-      return Node.this.send(msg);
-      
+    public List<MessageMetaWrapper<? extends StandardMessage>> send(StandardMessage msg) {
+    	MessageMetaWrapper<StandardMessage> sentMeta = Node.this.send(msg);
+    	List<MessageMetaWrapper<? extends StandardMessage>> rtn = new ArrayList<MessageMetaWrapper<? extends StandardMessage>>(1);
+    	rtn.add(sentMeta);
+    	return rtn;
     }
     
   };
@@ -374,7 +374,7 @@ public class Node extends BufferedNodeComponent {
     Callable<MessageMetaWrapper<? extends StandardMessage>> waitTask= new ThreadedWait(waitAdapter);
     Future<MessageMetaWrapper<? extends StandardMessage>> future = SharedThreadPool.getThreadPool().submit(waitTask);
     MessageMetaWrapper<? extends StandardMessage> receivedMeta = null;
-    MessageMetaWrapper<StandardMessage> sentMeta = null;
+    List<MessageMetaWrapper<? extends StandardMessage>> sentMeta = null;
     
     sender = sender == null ? nodeSender : sender;
     
@@ -422,9 +422,10 @@ public class Node extends BufferedNodeComponent {
       throw new RuntimeException(e);
     }
     
+    // message is in charge of updating sent messages
     if (receipt != null) {
-      receipt.setTxTimestamp(sentMeta.getTimestamp());
-      receipt.setRxTimestamp(receivedMeta.getTimestamp());
+      receipt.addReceived(receivedMeta);
+      receipt.addSent(sentMeta);
     }
     
     return receivedMeta.unwrap();
@@ -474,43 +475,15 @@ public class Node extends BufferedNodeComponent {
       final StandardMessage msg, 
       final MessageCondition condition,
       final Long timeout, final TimeUnit timeoutUnit,
-      final Long cutOffTimestamp,
-      BufferedNodeComponent componentIn,
       final MessageSender sender,
       final Receipt receipt) 
           throws InterruptedException, TimeoutException {
     final LockExchangeContainer lockContainer = new LockExchangeContainer();
-    final BufferedNodeComponent component = componentIn == null ? Node.this : componentIn;
     WaitAdapter responseAdapter = new WaitAdapter() {
 
       @Override
       public MessageMetaWrapper<StandardMessage> execute() throws InterruptedException, TimeoutException {
-        return evm.waitForMessage(component, condition, timeout, timeoutUnit, lockContainer, cutOffTimestamp);
-      }
-      
-    };
-    
-    return sendAndWaitWithAdapter(responseAdapter,msg,lockContainer,sender, receipt);
-
-  }
-  
-  public StandardMessage sendAndWaitForAck(
-      final StandardMessage msg, 
-      final MessageCondition condition,
-      final Long timeout, final TimeUnit timeoutUnit,
-      final Long cutOffTimestamp,
-      BufferedNodeComponent componentIn,
-      final MessageSender sender,
-      final Receipt receipt) 
-          throws InterruptedException, TimeoutException {
-    final LockExchangeContainer lockContainer = new LockExchangeContainer();
-    final BufferedNodeComponent component = componentIn == null ? Node.this : componentIn;
-    LOGGER.finer(component.toString());
-    WaitAdapter responseAdapter = new WaitAdapter() {
-
-      @Override
-      public MessageMetaWrapper<ChannelResponse> execute() throws InterruptedException, TimeoutException {
-        return evm.waitForAcknowledgement(component, condition, timeout, timeoutUnit, lockContainer, cutOffTimestamp);
+        return evm.waitForCondition(condition, timeout, timeoutUnit, lockContainer);
       }
       
     };
@@ -527,7 +500,7 @@ public class Node extends BufferedNodeComponent {
     if (wait) {
       try {
         MessageCondition condition = MessageConditionFactory.newInstanceOfCondition(StartupMessage.class);
-        sendAndWaitForMessage(resetMsg,condition,1L,TimeUnit.SECONDS,null,null,null, null);
+        sendAndWaitForMessage(resetMsg,condition,1L,TimeUnit.SECONDS,null,null);
       } catch (InterruptedException e) {
         throw new AntError(e);
       } catch (TimeoutException e) {
@@ -568,8 +541,6 @@ public class Node extends BufferedNodeComponent {
 
   public synchronized void stop() {
     if (!running) return; //throw new AntError("already stopped");
-    registerChannels(false);
-    registerSelf(false);
     evm.stop();
     antChipInterface.stop();
     running = false;
