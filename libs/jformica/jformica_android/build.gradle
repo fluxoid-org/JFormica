@@ -1,0 +1,39 @@
+    apply plugin : 'android-library'
+
+    android {
+        target = "android-15"
+    }
+
+    android {
+        sourceSets {
+            main {
+                manifest {
+                    srcFile 'AndroidManifest.xml'
+                }
+                java {
+                    srcDir 'src'
+                    exclude 'some/unwanted/package/**'
+                }
+                res {
+                    srcDir 'res'
+                }
+                assets {
+                    srcDir 'assets'
+                }
+                resources {
+                    srcDir 'src'
+                }
+            }
+            test {
+                java {
+                    srcDir 'tests/src'
+                }
+            }
+        }
+    }
+
+
+
+    dependencies {
+        compile project(':jformica_core'), fileTree(dir: 'libs', include: '**/*.jar')
+    }

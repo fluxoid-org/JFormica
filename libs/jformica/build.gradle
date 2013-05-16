@@ -1,0 +1,47 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.2', 'nl.javadude.gradle.plugins:license-gradle-plugin:0.5.0'
+    }
+}
+
+
+rootDir.eachFile() { file-> 
+if (file.isDirectory() && file.getName().startsWith('jformica')) { 
+    logger.info('applying license to ' + file.getName() )
+    project(':' + file.getName() ){
+        apply plugin: 'license'
+
+        license {
+            header rootProject.file('LICENSE')
+             strictCheck true
+        }
+
+    }
+}  
+} 
+
+
+allprojects {
+    
+
+
+    version = '0.0.2'
+    repositories {
+        mavenCentral()
+    }
+
+    tasks.withType(Compile) {
+        options.compilerArgs << "-Xlint:unchecked"
+  }
+
+
+
+}
+
+
+
+ 
