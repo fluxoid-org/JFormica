@@ -238,13 +238,13 @@ public class BrakeControllerTest {
 	    Node n = new Node(BrakeControllerTest.antchip);
 	    n.registerAntLogger(antLogger);
 	    SpeedResistancePowerMapper mapper = new SpeedResistancePowerMapper();
-	    mapper.enableLogging(new File("./logs/surfacelog"));
+	    mapper.enableLogging(new File("./logs/surfacelog_newbounds"));
 	    b = new BushidoBrake(n,mapper);
 	    b.setMode(Mode.TARGET_SLOPE);
 	    b.registerDataListener(dataListener);
 	    b.startConnection();
 
-	    Thread.sleep(60000);
+	    Thread.sleep(240000);
 	    
 	    b.stop();
 	    n.stop();

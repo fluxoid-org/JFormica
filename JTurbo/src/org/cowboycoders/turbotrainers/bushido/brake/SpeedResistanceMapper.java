@@ -138,7 +138,8 @@ public class SpeedResistanceMapper extends AbstractController {
 		getDataModel().setResistance(INITIAL_BRAKE_RESISTANCE);
 	}
 
-	public void stop() {
+	@Override
+	public void onStop() {
 		powerModelUpdater.stop();
 	}
 

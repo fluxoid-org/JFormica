@@ -47,19 +47,29 @@ public abstract class AbstractController implements TurboTrainerDataHooks {
 		return started;
 	}
 
-	public final void start(BrakeModel bushidoModel) {
+	public synchronized final void start(BrakeModel bushidoModel) {
 		if (started) return;
 		started  = true;
 		setDataModel(bushidoModel);
 		onStart();
 	}
 	
-	public void stop() {
+	public synchronized void stop() {
 		if (!started) return;
 		started = false;
+		onStop();
 	}
 	
+	/**
+	 * Guaranteed to only be called if not already started
+	 */
 	public abstract void onStart();
+	
+
+	/**
+	 * Guaranteed to only be called if not already stopped
+	 */
+	public abstract void onStop();
 	
 	/**
 	 * Default implementation passes value back unchanged, see: {@link TurboTrainerDataHooks#onSpeedChange(double)}

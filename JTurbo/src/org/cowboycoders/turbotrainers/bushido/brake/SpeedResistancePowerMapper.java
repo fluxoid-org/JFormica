@@ -26,10 +26,10 @@ public class SpeedResistancePowerMapper extends AbstractController {
 	private static final int POWER_MODEL_UPDATE_PERIOD_MS = 100;
 
 	// Brake resistance upon power up of the brake
-	private static final int INITIAL_BRAKE_RESISTANCE = 250;
+	private static final int INITIAL_BRAKE_RESISTANCE = 100;
 	// Below this limit power-speed characteristics 
 	// don' change appreciably for the brake
-	private static final int MINIMUM_BRAKE_RESISTANCE = 250;
+	private static final int MINIMUM_BRAKE_RESISTANCE = 100;
 	// It becomes very hard to pedal around ~700 
 	// and the tyre starts slipping even with high tension in the brake. 
 	private static final int MAXIMUM_BRAKE_RESISTANCE = 1000;
@@ -52,6 +52,7 @@ public class SpeedResistancePowerMapper extends AbstractController {
 
 	// Model to estimate speed from power
 	private final PowerModel powerModel = new PowerModel();
+	
 
 	/**
 	 * Calculates a brake resistance from the current virtual speed.
@@ -95,13 +96,6 @@ public class SpeedResistancePowerMapper extends AbstractController {
 				brakeResistance += SURF_COEFFS[k++] * Math.pow(virtualSpeed, i)
 						* Math.pow(actualPower, j);
 			}
-		}
-		
-		// Bound the brake resistance to sensible limits
-		if (brakeResistance < MINIMUM_BRAKE_RESISTANCE) {
-			brakeResistance = MINIMUM_BRAKE_RESISTANCE;
-		} else if (brakeResistance > MAXIMUM_BRAKE_RESISTANCE) {
-			brakeResistance = MAXIMUM_BRAKE_RESISTANCE;
 		}
  
 		return brakeResistance;
@@ -162,10 +156,12 @@ public class SpeedResistancePowerMapper extends AbstractController {
 
 	@Override
 	public final void onStart() {
+		getDataModel().setResistanceBounds(MINIMUM_BRAKE_RESISTANCE, MAXIMUM_BRAKE_RESISTANCE);
 		getDataModel().setResistance(INITIAL_BRAKE_RESISTANCE);
 	}
-
-	public void stop() {
+	
+	@Override
+	public final void onStop() {
 		powerModelUpdater.stop();
 	}
 

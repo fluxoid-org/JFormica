@@ -191,10 +191,6 @@ public class PidBrakeController extends AbstractController {
 
 
 	
-	public void stop() {
-		powerModelUpdater.stop();
-	}
-	
 	protected double getPredictedSpeed() {
 		// double non-atomic?
 		try {
@@ -267,6 +263,11 @@ public class PidBrakeController extends AbstractController {
 		logger.addTime(true);
 		logger.append(true);
 		return logger;
+	}
+
+	@Override
+	public void onStop() {
+		powerModelUpdater.stop();
 	}
 
 	

@@ -46,4 +46,9 @@ public class ConstantResistanceController extends AbstractController {
 		return logger;
 	}
 
+	@Override
+	public void onStop() {
+		// do nothing
+	}
+
 }

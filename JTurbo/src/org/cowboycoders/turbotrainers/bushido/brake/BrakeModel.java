@@ -43,8 +43,10 @@ public abstract class BrakeModel extends TurboBaseModel {
 
 	// limits upto and including
 	//private static final int RESISTANCE_LOW_LIMIT = -414;
-	private static final int RESISTANCE_LOW_LIMIT = 250; //capped at 250 as -414 til 250 appears to be a dead zone
-	private static final int RESISTANCE_HIGH_LIMIT = 3327;
+	
+	private int resitanceLowLimit = 250; //capped at 250 as -414 til 250 appears to be a dead zone
+	private int resistanceHighLimit = 3327;
+	
 	public static final double BALANCE_MAX = 100;
 	public static final double BALANCE_MIN = 0;
 	public static final double RESISTANCE_MAX = 100;
@@ -72,6 +74,19 @@ public abstract class BrakeModel extends TurboBaseModel {
 	public void setPowerRight(double powerRight) {
 		this.powerRight = powerRight;
 	}
+	
+	/**
+	 * Sets upper and lower bounds on absolute resistance.
+	 * 
+	 * Not thread safe.
+	 * 
+	 * @param low the lower limit	
+	 * @param high the upper limit
+	 */
+	public void setResistanceBounds(int low, int high) {
+		resitanceLowLimit = low;
+		resistanceHighLimit = high;
+	}
 
 	/**
 	 * Unknown counter value
@@ -95,7 +110,7 @@ public abstract class BrakeModel extends TurboBaseModel {
 	 * @return brake resistance as percent
 	 */
 	public double getResistance() {
-		return ((double)(getAbsoluteResistance() - RESISTANCE_LOW_LIMIT) / (double)(RESISTANCE_HIGH_LIMIT - RESISTANCE_LOW_LIMIT)) * 100.0;
+		return ((double)(getAbsoluteResistance() - resitanceLowLimit) / (double)(resistanceHighLimit - resitanceLowLimit)) * 100.0;
 	}
 	
 	/**
@@ -115,7 +130,7 @@ public abstract class BrakeModel extends TurboBaseModel {
 			resistance = RESISTANCE_MAX;
 		if (resistance < RESISTANCE_MIN)
 			resistance = RESISTANCE_MIN;
-		int absolute = (int) (((resistance / 100) * (RESISTANCE_HIGH_LIMIT - RESISTANCE_LOW_LIMIT)) + RESISTANCE_LOW_LIMIT);
+		int absolute = (int) (((resistance / 100) * (resistanceHighLimit - resitanceLowLimit)) + resitanceLowLimit);
 		this.resistance = absolute;
 	}
 	
@@ -124,10 +139,10 @@ public abstract class BrakeModel extends TurboBaseModel {
 	 * @param resistance absolute value for resistance
 	 */
 	public void setAbsoluteResistance(int resistance) {
-		if (resistance > RESISTANCE_HIGH_LIMIT)
-			resistance = RESISTANCE_HIGH_LIMIT;
-		if (resistance < RESISTANCE_LOW_LIMIT)
-			resistance = RESISTANCE_LOW_LIMIT;
+		if (resistance > resistanceHighLimit)
+			resistance = resistanceHighLimit;
+		if (resistance < resitanceLowLimit)
+			resistance = resitanceLowLimit;
 		this.resistance = resistance;
 	}
 
