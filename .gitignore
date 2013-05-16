@@ -35,5 +35,5 @@ antlog
 resources.ap_
 *.apk
 
-libs/*/build
-libs/*/.gradle
+libs/jformica/*/build
+libs/**/.gradle
