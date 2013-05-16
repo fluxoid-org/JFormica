@@ -34,3 +34,6 @@ antlog
 
 resources.ap_
 *.apk
+
+libs/*/build
+libs/*/.gradle
