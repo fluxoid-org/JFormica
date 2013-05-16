@@ -209,7 +209,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
         	}
         	// not found
         	if (index < 0) {
-            	LOGGER.warning("data read from usb endpoint does not contain a sync byte : ignoring");
+            	LOGGER.finer("data read from usb endpoint does not contain a sync byte : ignoring");
             	return new byte[0];
         	}
         	LOGGER.info("found non-zero sync byte index");
@@ -241,7 +241,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
             
             // negative length does not make sense
             if (msgLength < 0) {
-            	LOGGER.warning("msgLength appears to be incorrect (ignorning). Length : " + msgLength);
+            	LOGGER.finer("msgLength appears to be incorrect (ignorning). Length : " + msgLength);
             	data = skipCurrentSync(data);
             	continue;
             }
@@ -252,7 +252,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
             if (checkSumIndex >= data.length) {
                 // unreasonably large checkSumIndex (dont span multiple buffers)
                 if (checkSumIndex >= BUFFER_SIZE -1) {
-                	LOGGER.warning("msgLength appears to be incorrect (ignorning). Length : " + msgLength);
+                	LOGGER.finer("msgLength appears to be incorrect (ignorning). Length : " + msgLength);
                 	data = skipCurrentSync(data);
                 	continue;
                 }
@@ -442,7 +442,13 @@ public class AntTransceiver extends AbstractAntTransceiver {
       
     } catch (RuntimeException e) {
       e.printStackTrace();
-      claimInterface(_interface,false);
+      
+      try {
+        claimInterface(_interface,false);
+      } catch (Throwable t) {
+        LOGGER.warning("Unable to unclaim interface whilst shutting down due to error condition");
+      }
+
       throw e;
     } 
       finally {
@@ -604,7 +610,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
 //          
 //        }
         
-
+        LOGGER.finest("pre inPipe close");
         
         try {
           //inPipe.abortAllSubmissions();
@@ -612,9 +618,14 @@ public class AntTransceiver extends AbstractAntTransceiver {
         } catch (UsbException e) {
           throw new AntCommunicationException("Error closing inPipe",e);
         }
+
+        LOGGER.finest("post inPipe close");
+        
+        LOGGER.finest("pre usb interface release");
         
         _interface.release();
-        
+
+        LOGGER.finest("post usb interface release");
         
         
 

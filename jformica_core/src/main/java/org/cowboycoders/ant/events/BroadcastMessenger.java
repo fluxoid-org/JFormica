@@ -41,7 +41,7 @@ import org.cowboycoders.ant.SharedThreadPool;
 public class BroadcastMessenger<V> {
 	
   private static final ExecutorService SHARED_SINGLE_THREAD_EXECUTOR = Executors.newSingleThreadExecutor();
-  
+
   /**
    * Used to concurrently notify listeners
    */
