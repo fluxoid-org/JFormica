@@ -37,3 +37,16 @@
     dependencies {
         compile project(':jformica_core'), fileTree(dir: 'libs', include: '**/*.jar')
     }
+
+
+    apply plugin : 'java'
+
+
+    task javadocJar(type: Jar, dependsOn:javadoc) {
+     classifier = 'javadoc'
+     from javadoc.destinationDir
+    }
+
+    artifacts {
+         archives javadocJar
+    }  
