@@ -21,91 +21,113 @@ package org.cowboycoders.ant.messages.config;
 import org.cowboycoders.ant.messages.ChannelIdCompanion;
 import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.FatalMessageException;
+import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.Constants.DataElements;
 
 /**
  * ChannelId message
+ * 
  * @author will
- *
+ * 
  */
 public class ChannelIdMessage extends ChannelMessage {
-  
-  /** companion object we delegate shared methods to */
-  private ChannelIdCompanion companion;
 
-  /**
-   * The additional elements we are adding to channelmessage
-   */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.DEVICE_NUMBER,
-    DataElements.DEVICE_TYPE,
-    DataElements.TRANSMISSION_TYPE,
-  };
-  
-  
-  /**
-   * ChannelIdMessage with all bells and whistles
-   * @param channelNo the channel no to apply these settings to
-   * @param deviceNumber as given in ant spec
-   * @param deviceType as given in ant spec
-   * @param transmissionType as give in ant spec
-   * @param setPairingFlag true to set pairing bit, else false
-   */
-  public ChannelIdMessage(int channelNo, int deviceNumber, int deviceType,
-      int transmissionType, boolean setPairingFlag) {
-    super(MessageId.CHANNEL,channelNo,additionalElements);
-    this.companion = new ChannelIdCompanion(this);
-    try {
-      setDeviceNumber(deviceNumber);
-      setDeviceType(deviceType);
-      setTransmissionType(transmissionType);
-      setPairingFlag(setPairingFlag);
-    } catch (ValidationException e) {
-      throw new FatalMessageException("Error setting values",e);
-    }
-  }
+	/** companion object we delegate shared methods to */
+	private ChannelIdCompanion companion;
 
-  
-   /**
-   * @param deviceType to set
-   * @throws ValidationException if out of limit
-   */
-  private void setDeviceType(int deviceType) throws ValidationException {
-    companion.setDeviceType(deviceType);
-  }
-  
+	/**
+	 * The additional elements we are adding to channelmessage
+	 */
+	private static DataElements[] additionalElements = new DataElements[] {
+			DataElements.DEVICE_NUMBER, DataElements.DEVICE_TYPE,
+			DataElements.TRANSMISSION_TYPE, };
 
-/**
- * @param setPairingFlag  to set
- */
-  private void setPairingFlag(boolean setPairingFlag) {
-    companion.setPairingFlag(setPairingFlag);
-  }
+	/**
+	 * ChannelIdMessage with all bells and whistles
+	 * 
+	 * @param channelNo
+	 *            the channel no to apply these settings to
+	 * @param deviceNumber
+	 *            as given in ant spec
+	 * @param deviceType
+	 *            as given in ant spec
+	 * @param transmissionType
+	 *            as give in ant spec
+	 * @param setPairingFlag
+	 *            true to set pairing bit, else false
+	 */
+	public ChannelIdMessage(int channelNo, int deviceNumber, int deviceType,
+			int transmissionType, boolean setPairingFlag) {
+		super(MessageId.CHANNEL, channelNo, additionalElements);
+		this.companion = new ChannelIdCompanion(this);
+		try {
+			setDeviceNumber(deviceNumber);
+			setDeviceType(deviceType);
+			setTransmissionType(transmissionType);
+			setPairingFlag(setPairingFlag);
+		} catch (ValidationException e) {
+			throw new FatalMessageException("Error setting values", e);
+		}
+	}
 
+	/**
+	 * @param deviceType
+	 *            to set
+	 * @throws ValidationException
+	 *             if out of limit
+	 */
+	private void setDeviceType(int deviceType) throws ValidationException {
+		companion.setDeviceType(deviceType);
+	}
 
+	/**
+	 * @param setPairingFlag
+	 *            to set
+	 */
+	private void setPairingFlag(boolean setPairingFlag) {
+		companion.setPairingFlag(setPairingFlag);
+	}
 
-/**
- * 
- * @param transmissionType  to set
- * @throws ValidationException if out of limit
- * 
- * */
-  private void setTransmissionType(int transmissionType) throws ValidationException {
-    companion.setTransmissionType(transmissionType);
-  }
+	/**
+	 * 
+	 * @param transmissionType
+	 *            to set
+	 * @throws ValidationException
+	 *             if out of limit
+	 * 
+	 * */
+	private void setTransmissionType(int transmissionType)
+			throws ValidationException {
+		companion.setTransmissionType(transmissionType);
+	}
 
-  /**
-   * 
-   * @param deviceNumber to set
-   * @throws ValidationException if out of limit
-   */
-  private void setDeviceNumber(int deviceNumber) throws ValidationException {
-    companion.setDeviceNumber(deviceNumber);
-  }
-  
-  
+	/**
+	 * 
+	 * @param deviceNumber
+	 *            to set
+	 * @throws ValidationException
+	 *             if out of limit
+	 */
+	private void setDeviceNumber(int deviceNumber) throws ValidationException {
+		companion.setDeviceNumber(deviceNumber);
+	}
+
+	public int getDeviceNumber() {
+		return companion.getDeviceNumber();
+	}
+
+	public int getTransmissionType() {
+		return companion.getTransmissionType();
+	}
+
+	public boolean isPairingFlagSet() {
+		return companion.isPairingFlagSet();
+	}
+
+	public int getDeviceType() {
+		return companion.getDeviceType();
+	}
 
 }

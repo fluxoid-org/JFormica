@@ -22,7 +22,7 @@ import org.cowboycoders.ant.messages.Constants.DataElements;
 import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
- * Channel id common functionality sahred between classes
+ * Channel id common functionality shared between classes
  * @author will
  *
  */
@@ -103,6 +103,28 @@ public class ChannelIdCompanion {
        );
    StandardMessage message = getMessage(); 
    message.setDataElement(DataElements.DEVICE_NUMBER,deviceNumber);
+ }
+ 
+ public int getDeviceNumber() {
+	 StandardMessage message = getMessage(); 
+	 return message.getDataElement(DataElements.DEVICE_NUMBER);
+ }
+ 
+ public int getTransmissionType() {
+	 StandardMessage message = getMessage(); 
+	 return message.getDataElement(DataElements.TRANSMISSION_TYPE);
+ }
+ 
+ public boolean isPairingFlagSet() {
+	 StandardMessage message = getMessage();
+	 int unmasked = message.getDataElement(DataElements.DEVICE_TYPE);
+	 return (unmasked & PAIRING_FLAG_MASK) > 0 ? true : false ;
+ }
+ 
+ public int getDeviceType() {
+	 StandardMessage message = getMessage();
+	 int unmasked = message.getDataElement(DataElements.DEVICE_TYPE);
+	 return (unmasked &  DEVICE_TYPE_MASK);
  }
   
 
