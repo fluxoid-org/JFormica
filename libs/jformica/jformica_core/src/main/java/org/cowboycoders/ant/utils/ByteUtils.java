@@ -1,6 +1,7 @@
 package org.cowboycoders.ant.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -103,6 +104,9 @@ public class ByteUtils {
 		for (byte b : ByteUtils.joinArray(one,two,three,four)) {
 			System.out.println(b);
 		}
+		
+		
+		  System.out.println(ByteUtils.lsbMerge(Arrays.asList(new Byte [] {(byte) 0xd0,(byte) 0xaf})));
 	}
 	
 	/*
@@ -124,7 +128,7 @@ public class ByteUtils {
 	    Integer rtn = 0;
 	    byte count = 0;
 	    for (Byte b : data) {
-	      rtn |= b << (count * 8);
+	      rtn |= unsignedByteToInt(b) << (count * 8);
 	      count ++;
 	    }
 	    return rtn;
@@ -202,6 +206,7 @@ public class ByteUtils {
 	    return split;
 	  
 	  }
+	  
 	  
 	  
 	  
