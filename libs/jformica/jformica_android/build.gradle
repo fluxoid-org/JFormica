@@ -2,6 +2,13 @@
 
     android {
         target = "android-15"
+	compileSdkVersion 15
+  	buildToolsVersion "17"
+
+    	defaultConfig {
+       		      minSdkVersion 14
+        	      targetSdkVersion 15
+    		      }
     }
 
     android {
@@ -39,14 +46,13 @@
     }
 
 
-    apply plugin : 'java'
+    //apply plugin : 'java'
 
+    //task javadocJar(type: Jar, dependsOn:javadoc) {
+    // classifier = 'javadoc'
+    // from javadoc.destinationDir
+    //}
 
-    task javadocJar(type: Jar, dependsOn:javadoc) {
-     classifier = 'javadoc'
-     from javadoc.destinationDir
-    }
-
-    artifacts {
-         archives javadocJar
-    }  
+    //artifacts {
+    //     archives javadocJar
+    //}
