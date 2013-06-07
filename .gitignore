@@ -37,3 +37,6 @@ resources.ap_
 
 libs/jformica/*/build
 libs/**/.gradle
+
+Cyclismo/Cyclismo/gen/*
+Cyclimso/Cyclismo/build/*

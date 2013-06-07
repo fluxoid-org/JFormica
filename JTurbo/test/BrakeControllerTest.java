@@ -216,7 +216,7 @@ public class BrakeControllerTest {
     n.stop();
   }
   
-  //@Test
+  @Test
   public void testPolynomialCOntroller() throws InterruptedException, TimeoutException {
     Node n = new Node(BrakeControllerTest.antchip);
     n.registerAntLogger(antLogger);
@@ -233,7 +233,7 @@ public class BrakeControllerTest {
     n.stop();
   }
   
-  @Test
+  //@Test
   public void testSurfaceFitController() throws InterruptedException, TimeoutException {
 	    Node n = new Node(BrakeControllerTest.antchip);
 	    n.registerAntLogger(antLogger);
