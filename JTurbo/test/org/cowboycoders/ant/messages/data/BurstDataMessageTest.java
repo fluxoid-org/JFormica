@@ -29,6 +29,7 @@ public class BurstDataMessageTest {
   public void testSetSequenceNumber() {
     BurstDataMessage msg = new BurstDataMessage();
     msg.setSequenceNumber(7);
+    assertEquals(7,msg.getSequenceNumber());
   }
 
 }
