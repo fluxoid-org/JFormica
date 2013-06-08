@@ -790,7 +790,9 @@ public class Channel {
 	};
 	
 	/**
-	 * Listen for combined burst messages
+	 * Listen for combined burst messages. Adding a burst listener will
+	 * prevent any burst messages being sent to this channels
+	 * RxListeners. See : {@link Channel#registerRxListener(BroadcastListener, Class)}
 	 * @param listener new listener
 	 */
 	public synchronized void registerBurstListener(
