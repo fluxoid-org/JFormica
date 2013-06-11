@@ -333,7 +333,7 @@ public class BurstReceiveTest {
 								e.printStackTrace();
 							}
 				    
-				    int length = 255;
+				    int length = 248;
 				    byte [] test = new byte[length];
 				    for (int i = 0 ; i < length ; i ++) {
 				     test[i] = (byte) i;
