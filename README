@@ -8,67 +8,13 @@ Ant+ enabled phone - Android only
 
 It is based on python-ant (https://github.com/mvillalba/python-ant) by Martín Raúl Villalba.
 
-Example code to listen for an Ant+ enabled heart rate monitor:
+EXAMPLE CODE:
 
+See :
+	 https://github.com/cowboy-coders/jformica_examples
+	 https://github.com/cowboy-coders/JFormica/tree/master/jformica_examples
 
-   class Listener implements BroadcastListener<BroadcastDataMessage> {
-
-    @Override
-    public void receiveMessage(BroadcastDataMessage message) {
-        System.out.println("Heart rate: " + message.getData()[7]);
-    }
-    
-  }
-
-
-  public void test_hrm() throws InterruptedException, TimeoutException {
-    
-    // first usb ant-stick
-    AntTransceiver antchip = new AntTransceiver(0);
-
-    Node n = new Node(antchip);
-    
-    NetworkKey key = new NetworkKey(0xB9,0xA5,0x21,0xFB,0xBD,0x72,0xC3,0x45);
-    key.setName("N:ANT+");
-    
-    n.start();
-    n.reset();
-
-    // sets network key of network zero
-    n.setNetworkKey(0, key);
-    
-    Channel c;
-    c = n.getFreeChannel();
-    
-    c.setName("C:HRM");
-    
-    ChannelType channelType = new SlaveChannelType();
-    
-    c.assign("N:ANT+", channelType);
-    
-    c.registerRxListener(new Listener(), BroadcastDataMessage.class);
-    
-    c.setId(0, 120, 0, false);
-   
-    c.setFrequency(57);
-    
-    c.setPeriod(8070);
-    
-    c.setSearchTimeout(255);
-    
-    c.open();
-    
-    Thread.sleep(10000);
-    
-    c.close();
-    c.unassign();
-    
-    //return the channel to the pool of available channels
-    n.freeChannel(c);
-
-    n.stop();
-    
-  }
+COMPILE INSTRUCTIONS:
 
 To compile either import each folder into eclipse or compile using gradle.
 
@@ -80,3 +26,11 @@ android - you need to copy dynastreams antlib.jar to jformica_android/libs
 Gradle notes
 
 To compile seperately, enter the desired compoents folder and issue 'gradle build'. Doing so from the project root will attempt to build all three. Add the resulting jars to your classpath.
+
+USAGE INSTRUCTIONS:
+
+Please see:
+
+       https://github.com/cowboy-coders/JFormica/tree/master/jformica_examples
+
+
