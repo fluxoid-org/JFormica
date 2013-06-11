@@ -1,5 +1,7 @@
+package org.cowboycoders.ant.interfaces;
+
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2012-2013, Will Szumski, David George
  *
  *     This file is part of formicidae.
  *
@@ -16,14 +18,11 @@
  *     You should have received a copy of the GNU General Public License
  *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.cowboycoders.ant.interfaces;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,7 +40,6 @@ import javax.usb.UsbNotOpenException;
 import javax.usb.UsbPipe;
 import javax.usb.UsbServices;
 
-import org.cowboycoders.ant.SharedThreadPool;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.commands.ResetMessage;
 import org.cowboycoders.ant.utils.ByteUtils;
@@ -51,6 +49,17 @@ public class AntTransceiver extends AbstractAntTransceiver {
 
 	public final static Logger LOGGER = Logger.getLogger(AntTransceiver.class
 			.getName());
+
+	public static final Level LOG_LEVEL = Level.ALL;
+
+	static {
+		// set logging level
+		AntTransceiver.LOGGER.setLevel(LOG_LEVEL);
+		ConsoleHandler handler = new ConsoleHandler();
+		// PUBLISH this level
+		handler.setLevel(LOG_LEVEL);
+		AntTransceiver.LOGGER.addHandler(handler);
+	}
 
 	/**
 	 * usb device id
@@ -180,7 +189,6 @@ public class AntTransceiver extends AbstractAntTransceiver {
 	}
 
 	public class UsbReader extends Thread {
-
 		private byte[] last;
 
 		private static final int BUFFER_SIZE = 64;
@@ -190,13 +198,14 @@ public class AntTransceiver extends AbstractAntTransceiver {
 		 *            buffer to check
 		 * @return data remaining
 		 */
-		private byte[] lookForSync(byte[] data) {
+		private byte[] lookForSync(byte[] data, int len) {
 			if (data == null || data.length < 1) {
 				return new byte[0];
 			}
+
 			if (data[0] != MESSAGE_TX_SYNC) {
 				int index = -1;
-				for (int i = 0; i < data.length; i++) {
+				for (int i = 0; i < len; i++) {
 					if (data[i] == MESSAGE_TX_SYNC) {
 						index = i;
 						break;
@@ -204,8 +213,8 @@ public class AntTransceiver extends AbstractAntTransceiver {
 				}
 				// not found
 				if (index < 0) {
-					LOGGER.finest("data read from usb endpoint does not contain a sync byte : ignoring");
-					return new byte[0];
+					LOGGER.warning("data read from usb endpoint does not contain a sync byte : ignoring");
+					return new byte[0]; // zero length array
 				}
 				LOGGER.info("found non-zero sync byte index");
 				data = Arrays.copyOfRange(data, index, data.length);
@@ -223,8 +232,17 @@ public class AntTransceiver extends AbstractAntTransceiver {
 			return data;
 		}
 
-		void processBuffer(byte[] data) {
-			while ((data = lookForSync(data)).length > 0) {
+		/**
+		 * Gets the next message and notifies interested listeners.
+		 * 
+		 * @param data
+		 *            - message data
+		 * @param len
+		 *            - message length
+		 */
+		void processBuffer(byte[] data, int len) {
+			while (len > 0) {
+				data = lookForSync(data, len);
 
 				if (data.length <= MESSAGE_OFFSET_MSG_LENGTH) {
 					LOGGER.info("data length too small, checking next packet");
@@ -275,11 +293,22 @@ public class AntTransceiver extends AbstractAntTransceiver {
 
 				AntTransceiver.this.broadcastRxMessage(cleanData);
 				// cleandata length + sync + checksum
+				len -= (cleanData.length + 2);
 				data = Arrays.copyOfRange(data, cleanData.length + 2,
 						data.length);
 			}
 		}
 
+		
+		/*
+		 * Two Modifications (David George - 11/June/2013)
+		 * 
+		 * 1. continue if we get a USB Exception on read from lower layers, this
+		 * is a timeout and we don't care
+		 * 
+		 * 2. use returned data length to make code more efficient (hopefully).
+		 * No more searching for SYNC bytes in zero data
+		 */
 		@Override
 		public void run() {
 
@@ -290,15 +319,15 @@ public class AntTransceiver extends AbstractAntTransceiver {
 						// interfaceLock.lock();
 						// byte [] data = new byte[MAX_MSG_LENGTH];
 						byte[] data = new byte[BUFFER_SIZE];
+						int len;
 						try {
 							// inPipe.open();
 							LOGGER.finest("pre read");
-							inPipe.syncSubmit(data);
+							len = inPipe.syncSubmit(data);
+							// System.out.println("received " + len);
 						} catch (UsbException e) {
-							// Timeouts are expected in some implementations - these manifest
-							// themselves as UsbExceptions. We should continue, but log the error
-							// in case it indicates something more serious.
-							LOGGER.finest(this.getClass().toString() + " ignoring " + e);
+							// carry on regardless
+							LOGGER.warning(e.getMessage());
 							continue;
 						} finally {
 							// inPipe.close();
@@ -308,16 +337,17 @@ public class AntTransceiver extends AbstractAntTransceiver {
 
 						// process remaining bytes from last buffer
 						if (last != null) {
+							// TODO len is bigger due to remaining bytes
+							len += last.length;
 							data = ByteUtils.joinArray(last, data);
 							last = null;
 						}
 
-						processBuffer(data);
+						processBuffer(data, len);
 
 					} finally {
 						// interfaceLock.unlock();
 					}
-
 				}
 
 			} catch (UsbNotActiveException e) {
@@ -418,6 +448,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
 			// FIXME: if we don't write some garbage it doesn't response to
 			// first few
 			// messages
+
 			try {
 				write(new byte[128]);
 			} catch (UsbException e) {
