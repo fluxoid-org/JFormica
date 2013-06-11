@@ -22,9 +22,7 @@ package org.cowboycoders.ant.interfaces;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.usb.UsbClaimException;
 import javax.usb.UsbConst;
@@ -50,15 +48,11 @@ public class AntTransceiver extends AbstractAntTransceiver {
 	public final static Logger LOGGER = Logger.getLogger(AntTransceiver.class
 			.getName());
 
-	public static final Level LOG_LEVEL = Level.ALL;
+	public static final Level LOG_LEVEL = Level.SEVERE;
 
 	static {
 		// set logging level
 		AntTransceiver.LOGGER.setLevel(LOG_LEVEL);
-		ConsoleHandler handler = new ConsoleHandler();
-		// PUBLISH this level
-		handler.setLevel(LOG_LEVEL);
-		AntTransceiver.LOGGER.addHandler(handler);
 	}
 
 	/**
@@ -327,7 +321,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
 							// System.out.println("received " + len);
 						} catch (UsbException e) {
 							// carry on regardless
-							LOGGER.warning(e.getMessage());
+							LOGGER.finer(e.getMessage());
 							continue;
 						} finally {
 							// inPipe.close();
