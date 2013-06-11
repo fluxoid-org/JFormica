@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.usb.UsbClaimException;
 import javax.usb.UsbConst;
@@ -320,8 +321,10 @@ public class AntTransceiver extends AbstractAntTransceiver {
 							len = inPipe.syncSubmit(data);
 							// System.out.println("received " + len);
 						} catch (UsbException e) {
-							// carry on regardless
-							LOGGER.finer(e.getMessage());
+							// Timeouts are expected in some implementations - these manifest
+							// themselves as UsbExceptions. We should continue, but log the error
+							// in case it indicates something more serious.
+							LOGGER.warning(e.getMessage());
 							continue;
 						} finally {
 							// inPipe.close();
