@@ -274,7 +274,10 @@ public class Node {
   public synchronized Channel getFreeChannel() {
     
     for (Channel c : channels) {
-      if (c.isFree()) return c;
+      if (c.isFree()) {
+    	  c.setFree(false);
+    	  return c;
+      }
     }
     
     return null;
