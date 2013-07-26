@@ -45,11 +45,11 @@ public class ChannelRequestMessage extends ChannelMessage {
    *
    */
   public enum Request {
+	CHANNEL_STATUS(0x52),
     CHANNEL_ID(0x51),
     ANT_VERSION(0x3E),
     CAPABILITIES(0x54),
     SERIAL_NUMBER(0x61),
-    
     ;
     
     byte msgId;
@@ -81,6 +81,15 @@ public class ChannelRequestMessage extends ChannelMessage {
     } catch (ValidationException e) {
       throw new FatalMessageException("Error setting values",e);
     }
+  }
+  
+  /**
+   * Use default channel (zero). If sent though {@link org.cowycoders.ant.Channel} this
+   * will be set to the corresponding channel number associated with that instance.
+   * @param request
+   */
+  public ChannelRequestMessage(Request request) {
+	  this(0,request);
   }
   
   /**

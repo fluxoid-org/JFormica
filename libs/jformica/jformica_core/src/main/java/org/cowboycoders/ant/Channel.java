@@ -42,6 +42,8 @@ import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.commands.ChannelCloseMessage;
 import org.cowboycoders.ant.messages.commands.ChannelOpenMessage;
+import org.cowboycoders.ant.messages.commands.ChannelRequestMessage;
+import org.cowboycoders.ant.messages.commands.ChannelRequestMessage.Request;
 import org.cowboycoders.ant.messages.config.ChannelAssignMessage;
 import org.cowboycoders.ant.messages.config.ChannelFrequencyMessage;
 import org.cowboycoders.ant.messages.config.ChannelIdMessage;
@@ -53,6 +55,8 @@ import org.cowboycoders.ant.messages.data.BurstDataMessage;
 import org.cowboycoders.ant.messages.data.BurstData;
 import org.cowboycoders.ant.messages.nonstandard.CombinedBurst;
 import org.cowboycoders.ant.messages.responses.ChannelResponse;
+import org.cowboycoders.ant.messages.responses.ChannelStatusResponse;
+import org.cowboycoders.ant.messages.responses.ChannelStatusResponse.State;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
 import org.cowboycoders.ant.utils.BurstMessageSequenceGenerator;
 import org.cowboycoders.ant.utils.ByteUtils;
@@ -63,7 +67,7 @@ public class Channel {
 
 	public final static Logger LOGGER = Logger.getLogger(EventMachine.class
 			.getName());
-	
+
 	private static final int RAW_CHANNEL_PERIOD_DEFAULT = 8192;
 
 	private static final double CHANNEL_PERIOD_SCALE_FACTOR = 32768.0;
@@ -75,8 +79,9 @@ public class Channel {
 			.pow(10, 9);
 
 	private static final long BURST_TIMEOUT_NANOS_DEFAULT = rawChannelPeriodToDefaultTimeout(RAW_CHANNEL_PERIOD_DEFAULT);
-	
-	private static long  rawChannelPeriodToDefaultTimeout (final int rawChannelPeriod) {
+
+	private static long rawChannelPeriodToDefaultTimeout(
+			final int rawChannelPeriod) {
 		return (long) (BURST_TIMEOUT_SCALE_FACTOR
 				* (rawChannelPeriod / CHANNEL_PERIOD_SCALE_FACTOR) * CONVERSION_FACTOR_SECONDS_TO_NANOSECONDS);
 	}
@@ -89,7 +94,7 @@ public class Channel {
 	public Node getParent() {
 		return parent;
 	}
-	
+
 	private Long lastBurstTimeStamp;
 
 	private long burstTimeout = BURST_TIMEOUT_NANOS_DEFAULT;
@@ -100,7 +105,7 @@ public class Channel {
 
 	private String name = UUID.randomUUID().toString();
 
-	private boolean isFree = true;
+	private boolean free = true;
 
 	/**
 	 * The channel messaging period in seconds * 32768. Maximum messaging period
@@ -149,15 +154,68 @@ public class Channel {
 	 * @return the isFree
 	 */
 	public synchronized boolean isFree() {
-		return isFree;
+		return free;
 	}
 
 	/**
 	 * @param isFree
 	 *            the isFree to set
 	 */
-	protected synchronized void setFree(boolean isFree) {
-		this.isFree = isFree;
+	protected synchronized void setFree(boolean free) {
+		LOGGER.entering(Channel.class.getSimpleName(), "setFree");
+		
+		// Make sure channel is in reusable state
+		if (free) {
+			cleanUp();
+		}
+		
+		// clean up complete, set free		
+		this.free = free;
+		LOGGER.exiting(Channel.class.getSimpleName(), "setFree");
+	}
+	
+	/**
+	 * Performs clean up operations so that the channel is ready to use again.
+	 */
+	private void cleanUp() {
+		// assume assigned, so we don't leave in assigned state
+		State state = ChannelStatusResponse.State.ASSIGNED;
+		try {
+			ChannelStatusResponse status = this.requestStatus();
+			state = status.getState();
+		} catch (ChannelError e){
+			// ignore (assume assigned)
+			LOGGER.warning("Error requesting channel status");
+		}
+		
+		// if channel is open (try and close)
+		if (state.equals(State.TRACKING) || state.equals(State.SEARCHING)) {
+			try {
+				this.close();
+				
+			} catch (ChannelError e){
+				LOGGER.warning("Error closing channel in state: " + state);
+			}
+		}
+		
+		// update status
+		try {
+			ChannelStatusResponse status = this.requestStatus();
+			state = status.getState();
+		} catch (ChannelError e){
+			// ignore (assume assigned)
+			LOGGER.warning("Error requesting channel status");
+		}
+		
+		// channel is assigned, but not open
+		if (state.equals(State.ASSIGNED)) {
+			try {
+				this.unassign();
+				
+			} catch (ChannelError e){
+				LOGGER.warning("Error unassigning channel in state: " + state);
+			}
+		}
 	}
 
 	/**
@@ -270,7 +328,7 @@ public class Channel {
 		}
 
 	}
-	
+
 	/**
 	 * Filters burst messages if listeners exist for {@link CombinedBurst}s
 	 * 
@@ -283,12 +341,14 @@ public class Channel {
 
 		@Override
 		public boolean test(StandardMessage msg) {
-			if (burstMessenger.getListenerCount() > 0 && (msg instanceof BurstData)) return false;
+			if (burstMessenger.getListenerCount() > 0
+					&& (msg instanceof BurstData))
+				return false;
 			return true;
 		}
 
 	}
-	
+
 	private final BurstFilterCondition burstFilterCondition = new BurstFilterCondition();
 
 	/**
@@ -305,8 +365,10 @@ public class Channel {
 			@Override
 			public void receiveMessage(ChannelMessage message) {
 				// filter burst messages if we are listening for combined
-				if (!burstFilterCondition.test(message) && listener != burstListener) return;
-				
+				if (!burstFilterCondition.test(message)
+						&& listener != burstListener)
+					return;
+
 				if (clazz.isInstance(message)
 						&& message.getChannelNumber() == number) {
 					listener.receiveMessage(clazz.cast(message));
@@ -333,7 +395,6 @@ public class Channel {
 		}
 
 	}
-	
 
 	/**
 	 * With internal locking
@@ -635,19 +696,25 @@ public class Channel {
 			handleTimeOutException(e);
 		}
 	}
-	
+
 	/**
-	 * Sends a byte array as a burst message. Will split into 
-	 * {@link AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE} long chunks,
-	 * so if you want complete control, make sure the total length is
-	 * a multiple of this number. 
+	 * Sends a byte array as a burst message. Will split into
+	 * {@link AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE} long chunks, so if you
+	 * want complete control, make sure the total length is a multiple of this
+	 * number.
 	 * 
-	 * @param data array to send a burst
-	 * @param timeout timeout for complete burst
-	 * @param timeoutUnit unit for timeout
-	 * @throws InterruptedException if thread interrupted whilst waiting for completion
-	 * @throws TimeoutException if timeout expires
-	 * @throws TransferException on transfer error
+	 * @param data
+	 *            array to send a burst
+	 * @param timeout
+	 *            timeout for complete burst
+	 * @param timeoutUnit
+	 *            unit for timeout
+	 * @throws InterruptedException
+	 *             if thread interrupted whilst waiting for completion
+	 * @throws TimeoutException
+	 *             if timeout expires
+	 * @throws TransferException
+	 *             on transfer error
 	 */
 	public void sendBurst(byte[] data, Long timeout, TimeUnit timeoutUnit)
 			throws InterruptedException, TimeoutException, TransferException {
@@ -788,21 +855,25 @@ public class Channel {
 		}
 
 	};
-	
+
 	/**
-	 * Listen for combined burst messages. Adding a burst listener will
-	 * prevent any burst messages being sent to this channels
-	 * RxListeners. See : {@link Channel#registerRxListener(BroadcastListener, Class)}
-	 * @param listener new listener
+	 * Listen for combined burst messages. Adding a burst listener will prevent
+	 * any burst messages being sent to this channels RxListeners. See :
+	 * {@link Channel#registerRxListener(BroadcastListener, Class)}
+	 * 
+	 * @param listener
+	 *            new listener
 	 */
 	public synchronized void registerBurstListener(
 			BroadcastListener<CombinedBurst> listener) {
 		burstMessenger.addBroadcastListener(listener);
 	}
-	
+
 	/**
 	 * Stop listening for combined burst messages
-	 * @param listener new listener
+	 * 
+	 * @param listener
+	 *            new listener
 	 */
 	public synchronized void removeBurstListener(
 			BroadcastListener<CombinedBurst> listener) {
@@ -818,27 +889,58 @@ public class Channel {
 		return rawChannelPeriod / CHANNEL_PERIOD_SCALE_FACTOR;
 
 	}
-	
+
 	/**
 	 * Gets burst timeout
+	 * 
 	 * @return timeout in a nanoseconds
 	 */
 	public long getBurstTimeout() {
 		return burstTimeout;
 	}
-	
+
 	/**
-	 * Sets burst timeout manually. Must be called after setting new period, as this
-	 * resets to the default value;
+	 * Sets burst timeout manually. Must be called after setting new period, as
+	 * this resets to the default value;
 	 * 
-	 * @param burstTimeout new timeout in nanoseconds
-	 * @throws IllegalArgumentException if timeout below zero
+	 * @param burstTimeout
+	 *            new timeout in nanoseconds
+	 * @throws IllegalArgumentException
+	 *             if timeout below zero
 	 */
 	public void setBurstTimeout(long burstTimeout) {
 		if (burstTimeout < 0) {
-			throw new IllegalArgumentException("timeout must be grater than zero");
+			throw new IllegalArgumentException(
+					"timeout must be grater than zero");
 		}
 		this.burstTimeout = burstTimeout;
 	}
+	
+	
+	/**
+	 * Utility method to request channel status. Default timeout of 1 second.
+	 * @return {@link ChannelStatusResponse) encompassing response
+	 * @throws ChannelError on timeout, if interrupted whilst waiting or status not received;
+	 */
+	public ChannelStatusResponse requestStatus() throws ChannelError {
+		
+		ChannelRequestMessage msg = new  ChannelRequestMessage(Request.CHANNEL_STATUS);
+		
+		MessageCondition condition = MessageConditionFactory.newInstanceOfCondition(ChannelStatusResponse.class);
+		
+			ChannelStatusResponse response = null;
+			
+			try {
+				response = (ChannelStatusResponse) sendAndWaitForMessage(
+						msg, condition, 1L, TimeUnit.SECONDS, null);
+			} catch (InterruptedException e) {
+				throw new ChannelError(e);
+			} catch (TimeoutException e) {
+				throw new ChannelError(e);
+			}
+			
+			return response;
+			
 
+	}
 }
