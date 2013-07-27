@@ -188,6 +188,8 @@ public class Channel {
 			LOGGER.warning("Error requesting channel status");
 		}
 		
+		LOGGER.finer("pre close: " + state);
+		
 		// if channel is open (try and close)
 		if (state.equals(State.TRACKING) || state.equals(State.SEARCHING)) {
 			try {
@@ -206,6 +208,8 @@ public class Channel {
 			// ignore (assume assigned)
 			LOGGER.warning("Error requesting channel status");
 		}
+		
+		LOGGER.finer("pre unassign: " + state);
 		
 		// channel is assigned, but not open
 		if (state.equals(State.ASSIGNED)) {
