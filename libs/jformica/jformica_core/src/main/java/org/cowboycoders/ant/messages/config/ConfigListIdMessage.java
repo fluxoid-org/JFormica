@@ -59,6 +59,15 @@ public class ConfigListIdMessage extends ChannelMessage {
       throw new FatalMessageException("Error setting values", e);
     }
   }
+  
+  /**
+   * Channel number set to zero.
+   * @param listSize
+   * @param exclude
+   */
+  public ConfigListIdMessage(int listSize, boolean exclude) {
+	  this(0,listSize,exclude);
+  }
 
   private void setExcludeInclude(boolean exclude) {
     int flag = exclude ? 1 : 0;

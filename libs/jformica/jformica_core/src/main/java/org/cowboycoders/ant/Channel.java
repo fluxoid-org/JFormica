@@ -44,6 +44,7 @@ import org.cowboycoders.ant.messages.commands.ChannelCloseMessage;
 import org.cowboycoders.ant.messages.commands.ChannelOpenMessage;
 import org.cowboycoders.ant.messages.commands.ChannelRequestMessage;
 import org.cowboycoders.ant.messages.commands.ChannelRequestMessage.Request;
+import org.cowboycoders.ant.messages.config.AddChannelIdMessage;
 import org.cowboycoders.ant.messages.config.ChannelAssignMessage;
 import org.cowboycoders.ant.messages.config.ChannelFrequencyMessage;
 import org.cowboycoders.ant.messages.config.ChannelIdMessage;
@@ -51,6 +52,7 @@ import org.cowboycoders.ant.messages.config.ChannelPeriodMessage;
 import org.cowboycoders.ant.messages.config.ChannelSearchTimeoutMessage;
 import org.cowboycoders.ant.messages.config.ChannelUnassignMessage;
 import org.cowboycoders.ant.messages.config.ChannelAssignMessage.ExtendedAssignment;
+import org.cowboycoders.ant.messages.config.ConfigListIdMessage;
 import org.cowboycoders.ant.messages.data.BurstDataMessage;
 import org.cowboycoders.ant.messages.data.BurstData;
 import org.cowboycoders.ant.messages.nonstandard.CombinedBurst;
@@ -484,6 +486,18 @@ public class Channel {
 		} catch (TimeoutException e) {
 			handleTimeOutException(e);
 		}
+	}
+	
+	/**
+	 * Sets the channelId
+	 * See also {@link Channel#setId(int, int, int, boolean)}
+	 * @param channelId
+	 */
+	public void setId(ChannelId channelId) {
+		this.setId(channelId.getDeviceNumber(),
+				channelId.getDeviceType(),
+				channelId.getTransmissonType(),
+				channelId.isPairingFlagSet());
 	}
 
 	/**
@@ -955,4 +969,102 @@ public class Channel {
 	  public void registerEventHandler(ChannelEventHandler handler) {
 		  this.registerRxListener(handler, Response.class);
 	  }
+	  
+	  /**
+	   * Adds an item to the exclusion/inclusion list. This is a per channel list with a maximum
+	   * of four entries (0 ... 3). Must call {@link Channel#configureExclusionInclusionList(int, boolean)
+	   * to activate.
+	   * @param index the index to change
+	   * @param id {@link ChannelId} to filter
+	   */
+	  public void updateExclusionInclusionList(int index, ChannelId id) {
+		  	ChannelMessage msg = new AddChannelIdMessage(id.getDeviceNumber(),
+		  			id.getDeviceType(),
+		  			id.getTransmissonType(), 
+		  			index);
+			MessageCondition condition = MessageConditionFactory
+					.newResponseCondition(msg.getId(),
+							ResponseCode.RESPONSE_NO_ERROR);
+			try {
+				sendAndWaitForMessage(msg, condition, 1L,
+						TimeUnit.SECONDS, null);
+			} catch (InterruptedException e) {
+				handleTimeOutException(e);
+			} catch (TimeoutException e) {
+				handleTimeOutException(e);
+			}
+	  }
+	  
+	  /**
+	   * Determines how many ids in the exclusion/inclusion list
+	   * and whether it is a black or white list.
+	   * 
+	   * Must be called before {@link Channel#open()} and only works on slaves. The
+	   * behaviour is undefined if used on a master.
+	   * @param listSize the number of ids you want to exclude/ include
+	   * @param exclude true for blacklist, false fore white-list
+	   */
+	  public void configureExclusionInclusionList(int listSize, boolean exclude) {
+		  	ChannelMessage msg = new ConfigListIdMessage(listSize,exclude);
+			MessageCondition condition = MessageConditionFactory
+					.newResponseCondition(msg.getId(),
+							ResponseCode.RESPONSE_NO_ERROR);
+			try {
+				sendAndWaitForMessage(msg, condition, 1L,
+						TimeUnit.SECONDS, null);
+			} catch (InterruptedException e) {
+				handleTimeOutException(e);
+			} catch (TimeoutException e) {
+				handleTimeOutException(e);
+			}
+	  }
+	  
+	 /**
+	  * Convenience method to update and configure exclusion/inclusion list. Must be called
+	  * before {@link Channel#open}
+	  * @param ids to black/white list
+	  * @param exclude true for blacklist, false fore white
+	  */
+	 private void configureExclusionInclusionList(ChannelId [] ids, boolean exclude) throws IllegalArgumentException {
+		 if (ids.length > 4) {
+			 throw new IllegalArgumentException("a maximum of 4 channel ids is permitted");
+		 }
+		 for (int i = 0 ; i < ids.length ; i++) {
+			 updateExclusionInclusionList(i,ids[i]);
+		 }
+		 configureExclusionInclusionList(ids,exclude);
+	 }
+	 
+	 /**
+	  * Blacklists {@link ChannelId}s. 
+	  * 
+	  * You should check the ant chip has the capability to have exclusion/inclusion lists.
+	  * 
+	  * Must be called after assigning, but before opening channel. Can only be used on slave channels,
+	  * attempting to use on a master results in undefined behaviour.
+	  * 
+	  * @param ids array containing ids to blacklist (max length: 4) or null to disable.
+	  */
+	 public void blacklist(ChannelId [] ids) {
+		 if (ids == null) {
+			 configureExclusionInclusionList(0, true);
+			 return;
+		 }
+		 configureExclusionInclusionList(ids,true);
+	 }
+	 
+	 /**
+	  * Whitelist an array of ChannelIds. 
+	  * 
+	  * For more details see {@link Channel#blacklist(ChannelId[]))
+	  * 
+	  * @param ids array containing ids to blacklist (max length: 4) or null to disable.
+	  */
+	 public void whitelist(ChannelId [] ids) {
+		 if (ids == null) {
+			 configureExclusionInclusionList(0, false);
+			 return;
+		 }
+		 configureExclusionInclusionList(ids,true);
+	 }
 }

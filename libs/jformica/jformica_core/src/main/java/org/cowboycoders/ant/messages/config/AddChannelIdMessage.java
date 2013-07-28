@@ -68,6 +68,12 @@ public class AddChannelIdMessage extends ChannelMessage {
     }
   }
   
+  public AddChannelIdMessage(int deviceNumber, int deviceType,
+	      int transmissionType, int listIndex) {
+	  this(0,deviceNumber, deviceType,
+	      transmissionType, listIndex);
+	  }
+  
   /**
    * Sets list index
    * @param listIndex min:0 , max:3
