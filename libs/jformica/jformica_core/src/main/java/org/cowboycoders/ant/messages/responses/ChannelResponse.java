@@ -27,11 +27,11 @@ import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.Constants.DataElements;
 
 /**
- * Sent in response to channel event 
+ * Dual purpose class that encompasses events and responses
  * @author will
  *
  */
-public class ChannelResponse extends ChannelMessage{
+public class ChannelResponse extends ChannelMessage {
   
   /**
    * The additional elements we are adding to channel message

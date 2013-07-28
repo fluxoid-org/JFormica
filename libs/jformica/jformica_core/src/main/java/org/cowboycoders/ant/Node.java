@@ -59,6 +59,7 @@ import org.cowboycoders.ant.messages.responses.CapabilityResponse;
 import org.cowboycoders.ant.messages.responses.Capability;
 import org.cowboycoders.ant.messages.responses.ChannelResponse;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
+import org.cowboycoders.ant.messages.responses.ResponseExceptionFactory;
 import org.cowboycoders.ant.utils.FixedSizeFifo;
 
 public class Node {
@@ -83,6 +84,32 @@ public class Node {
   
   public final static Logger LOGGER = Logger.getLogger(EventMachine.class .getName()); 
   private Set<AntLogger> antLoggers = Collections.newSetFromMap(new WeakHashMap<AntLogger,Boolean>());
+  
+  private static class TransmissionErrorCondition implements MessageCondition {
+	  
+	private StandardMessage transmittedMessage;
+	
+	/**
+	 * Throws an {@link RumtimeException} if an error is raised trying to send message
+	 * @param msg message that is being sent
+	 */
+	public TransmissionErrorCondition(StandardMessage msg) {
+		transmittedMessage = msg;
+	}
+
+	@Override
+	public boolean test(StandardMessage msg) {
+		// make sure it a response/event
+		if (!MessageConditionFactory.newResponseCondition(transmittedMessage.getId(),null).test(msg)) return false;
+		ChannelResponse response = (ChannelResponse)msg;
+		// indicate we are interested in this message if an exception needs to be thrown
+		if(ResponseExceptionFactory.getFactory().map(response.getResponseCode()) != null) {
+			return true;
+		}
+		return false;
+	}
+	  
+  };
   
   private boolean running = false;
   private EventMachine evm;
@@ -422,6 +449,9 @@ public class Node {
       if (cause instanceof TimeoutException) {
         throw new TimeoutException("timeout waiting for message");
       }
+      if (cause instanceof RuntimeException) {
+    	  throw ((RuntimeException)cause);
+      }
       throw new RuntimeException(e);
     }
     
@@ -482,11 +512,38 @@ public class Node {
       final Receipt receipt) 
           throws InterruptedException, TimeoutException {
     final LockExchangeContainer lockContainer = new LockExchangeContainer();
+    final TransmissionErrorCondition errorCondition = new TransmissionErrorCondition(msg);
+    
+    final MessageCondition conditionWithChecks = new MessageCondition() {
+
+		@Override
+		public boolean test(StandardMessage msg) {
+			// null will match all (should we allow this?)
+			if (condition == null) {
+				return true;
+			}
+			if (condition.test(msg)) {
+				return true;
+			}
+			
+			// indicates whether or not we interested in this message as an error event
+			return errorCondition.test(msg);
+			
+		}
+    	
+    };
+    
     WaitAdapter responseAdapter = new WaitAdapter() {
 
       @Override
       public MessageMetaWrapper<StandardMessage> execute() throws InterruptedException, TimeoutException {
-        return evm.waitForCondition(condition, timeout, timeoutUnit, lockContainer);
+    	  MessageMetaWrapper<StandardMessage> response =  
+    			  evm.waitForCondition(conditionWithChecks, timeout, timeoutUnit, lockContainer);
+    	  // check if we were interested in this message as an error event
+    	  if (errorCondition.test(response.unwrap())) {
+    		  ResponseExceptionFactory.getFactory().throwOnError((ChannelResponse)response.unwrap());
+    	  }
+    	  return response;
       }
       
     };

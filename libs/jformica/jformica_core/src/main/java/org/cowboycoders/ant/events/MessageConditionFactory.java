@@ -33,7 +33,33 @@ import org.cowboycoders.ant.messages.responses.ResponseCode;
  */
 public class MessageConditionFactory {
   
-  public final static Logger LOGGER = Logger.getLogger(MessageConditionFactory.class .getName()); 
+  public final static Logger LOGGER = Logger.getLogger(MessageConditionFactory.class .getName());
+  
+  private static MessageCondition GENERIC_RESPONSE_CONDITION = new ResponseCondition();
+  
+  private static MessageCondition RESPONSE_FILTER_CONDITION = new MessageCondition() {
+
+	@Override
+	public boolean test(StandardMessage msg) {
+		if (!GENERIC_RESPONSE_CONDITION.test(msg)) return false;
+		ChannelResponse response = (ChannelResponse) msg;
+		if (response.getMessageId().equals(MessageId.EVENT)) return false;
+		return true;
+	}
+	  
+  };
+  
+  private static MessageCondition EVENT_FILTER_CONDITION = new MessageCondition() {
+
+	@Override
+	public boolean test(StandardMessage msg) {
+		if (!GENERIC_RESPONSE_CONDITION.test(msg)) return false;
+		ChannelResponse response = (ChannelResponse) msg;
+		if (!response.getMessageId().equals(MessageId.EVENT)) return false;
+		return true;
+	}
+	  
+  };
   
   /**
    * wait for a message with class equal clazz
@@ -88,6 +114,13 @@ public class MessageConditionFactory {
       this.id = id;
       this.responseCode = responseCode;
     }
+    
+    /**
+     * Matches any {@link ChannelResponse}
+     */
+    public ResponseCondition() {
+    	this(null,null);
+      }
 
     @Override
     public boolean test(StandardMessage testMsg) {
@@ -123,9 +156,29 @@ public class MessageConditionFactory {
     return condition;
   }
   
+  /**
+   * Matches a generic response, see {@link ChannelResponse}
+   * @return
+   */
+  public static MessageCondition newResponseCondition()
+  {
+    return RESPONSE_FILTER_CONDITION;
+  }
   
   /**
-   * Chains conditions together - you should only use this once
+   * Matches a generic event i.e something that is sent from the ant chip
+   * that isn't in reply to a message you have sent, see {@link ChannelResponse}
+   * @return
+   */
+  public MessageCondition newEventCondition()
+  {
+    return EVENT_FILTER_CONDITION;
+  }
+  
+  
+  /**
+   * Chains conditions together - you should only use this once. All conditions must be 
+   * satisfied (think and!)
    * @param conditions to chain
    * @return chained condition
    */
