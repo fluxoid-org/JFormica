@@ -33,7 +33,7 @@ import org.cowboycoders.ant.messages.notifications.SerialErrorMessage;
 import org.cowboycoders.ant.messages.notifications.StartupMessage;
 import org.cowboycoders.ant.messages.responses.CapabilityResponse;
 import org.cowboycoders.ant.messages.responses.ChannelIdResponse;
-import org.cowboycoders.ant.messages.responses.ChannelResponse;
+import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.messages.responses.ChannelStatusResponse;
 import org.cowboycoders.ant.messages.responses.SerialNumberResponse;
 import org.cowboycoders.ant.messages.responses.VersionResponse;
@@ -114,7 +114,7 @@ public class AntMessageFactory {
         break;
         
       case RESPONSE_EVENT:
-        msg = new ChannelResponse();
+        msg = new Response();
         break;
         
       case CHANNEL_STATUS:

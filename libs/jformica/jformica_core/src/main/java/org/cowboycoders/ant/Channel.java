@@ -54,7 +54,7 @@ import org.cowboycoders.ant.messages.config.ChannelAssignMessage.ExtendedAssignm
 import org.cowboycoders.ant.messages.data.BurstDataMessage;
 import org.cowboycoders.ant.messages.data.BurstData;
 import org.cowboycoders.ant.messages.nonstandard.CombinedBurst;
-import org.cowboycoders.ant.messages.responses.ChannelResponse;
+import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.messages.responses.ChannelStatusResponse;
 import org.cowboycoders.ant.messages.responses.ChannelStatusResponse.State;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
@@ -320,7 +320,7 @@ public class Channel {
 
 		@Override
 		public boolean test(StandardMessage msg) {
-			if (!(msg instanceof ChannelResponse))
+			if (!(msg instanceof Response))
 				return false;
 			if (!(msg instanceof ChannelMessage))
 				return false;
@@ -749,9 +749,9 @@ public class Channel {
 				public boolean test(StandardMessage msg) {
 					if (completed.test(msg))
 						return true;
-					ChannelResponse r = null;
-					if (msg instanceof ChannelResponse) {
-						r = (ChannelResponse) msg;
+					Response r = null;
+					if (msg instanceof Response) {
+						r = (Response) msg;
 					}
 					if (failed.test(msg)) {
 						throw new TransferException(r.getMessageId(),
@@ -947,4 +947,12 @@ public class Channel {
 			
 
 	}
+	
+	  /**
+	   * Registers an event listener. To remove user {@link Channel#removeRxListener(BroadcastListener));
+	   * @param handler event handler
+	   */
+	  public void registerEventHandler(ChannelEventHandler handler) {
+		  this.registerRxListener(handler, Response.class);
+	  }
 }

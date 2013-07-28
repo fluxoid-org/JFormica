@@ -57,7 +57,7 @@ import org.cowboycoders.ant.messages.notifications.StartupMessage;
 import org.cowboycoders.ant.messages.responses.CapabilityCategory;
 import org.cowboycoders.ant.messages.responses.CapabilityResponse;
 import org.cowboycoders.ant.messages.responses.Capability;
-import org.cowboycoders.ant.messages.responses.ChannelResponse;
+import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
 import org.cowboycoders.ant.messages.responses.ResponseExceptionFactory;
 import org.cowboycoders.ant.utils.FixedSizeFifo;
@@ -101,7 +101,7 @@ public class Node {
 	public boolean test(StandardMessage msg) {
 		// make sure it a response/event
 		if (!MessageConditionFactory.newResponseCondition(transmittedMessage.getId(),null).test(msg)) return false;
-		ChannelResponse response = (ChannelResponse)msg;
+		Response response = (Response)msg;
 		// indicate we are interested in this message if an exception needs to be thrown
 		if(ResponseExceptionFactory.getFactory().map(response.getResponseCode()) != null) {
 			return true;
@@ -541,7 +541,7 @@ public class Node {
     			  evm.waitForCondition(conditionWithChecks, timeout, timeoutUnit, lockContainer);
     	  // check if we were interested in this message as an error event
     	  if (errorCondition.test(response.unwrap())) {
-    		  ResponseExceptionFactory.getFactory().throwOnError((ChannelResponse)response.unwrap());
+    		  ResponseExceptionFactory.getFactory().throwOnError((Response)response.unwrap());
     	  }
     	  return response;
       }
@@ -625,6 +625,14 @@ public class Node {
     synchronized(antLoggers) {
       antLoggers.remove(logger);
     }
+  }
+  
+  /**
+   * Registers an event listener. To remove user {@link Node#removeRxListener(BroadcastListener));
+   * @param handler event handler
+   */
+  public void registerEventHandler(NodeEventHandler handler) {
+	  this.registerRxListener(handler, Response.class);
   }
   
 

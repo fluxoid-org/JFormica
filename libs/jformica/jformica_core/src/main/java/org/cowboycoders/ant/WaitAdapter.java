@@ -22,7 +22,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
-import org.cowboycoders.ant.messages.responses.ChannelResponse;
+import org.cowboycoders.ant.messages.responses.Response;
 
 public interface WaitAdapter {
 

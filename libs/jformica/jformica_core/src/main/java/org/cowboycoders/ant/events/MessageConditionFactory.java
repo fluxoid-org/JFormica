@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.StandardMessage;
-import org.cowboycoders.ant.messages.responses.ChannelResponse;
+import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
 
 /**
@@ -42,7 +42,7 @@ public class MessageConditionFactory {
 	@Override
 	public boolean test(StandardMessage msg) {
 		if (!GENERIC_RESPONSE_CONDITION.test(msg)) return false;
-		ChannelResponse response = (ChannelResponse) msg;
+		Response response = (Response) msg;
 		if (response.getMessageId().equals(MessageId.EVENT)) return false;
 		return true;
 	}
@@ -54,7 +54,7 @@ public class MessageConditionFactory {
 	@Override
 	public boolean test(StandardMessage msg) {
 		if (!GENERIC_RESPONSE_CONDITION.test(msg)) return false;
-		ChannelResponse response = (ChannelResponse) msg;
+		Response response = (Response) msg;
 		if (!response.getMessageId().equals(MessageId.EVENT)) return false;
 		return true;
 	}
@@ -116,7 +116,7 @@ public class MessageConditionFactory {
     }
     
     /**
-     * Matches any {@link ChannelResponse}
+     * Matches any {@link Response}
      */
     public ResponseCondition() {
     	this(null,null);
@@ -124,8 +124,8 @@ public class MessageConditionFactory {
 
     @Override
     public boolean test(StandardMessage testMsg) {
-      if (!(testMsg instanceof ChannelResponse)) return false;
-      ChannelResponse response = (ChannelResponse) testMsg;
+      if (!(testMsg instanceof Response)) return false;
+      Response response = (Response) testMsg;
       if (id != null) {
         if (!response.getMessageId().equals(id)) return false;
       }
@@ -157,7 +157,7 @@ public class MessageConditionFactory {
   }
   
   /**
-   * Matches a generic response, see {@link ChannelResponse}
+   * Matches a generic response, see {@link Response}
    * @return
    */
   public static MessageCondition newResponseCondition()
@@ -167,10 +167,10 @@ public class MessageConditionFactory {
   
   /**
    * Matches a generic event i.e something that is sent from the ant chip
-   * that isn't in reply to a message you have sent, see {@link ChannelResponse}
+   * that isn't in reply to a message you have sent, see {@link Response}
    * @return
    */
-  public MessageCondition newEventCondition()
+  public static MessageCondition newEventCondition()
   {
     return EVENT_FILTER_CONDITION;
   }

@@ -37,7 +37,7 @@ import org.cowboycoders.ant.messages.AntMessageFactory;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
-import org.cowboycoders.ant.messages.responses.ChannelResponse;
+import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.utils.FixedSizeFifo;
 import org.cowboycoders.ant.utils.FixedSizeQueue;
 
