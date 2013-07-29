@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -21,7 +21,7 @@
  */
 package org.cowboycoders.ant.messages.responses;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.StandardMessage;
@@ -37,9 +37,9 @@ public class SerialNumberResponse extends StandardMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.SERIAL_NUMBER,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.SERIAL_NUMBER,
   };
 
   public SerialNumberResponse() {
@@ -57,7 +57,7 @@ public class SerialNumberResponse extends StandardMessage {
   }
   
   public int getSerialNumber() {
-    return getDataElement(DataElements.SERIAL_NUMBER);
+    return getDataElement(DataElement.SERIAL_NUMBER);
   }
 
 }

@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.StandardMessage;
@@ -45,14 +45,14 @@ public class CapabilityResponse extends StandardMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.MAX_CHANNELS,
-    DataElements.MAX_NETWORKS,
-    DataElements.STANDARD_CAPABILITIES,
-    DataElements.ADVANCED_CAPABILITIES,
-    DataElements.ADVANCED_CAPABILITIES,
-    DataElements.ADVANCED_CAPABILITIES,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.MAX_CHANNELS,
+    DataElement.MAX_NETWORKS,
+    DataElement.STANDARD_CAPABILITIES,
+    DataElement.ADVANCED_CAPABILITIES,
+    DataElement.ADVANCED_CAPABILITIES,
+    DataElement.ADVANCED_CAPABILITIES,
   };
   
   public CapabilityResponse() {
@@ -75,16 +75,16 @@ public class CapabilityResponse extends StandardMessage {
     byte capabilityByte = 0;
     switch(category) {
       case STANDARD:
-        capabilityByte = getDataElement(DataElements.STANDARD_CAPABILITIES).byteValue();
+        capabilityByte = getDataElement(DataElement.STANDARD_CAPABILITIES).byteValue();
         break;
       case ADVANCED:
-        capabilityByte = getDataElement(DataElements.ADVANCED_CAPABILITIES).byteValue();
+        capabilityByte = getDataElement(DataElement.ADVANCED_CAPABILITIES).byteValue();
         break;
       case ADVANCED2:
-        capabilityByte = getDataElement(DataElements.ADVANCED_CAPABILITIES,1).byteValue();
+        capabilityByte = getDataElement(DataElement.ADVANCED_CAPABILITIES,1).byteValue();
         break;        
       case ADVANCED3:
-        capabilityByte = getDataElement(DataElements.ADVANCED_CAPABILITIES,2).byteValue();
+        capabilityByte = getDataElement(DataElement.ADVANCED_CAPABILITIES,2).byteValue();
         break;       
     }
     
@@ -118,14 +118,14 @@ public class CapabilityResponse extends StandardMessage {
    * @return max number of channels this ant device supports
    */
   public int getMaxChannels() {
-    return getDataElement(DataElements.MAX_CHANNELS);
+    return getDataElement(DataElement.MAX_CHANNELS);
   }
   
   /**
    * @return max number of networks this ant device supports
    */
   public int getMaxNetworks() {
-    return getDataElement(DataElements.MAX_NETWORKS);
+    return getDataElement(DataElement.MAX_NETWORKS);
   }
   
   

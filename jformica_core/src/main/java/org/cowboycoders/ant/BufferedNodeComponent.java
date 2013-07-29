@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -21,9 +21,8 @@ package org.cowboycoders.ant;
 import org.cowboycoders.ant.events.MessageCondition;
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
-import org.cowboycoders.ant.messages.responses.ChannelResponse;
+import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.utils.SharedBuffer;
-import org.cowboycoders.ant.utils.TimestampQueryable;
 
 /**
  * Provides acknowledgement buffer and message buffer
@@ -39,7 +38,7 @@ public abstract class BufferedNodeComponent {
   
   private SharedBuffer<MessageMetaWrapper<StandardMessage>> msgBuffer;
   
-  private SharedBuffer<MessageMetaWrapper<ChannelResponse>> ackBuffer;
+  private SharedBuffer<MessageMetaWrapper<Response>> ackBuffer;
   
   public BufferedNodeComponent() {
     this(null,null);
@@ -47,7 +46,7 @@ public abstract class BufferedNodeComponent {
   
   public BufferedNodeComponent(MessageCondition msgCondition, MessageCondition ackCondition) {
     msgBuffer = new SharedMetaBuffer<MessageMetaWrapper<StandardMessage>>(MSG_BUFFER_LENGTH, msgCondition);
-    ackBuffer = new SharedMetaBuffer<MessageMetaWrapper<ChannelResponse>>(ACK_BUFFER_LENGTH, ackCondition);
+    ackBuffer = new SharedMetaBuffer<MessageMetaWrapper<Response>>(ACK_BUFFER_LENGTH, ackCondition);
   }
 
   /**
@@ -60,7 +59,7 @@ public abstract class BufferedNodeComponent {
   /**
    * @return the ackBuffer
    */
-  public SharedBuffer<MessageMetaWrapper<ChannelResponse>> getAckBuffer() {
+  public SharedBuffer<MessageMetaWrapper<Response>> getAckBuffer() {
     return ackBuffer;
   }
   

@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -26,7 +26,7 @@ import org.cowboycoders.ant.messages.FatalMessageException;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageExceptionFactory;
 import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
@@ -41,9 +41,9 @@ public class ChannelFrequencyMessage extends ChannelMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.CHANNEL_FREQUENCY,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.CHANNEL_FREQUENCY,
   };
   
   /**
@@ -70,7 +70,7 @@ public class ChannelFrequencyMessage extends ChannelMessage {
     ValidationUtils.maxMinValidator(0, MAX_CHANNEL_FREQUENCY, frequency, 
         MessageExceptionFactory.createMaxMinExceptionProducable("Channel frequency")
         );
-    setDataElement(DataElements.CHANNEL_FREQUENCY,frequency);
+    setDataElement(DataElement.CHANNEL_FREQUENCY,frequency);
     
   }
 

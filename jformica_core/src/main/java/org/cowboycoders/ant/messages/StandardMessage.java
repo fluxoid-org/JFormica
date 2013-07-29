@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.utils.BitUtils;
 import org.cowboycoders.ant.utils.DataElementUtils;
 import org.cowboycoders.ant.utils.ValidationUtils;
@@ -64,24 +64,24 @@ public abstract class StandardMessage
   /**
    *  Stores the message elements in the order they appear in the message
    */
-  private DataElements [] messageElements;
+  private DataElement [] messageElements;
   
   /**
    * @return the messageElements
    */
-  private DataElements[] getMessageElements() {
+  private DataElement[] getMessageElements() {
     return messageElements;
   }
 
   /**
    * @param messageElements the messageElements to set
    */
-  private void setMessageElements(DataElements[] messageElements) {
+  private void setMessageElements(DataElement[] messageElements) {
     this.messageElements = messageElements;
   }
 
   protected StandardMessage(MessageId id, 
-      DataElements[] messageElements) {
+      DataElement[] messageElements) {
     this(null, id, messageElements);
   }
   
@@ -91,8 +91,8 @@ public abstract class StandardMessage
    * @throws FatalMessageException if there is an error building message
    */
   protected StandardMessage(Message message, MessageId id, 
-      ArrayList<DataElements> messageElements) {
-    this(message,id,messageElements.toArray(new DataElements[0]));
+      ArrayList<DataElement> messageElements) {
+    this(message,id,messageElements.toArray(new DataElement[0]));
   }
   
   /**
@@ -101,7 +101,7 @@ public abstract class StandardMessage
    * @throws FatalMessageException if there is an error building message
    */
   protected StandardMessage(Message message, MessageId id, 
-      DataElements [] messageElements) {
+      DataElement [] messageElements) {
     
     this.id = id;
     
@@ -120,7 +120,7 @@ public abstract class StandardMessage
     this.message.setId(id);
     this.messageElements = messageElements;
     
-    for (DataElements element : messageElements) {
+    for (DataElement element : messageElements) {
       int elementLength = element.getLength();
       totalElementLength += elementLength;
       for (int i= 0 ; i < elementLength ; i++) {
@@ -250,7 +250,7 @@ public abstract class StandardMessage
    * @param skip the number of identical elements to skip before reaching desired element
    * @return true on success, else false
    */
-  protected boolean setDataElement(DataElements element, Integer value, int skip) {
+  protected boolean setDataElement(DataElement element, Integer value, int skip) {
     ArrayList<Byte> payload = getStandardPayload();
     boolean completed = false;
     completed = DataElementUtils.setDataElement(payload,messageElements,element,value,0,skip);
@@ -265,7 +265,7 @@ public abstract class StandardMessage
     return completed;
   }
   
-  protected boolean setDataElement(DataElements element, Integer value) {
+  protected boolean setDataElement(DataElement element, Integer value) {
     return setDataElement(element,value,0);
   }
   
@@ -275,7 +275,7 @@ public abstract class StandardMessage
    * @param skip the number of identical elements to skip before returning
    * @return the data associated with the element
    */
-  protected Integer getDataElement(DataElements element,int skip) {
+  protected Integer getDataElement(DataElement element,int skip) {
     Integer rtn = null;
     ArrayList<Byte> payload = getStandardPayload();
     int offset = 0; 
@@ -286,7 +286,7 @@ public abstract class StandardMessage
   /**
    * See {@code getDataElement(element,skip)}
    */
-  protected Integer getDataElement(DataElements element) {
+  protected Integer getDataElement(DataElement element) {
     return getDataElement(element,0);
   }
   
@@ -295,9 +295,9 @@ public abstract class StandardMessage
    * the current message structure
    * @param element the element to append
    */
-  protected void addOptionalDataElement(DataElements element) {
+  protected void addOptionalDataElement(DataElement element) {
     messageElements = getMessageElements();
-    DataElements[] newElements = Arrays.copyOf(messageElements, 
+    DataElement[] newElements = Arrays.copyOf(messageElements, 
         messageElements.length + 1);
     newElements[messageElements.length] = element;
     setMessageElements(newElements);
@@ -326,7 +326,7 @@ public abstract class StandardMessage
    * @param value the value to set in the mask bits
    * @param mask only bits marked in mask are changed
    */
-  protected void setPartialDataElement(DataElements element, int value, int mask) {
+  protected void setPartialDataElement(DataElement element, int value, int mask) {
     int wholeElement = getDataElement(element);
     int clearMask = mask ^ (~0);
     int shift = BitUtils.getMaxZeroBitIndex(mask) + 1;
@@ -346,7 +346,7 @@ public abstract class StandardMessage
    * @param skip the number of identical elements to skip
    * @throws ValidationException
    */
-  protected void setAndValidateDataElement(DataElements element, int value, int skip) 
+  protected void setAndValidateDataElement(DataElement element, int value, int skip) 
       throws ValidationException {
     Integer maxValue = element.getMaxValue();
     Integer minValue = element.getMinValue();
@@ -368,7 +368,7 @@ public abstract class StandardMessage
    * @param value
    * @throws ValidationException
    */
-  protected void setAndValidateDataElement(DataElements element, int value) throws ValidationException {
+  protected void setAndValidateDataElement(DataElement element, int value) throws ValidationException {
     setAndValidateDataElement(element,value,0);
   }
   

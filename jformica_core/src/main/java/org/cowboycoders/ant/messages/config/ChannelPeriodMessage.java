@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -26,7 +26,7 @@ import org.cowboycoders.ant.messages.FatalMessageException;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageExceptionFactory;
 import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
@@ -41,9 +41,9 @@ public class ChannelPeriodMessage extends ChannelMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.CHANNEL_PERIOD,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.CHANNEL_PERIOD,
   };
   
   /**
@@ -73,7 +73,7 @@ public class ChannelPeriodMessage extends ChannelMessage {
     ValidationUtils.maxMinValidator(0, MAX_PERIOD, period, 
         MessageExceptionFactory.createMaxMinExceptionProducable("period")
         );
-    setDataElement(DataElements.CHANNEL_PERIOD,period);
+    setDataElement(DataElement.CHANNEL_PERIOD,period);
     
   }
 

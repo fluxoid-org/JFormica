@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -21,7 +21,7 @@
  */
 package org.cowboycoders.ant.messages.config;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.FatalMessageException;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageExceptionFactory;
@@ -53,15 +53,15 @@ public class NetworkKeyMessage extends StandardMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [9];
+  private static DataElement [] additionalElements = 
+      new DataElement [9];
   
   static {
     int index = 0;
-    additionalElements[index] = DataElements.NETWORK_NUMBER;
+    additionalElements[index] = DataElement.NETWORK_NUMBER;
     index ++;
     for (int i = index ; i< additionalElements.length ; i++) {
-      additionalElements[i] = DataElements.NETWORK_KEY;
+      additionalElements[i] = DataElement.NETWORK_KEY;
       index = i;
     }
   }
@@ -94,7 +94,7 @@ public class NetworkKeyMessage extends StandardMessage {
       ValidationUtils.maxMinValidator(0, MAX_NETWORK_KEY_ELEMENT, networkKey[i], 
           MessageExceptionFactory.createMaxMinExceptionProducable("element " + i + " value")
           );
-      setDataElement(DataElements.NETWORK_KEY, networkKey[i],i);
+      setDataElement(DataElement.NETWORK_KEY, networkKey[i],i);
     }
     
   }
@@ -107,7 +107,7 @@ public class NetworkKeyMessage extends StandardMessage {
     ValidationUtils.maxMinValidator(0, MAX_NETWORK_NUMBER, networkNumber, 
         MessageExceptionFactory.createMaxMinExceptionProducable("Network number")
         );
-    setDataElement(DataElements.NETWORK_NUMBER, networkNumber);
+    setDataElement(DataElement.NETWORK_NUMBER, networkNumber);
   }
 
   /* (non-Javadoc)

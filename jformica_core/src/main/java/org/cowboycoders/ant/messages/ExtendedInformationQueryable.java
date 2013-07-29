@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -18,7 +18,7 @@
  */
 package org.cowboycoders.ant.messages;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 
 public interface ExtendedInformationQueryable {
 
@@ -27,6 +27,6 @@ public interface ExtendedInformationQueryable {
    * @param element to look for
    * @return extended data or None if not found
    */
-  public abstract Integer getExtendedData(DataElements element);
+  public abstract Integer getExtendedData(DataElement element);
 
 }

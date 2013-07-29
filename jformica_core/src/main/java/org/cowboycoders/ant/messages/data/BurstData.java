@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -21,8 +21,7 @@ package org.cowboycoders.ant.messages.data;
 import org.cowboycoders.ant.messages.Message;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.Constants.DataElements;
-import org.cowboycoders.ant.utils.ByteUtils;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 
 /**
  * Common functionality to all burst message types
@@ -49,7 +48,7 @@ public abstract class BurstData extends DataMessage {
       throw new ValidationException("Channel number must be between 0 and " +
           BURST_MAX_CHANNEL_NO);
     }
-    setPartialDataElement(DataElements.CHANNEL_ID, (int) channelNumber,(int) CHANNEL_MASK);
+    setPartialDataElement(DataElement.CHANNEL_ID, (int) channelNumber,(int) CHANNEL_MASK);
   }
 
   /* (non-Javadoc)
@@ -57,7 +56,7 @@ public abstract class BurstData extends DataMessage {
    */
   @Override
   public int getChannelNumber() {
-    return getDataElement(DataElements.CHANNEL_ID).byteValue() & CHANNEL_MASK;
+    return getDataElement(DataElement.CHANNEL_ID).byteValue() & CHANNEL_MASK;
   }
   
   /**
@@ -71,7 +70,7 @@ public abstract class BurstData extends DataMessage {
       throw new ValidationException("sequnece number must be between 0 and " +
           SEQUENCE_MAX);
     }
-    setPartialDataElement(DataElements.CHANNEL_ID,sequence,SEQUENCE_MASK);
+    setPartialDataElement(DataElement.CHANNEL_ID,sequence,SEQUENCE_MASK);
   }
   
   /**
@@ -79,7 +78,7 @@ public abstract class BurstData extends DataMessage {
    * @return sequence number of this burst packet
    */
   public int getSequenceNumber() {
-    return (getDataElement(DataElements.CHANNEL_ID) & SEQUENCE_MASK) >>> 5 ;
+    return (getDataElement(DataElement.CHANNEL_ID) & SEQUENCE_MASK) >>> 5 ;
   }
   
   

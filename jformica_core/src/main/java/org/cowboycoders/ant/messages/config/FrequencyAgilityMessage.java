@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -19,7 +19,7 @@
 package org.cowboycoders.ant.messages.config;
 
 import org.cowboycoders.ant.messages.ChannelMessage;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.FatalMessageException;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageExceptionFactory;
@@ -38,11 +38,11 @@ public class FrequencyAgilityMessage extends ChannelMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.CHANNEL_FREQUENCY,
-    DataElements.CHANNEL_FREQUENCY,
-    DataElements.CHANNEL_FREQUENCY,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.CHANNEL_FREQUENCY,
+    DataElement.CHANNEL_FREQUENCY,
+    DataElement.CHANNEL_FREQUENCY,
   };
   
   /**
@@ -74,12 +74,18 @@ public class FrequencyAgilityMessage extends ChannelMessage {
     }
     
   }
+  
+  public FrequencyAgilityMessage( 
+	      Integer frequency1, Integer frequency2,  Integer frequency3) {
+	  	this(0,frequency1, frequency2,  frequency3);
+	    
+	  }
 
   private void setFrequency(Integer frequency, int i) throws ValidationException {
     ValidationUtils.maxMinValidator(0, MAX_FREQUENCY, frequency, 
         MessageExceptionFactory.createMaxMinExceptionProducable("Search timeout")
         );
-    setDataElement(DataElements.CHANNEL_FREQUENCY,frequency,i);
+    setDataElement(DataElement.CHANNEL_FREQUENCY,frequency,i);
   }
 
 }

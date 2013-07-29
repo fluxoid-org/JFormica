@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -16,7 +16,6 @@
  *     You should have received a copy of the GNU General Public License
  *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 /*
  * Copyright 2010 Dynastream Innovations Inc.
  *

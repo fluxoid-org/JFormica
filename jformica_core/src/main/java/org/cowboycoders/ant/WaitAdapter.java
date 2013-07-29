@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -22,7 +22,6 @@ import java.util.concurrent.TimeoutException;
 
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
-import org.cowboycoders.ant.messages.responses.ChannelResponse;
 
 public interface WaitAdapter {
 

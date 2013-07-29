@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -18,7 +18,7 @@
  */
 package org.cowboycoders.ant.messages.config;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.ExtendedMessage;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
@@ -35,8 +35,8 @@ public class LibConfigMessage extends StandardMessage {
    */
   public LibConfigMessage(boolean enableChannelId, boolean enableRssi,
       boolean enableTimestamps) {
-      super(MessageId.LIB_CONFIG, new DataElements [] {
-          DataElements.FILLER_BYTE, DataElements.EXTENDED_MESSAGE_FLAG}
+      super(MessageId.LIB_CONFIG, new DataElement [] {
+          DataElement.FILLER_BYTE, DataElement.EXTENDED_MESSAGE_FLAG}
           );
       byte flag = 
       generateFlag(
@@ -45,7 +45,7 @@ public class LibConfigMessage extends StandardMessage {
   }
   
   private void setFlag(byte flag) {
-    setDataElement(DataElements.EXTENDED_MESSAGE_FLAG, (int)flag);
+    setDataElement(DataElement.EXTENDED_MESSAGE_FLAG, (int)flag);
   }
 
   /**

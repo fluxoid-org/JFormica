@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -26,7 +26,7 @@ import org.cowboycoders.ant.messages.FatalMessageException;
 import org.cowboycoders.ant.messages.Message;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.utils.ByteUtils;
 
 /**
@@ -39,14 +39,14 @@ public abstract class DataMessage extends ChannelMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements;
+  private static DataElement [] additionalElements;
   
   private static final byte DATA_LENGTH = 8;
   
   static {
-    additionalElements = new DataElements[DATA_LENGTH];
+    additionalElements = new DataElement[DATA_LENGTH];
     for (int i = 0 ; i< additionalElements.length; i++) {
-      additionalElements[i] = DataElements.DATA_BYTE;
+      additionalElements[i] = DataElement.DATA_BYTE;
     }
   }
   

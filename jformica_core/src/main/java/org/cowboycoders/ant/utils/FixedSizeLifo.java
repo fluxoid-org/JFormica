@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -19,7 +19,6 @@
 package org.cowboycoders.ant.utils;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 
 public class FixedSizeLifo<V> extends AbstractFixedSizeQueue<V> implements FixedSizeQueue<V> {
 
