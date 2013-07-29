@@ -42,15 +42,22 @@ import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.commands.ChannelCloseMessage;
 import org.cowboycoders.ant.messages.commands.ChannelOpenMessage;
+import org.cowboycoders.ant.messages.commands.ChannelOpenRxScanModeMessage;
 import org.cowboycoders.ant.messages.commands.ChannelRequestMessage;
 import org.cowboycoders.ant.messages.commands.ChannelRequestMessage.Request;
 import org.cowboycoders.ant.messages.config.AddChannelIdMessage;
 import org.cowboycoders.ant.messages.config.ChannelAssignMessage;
 import org.cowboycoders.ant.messages.config.ChannelFrequencyMessage;
 import org.cowboycoders.ant.messages.config.ChannelIdMessage;
+import org.cowboycoders.ant.messages.config.ChannelLowPrioritySearchTimeoutMessage;
 import org.cowboycoders.ant.messages.config.ChannelPeriodMessage;
+import org.cowboycoders.ant.messages.config.ChannelSearchPriorityMessage;
 import org.cowboycoders.ant.messages.config.ChannelSearchTimeoutMessage;
+import org.cowboycoders.ant.messages.config.ChannelTxPowerMessage;
 import org.cowboycoders.ant.messages.config.ChannelUnassignMessage;
+import org.cowboycoders.ant.messages.config.FrequencyAgilityMessage;
+import org.cowboycoders.ant.messages.config.ProximitySearchMessage;
+import org.cowboycoders.ant.messages.config.TxPowerMessage;
 import org.cowboycoders.ant.messages.config.ChannelAssignMessage.ExtendedAssignment;
 import org.cowboycoders.ant.messages.config.ConfigListIdMessage;
 import org.cowboycoders.ant.messages.data.BurstDataMessage;
@@ -180,6 +187,7 @@ public class Channel {
 	 * Performs clean up operations so that the channel is ready to use again.
 	 */
 	private void cleanUp() {
+		
 		// assume assigned, so we don't leave in assigned state
 		State state = ChannelStatusResponse.State.ASSIGNED;
 		try {
@@ -202,6 +210,9 @@ public class Channel {
 			}
 		}
 		
+		// clear the black list
+		this.blacklist(null);
+		
 		// update status
 		try {
 			ChannelStatusResponse status = this.requestStatus();
@@ -222,6 +233,9 @@ public class Channel {
 				LOGGER.warning("Error unassigning channel in state: " + state);
 			}
 		}
+		
+		// remove all channelListeners
+		removeAllRxListeners();
 	}
 
 	/**
@@ -400,6 +414,19 @@ public class Channel {
 			LOGGER.warning("removeRxListener: ignoring unknown listener");
 		}
 
+	}
+	
+	public synchronized void removeAllRxListeners() {
+		for (Object key: mAdapterListenerMap.keySet()) {
+			@SuppressWarnings("unchecked")
+			BroadcastListener<ChannelMessage> listener = (BroadcastListener<ChannelMessage>) key;
+			
+			// don't remove internal listeners !
+			if (listener.equals(burstListener)) {
+				continue;
+			}
+			removeRxListener(listener);
+		}
 	}
 
 	/**
@@ -1032,7 +1059,7 @@ public class Channel {
 		 for (int i = 0 ; i < ids.length ; i++) {
 			 updateExclusionInclusionList(i,ids[i]);
 		 }
-		 configureExclusionInclusionList(ids,exclude);
+		 configureExclusionInclusionList(ids.length,exclude);
 	 }
 	 
 	 /**
@@ -1043,7 +1070,7 @@ public class Channel {
 	  * Must be called after assigning, but before opening channel. Can only be used on slave channels,
 	  * attempting to use on a master results in undefined behaviour.
 	  * 
-	  * @param ids array containing ids to blacklist (max length: 4) or null to disable.
+	  * @param ids array containing ids to blacklist (max length: 4) or a zero length array to disable.
 	  */
 	 public void blacklist(ChannelId [] ids) {
 		 if (ids == null) {
@@ -1058,7 +1085,7 @@ public class Channel {
 	  * 
 	  * For more details see {@link Channel#blacklist(ChannelId[]))
 	  * 
-	  * @param ids array containing ids to blacklist (max length: 4) or null to disable.
+	  * @param ids array containing ids to blacklist (max length: 4) or a zero length array to disable.
 	  */
 	 public void whitelist(ChannelId [] ids) {
 		 if (ids == null) {
@@ -1067,4 +1094,93 @@ public class Channel {
 		 }
 		 configureExclusionInclusionList(ids,true);
 	 }
+	 
+	 /**
+	  * Waits for response NO_ERROR for a maximum of 1 second
+	  * @param msg to send
+	  * @throws ChannelError can be caused by TimeoutException, InterruptedException or thrown outright
+	  * 		as a response to an error
+	  */
+	 public void sendAndWaitForResponseNoError(ChannelMessage msg) throws ChannelError {
+			MessageCondition condition = MessageConditionFactory
+					.newResponseCondition(msg.getId(),
+							ResponseCode.RESPONSE_NO_ERROR);
+			try {
+				sendAndWaitForMessage(msg, condition, 1L,
+						TimeUnit.SECONDS, null);
+			} catch (InterruptedException e) {
+				handleTimeOutException(e);
+			} catch (TimeoutException e) {
+				handleTimeOutException(e);
+			}
+	 }
+	 
+		/**
+		 * Sets channel transmit power
+		 * See table 9.4.3 in ANT protocol as this is chip dependent.
+		 * Maximum powerLevel 4, minimum 0. Some chips only support up to level 3.
+		 * @param powerLevel newPowerLevel 
+		 */
+		public void setTransmitPower(int powerLevel) {
+			ChannelMessage msg = new ChannelTxPowerMessage(powerLevel);
+			sendAndWaitForResponseNoError(msg);
+		}
+		
+		/**
+		 * Sets the proximity search threshold for this channel. 
+		 * 
+		 * @param threshold new threshold, must be between 0 and 10. A zero value will disable, whilst
+		 * 		  larger values will find devices further away
+		 */
+		public void setProximitySearchThreshold(int threshold) {
+			ChannelMessage msg = new ProximitySearchMessage(threshold);
+			sendAndWaitForResponseNoError(msg);
+		}
+		
+		/**
+		 * Configures frequency agility for this channel. Should be used in conjunction with {@link ExtendedAssignment}.FREQUENCY_AGILITY_ENABLE
+		 * at assign time. Do not use with one-way or shared channels. Support chip dependent
+		 * 
+		 * @param frequency1 The primary operating frequency offset in MHz from 2400MHz. Valid range: 0-124 Mhz
+		 * @param frequency2 The secondary operating frequency offset in MHz from 2400MHz. Valid range: 0-124 Mhz
+		 * @param frequency3 The tertiary operating frequency offset in MHz from 2400MHz. Valid range: 0-124 Mhz
+		 */
+		public void configureFrequencyAgility(int frequency1, int frequency2,  int frequency3) {
+			ChannelMessage msg = new FrequencyAgilityMessage(frequency1,frequency2,frequency3);
+			sendAndWaitForResponseNoError(msg);
+		}
+		
+		/**
+		 * Sets a Low priority search timeout
+		 * Low priority search does not interrupt other channels; Support chip dependent.
+		 * @param timeout timeout in seconds / 2.5. Maximum value: 255, 0 disables.
+		 */
+		public void setLowPrioirtySearchTimeout(int timeout) {
+			ChannelMessage msg = new ChannelLowPrioritySearchTimeoutMessage(timeout);
+			sendAndWaitForResponseNoError(msg);
+		}
+		
+		/**
+		 * Sets channel search priority. Higher priorities take precedence. This applies
+		 * any time a when several channels go to search. Support device specific.
+		 * 
+		 * @param priority new priority. Default value: 0 ; Range: 0-255 
+		 */
+		public void setSearchPriority(int priority) {
+			ChannelMessage msg = new ChannelSearchPriorityMessage(priority);
+			sendAndWaitForResponseNoError(msg);
+		}
+		
+		/**
+		 * Listens to all devices matching configured {@link ChannelId} regardless
+		 * of radio frequency and period. Two way communication can be achieved by
+		 * sending an ExtendedDataMessage with the channel id of the channel you wish to communicate with.
+		 * 
+		 * All other channels must be closed to use this method. The channel should
+		 * be assigned and configured as a slave. 
+		 */
+		public void openInRxScanMode() {
+			ChannelMessage msg = new ChannelOpenRxScanModeMessage();
+			sendAndWaitForResponseNoError(msg);
+		}
 }

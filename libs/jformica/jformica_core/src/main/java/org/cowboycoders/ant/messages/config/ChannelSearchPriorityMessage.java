@@ -58,6 +58,10 @@ public class ChannelSearchPriorityMessage extends ChannelMessage {
     
   }
   
+  public ChannelSearchPriorityMessage(Integer priority) {
+	  this(0,priority);
+  }
+  
   /**
    * 
    * @param priority

@@ -57,6 +57,10 @@ public class ProximitySearchMessage extends ChannelMessage {
     }
   }
   
+  public ProximitySearchMessage(int threshold) {
+	  this(0,threshold);
+  }
+  
   
   private void setThreshold(int threshold) throws ValidationException {
     setAndValidateDataElement(DataElements.SEARCH_THRESHOLD, threshold);

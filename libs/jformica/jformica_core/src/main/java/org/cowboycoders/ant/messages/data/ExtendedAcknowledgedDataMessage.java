@@ -18,6 +18,7 @@
  */
 package org.cowboycoders.ant.messages.data;
 
+import org.cowboycoders.ant.ChannelId;
 import org.cowboycoders.ant.messages.DeviceInfoQueryable;
 import org.cowboycoders.ant.messages.ExtendedMessage;
 import org.cowboycoders.ant.messages.MessageId;
@@ -74,4 +75,5 @@ implements DeviceInfoQueryable, RssiInfoQueryable, TimestampInfoQueryable {
     public Byte getTransmissionType() {
       return ((ExtendedMessage)getBackendMessage()).getTransmissionType();
     }
+   
 }

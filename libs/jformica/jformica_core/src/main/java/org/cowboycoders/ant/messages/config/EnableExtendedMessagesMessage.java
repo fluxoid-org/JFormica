@@ -36,7 +36,7 @@ public class EnableExtendedMessagesMessage extends StandardMessage {
    * Enables extended Messages. 
    * @param enable true to enable
    */
-  EnableExtendedMessagesMessage(boolean enable) {
+  public EnableExtendedMessagesMessage(boolean enable) {
     super(MessageId.RX_EXT_MESGS_ENABLE, new DataElements [] {
         DataElements.FILLER_BYTE,
         DataElements.EXTENDED_MESSAGE_FLAG

@@ -18,10 +18,10 @@
  */
 package org.cowboycoders.ant.messages.config;
 
+import org.cowboycoders.ant.ChannelId;
 import org.cowboycoders.ant.messages.ChannelIdCompanion;
 import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.FatalMessageException;
-import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.Constants.DataElements;
@@ -128,6 +128,15 @@ public class ChannelIdMessage extends ChannelMessage {
 
 	public int getDeviceType() {
 		return companion.getDeviceType();
+	}
+	
+	public ChannelId getChannelId() {
+		return ChannelId.Builder.newInstance()
+				.setDeviceNumber(getDeviceNumber())
+				.setDeviceType(getDeviceType())
+				.setTransmissonType(getTransmissionType())
+				.setPairingFlag(isPairingFlagSet())
+				.build();
 	}
 
 }

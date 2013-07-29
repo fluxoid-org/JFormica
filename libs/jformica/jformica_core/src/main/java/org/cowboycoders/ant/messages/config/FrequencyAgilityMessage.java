@@ -74,6 +74,12 @@ public class FrequencyAgilityMessage extends ChannelMessage {
     }
     
   }
+  
+  public FrequencyAgilityMessage( 
+	      Integer frequency1, Integer frequency2,  Integer frequency3) {
+	  	this(0,frequency1, frequency2,  frequency3);
+	    
+	  }
 
   private void setFrequency(Integer frequency, int i) throws ValidationException {
     ValidationUtils.maxMinValidator(0, MAX_FREQUENCY, frequency, 

@@ -62,6 +62,10 @@ public class ChannelLowPrioritySearchTimeoutMessage extends ChannelMessage {
     }
   }
   
+  public ChannelLowPrioritySearchTimeoutMessage(Integer timeout) {
+	  	this(0,timeout);
+	  }
+  
   /**
    * Sets timeout
    * @param timeout to set

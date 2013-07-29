@@ -48,11 +48,15 @@ import org.cowboycoders.ant.events.MessageConditionFactory;
 import org.cowboycoders.ant.interfaces.AntChipInterface;
 import org.cowboycoders.ant.interfaces.AntStatus;
 import org.cowboycoders.ant.interfaces.AntStatusUpdate;
+import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.commands.ChannelRequestMessage;
 import org.cowboycoders.ant.messages.commands.ResetMessage;
+import org.cowboycoders.ant.messages.config.EnableExtendedMessagesMessage;
+import org.cowboycoders.ant.messages.config.LibConfigMessage;
 import org.cowboycoders.ant.messages.config.NetworkKeyMessage;
+import org.cowboycoders.ant.messages.config.TxPowerMessage;
 import org.cowboycoders.ant.messages.notifications.StartupMessage;
 import org.cowboycoders.ant.messages.responses.CapabilityCategory;
 import org.cowboycoders.ant.messages.responses.CapabilityResponse;
@@ -60,7 +64,6 @@ import org.cowboycoders.ant.messages.responses.Capability;
 import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
 import org.cowboycoders.ant.messages.responses.ResponseExceptionFactory;
-import org.cowboycoders.ant.utils.FixedSizeFifo;
 
 public class Node {
   
@@ -634,6 +637,73 @@ public class Node {
   public void registerEventHandler(NodeEventHandler handler) {
 	  this.registerRxListener(handler, Response.class);
   }
+  
+	 /**
+	  * Waits for response NO_ERROR for a maximum of 1 second
+	  * @param msg to send
+	  * @throws AntError can be caused by TimeoutException, InterruptedException or thrown outright
+	  * 		as a response to an error
+	  * @throws ChannelError on error condition sending a {@link ChannelMessage}
+	  */
+	 public void sendAndWaitForResponseNoError(StandardMessage msg) throws AntError, ChannelError {
+			MessageCondition condition = MessageConditionFactory
+					.newResponseCondition(msg.getId(),
+							ResponseCode.RESPONSE_NO_ERROR);
+			try {
+				sendAndWaitForMessage(msg, condition, 1L,
+						TimeUnit.SECONDS, null,null);
+			} catch (InterruptedException e) {
+				handleTimeOutException(e);
+			} catch (TimeoutException e) {
+				handleTimeOutException(e);
+			}
+	 }
+
+	private void handleTimeOutException(Exception e) {
+		if (e instanceof InterruptedException) {
+			throw new AntError(
+					"Interuppted whilst waiting for message / reply", e);
+		}
+		if (e instanceof TimeoutException) {
+			throw new AntError(
+					"Timeout whilst waiting for message / reply", e);
+		}
+	}
+	
+	/**
+	 * Sets chip wide transmit power
+	 * See table 9.4.3 in ANT protocol as this is chip dependent.
+	 * Maximum powerLevel 4, minimum 0. Some chips only support up to level 3.
+	 * @param powerLevel newPowerLevel 
+	 */
+	public void setTransmitPower(int powerLevel) {
+		StandardMessage msg = new TxPowerMessage(powerLevel);
+		sendAndWaitForResponseNoError(msg);
+	}
+	
+	/**
+	 * Request extra info in extended message bytes. Not all chips support
+	 * all of the options (especially rssi) if any.
+	 * @param enableChannelId
+	 * @param enableRssi
+	 * @param enableTimestamps
+	 */
+	public void setLibConfig(boolean enableChannelId, boolean enableRssi,
+		      boolean enableTimestamps) {
+		StandardMessage msg = new LibConfigMessage(enableChannelId,enableRssi,enableTimestamps);
+		sendAndWaitForResponseNoError(msg);
+		
+	}
+	
+	/**
+	 * Include channelId with data messages (legacy) na duspport chip dependent.
+	 * @param enable
+	 */
+	public void enableExtendedMessages(boolean enable) {
+		StandardMessage msg = new EnableExtendedMessagesMessage(enable);
+		sendAndWaitForResponseNoError(msg);
+	}
+	
   
 
 }
