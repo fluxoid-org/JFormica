@@ -21,11 +21,14 @@
  */
 package org.cowboycoders.ant.messages.data;
 
+import org.cowboycoders.ant.ChannelId;
 import org.cowboycoders.ant.messages.DeviceInfoQueryable;
+import org.cowboycoders.ant.messages.DeviceInfoSettable;
 import org.cowboycoders.ant.messages.ExtendedMessage;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.RssiInfoQueryable;
 import org.cowboycoders.ant.messages.TimestampInfoQueryable;
+import org.cowboycoders.ant.messages.ValidationException;
 
 /**
  * extended burst data
@@ -33,7 +36,7 @@ import org.cowboycoders.ant.messages.TimestampInfoQueryable;
  *
  */
 public class ExtendedBurstDataMessage extends BurstDataMessage
-  implements DeviceInfoQueryable, RssiInfoQueryable, TimestampInfoQueryable {
+  implements DeviceInfoQueryable, DeviceInfoSettable, RssiInfoQueryable, TimestampInfoQueryable {
   
   public ExtendedBurstDataMessage() {
     this(0);
@@ -77,6 +80,36 @@ public class ExtendedBurstDataMessage extends BurstDataMessage
   public Byte getTransmissionType() {
     return ((ExtendedMessage)getBackendMessage()).getTransmissionType();
   }
+  
+  public void setChannelId(ChannelId id) {
+  	((ExtendedMessage)getBackendMessage()).setChannelId(id);
+  }
+  
+  public ChannelId getChannelId() {
+  	ChannelId id = ChannelId.Builder.newInstance()
+      		.setDeviceNumber(getDeviceNumber())
+      		.setDeviceType(getDeviceType())
+      		.setTransmissonType(getTransmissionType())
+      		.build();
+  	return id;
+  }
+  
+	@Override
+	public void setDeviceNumber(int deviceId) throws ValidationException {
+		   ((ExtendedMessage)getBackendMessage()).setDeviceNumber(deviceId);
+	}
+
+	@Override
+	public void setDeviceType(int deviceType) throws ValidationException {
+	   ((ExtendedMessage)getBackendMessage()).setDeviceType(deviceType);
+		
+	}
+
+	@Override
+	public void setTransmissionType(int transmissionType)
+			throws ValidationException {
+	   ((ExtendedMessage)getBackendMessage()).setTransmissionType(transmissionType);
+	}
   
 
 }

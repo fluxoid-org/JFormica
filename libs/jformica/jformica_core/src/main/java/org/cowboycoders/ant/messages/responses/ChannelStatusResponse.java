@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.ChannelType;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.MasterChannelType;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
@@ -39,9 +39,9 @@ public class ChannelStatusResponse extends ChannelMessage {
   /**
    * The additional elements we are adding to channel message
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.CHANNEL_STATUS,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.CHANNEL_STATUS,
   };
   
   public enum State {
@@ -102,7 +102,7 @@ public class ChannelStatusResponse extends ChannelMessage {
    * @return State of Channel
    */
   public State getState() {
-    int stateCode = getDataElement(DataElements.CHANNEL_STATUS) & STATE_MASK;
+    int stateCode = getDataElement(DataElement.CHANNEL_STATUS) & STATE_MASK;
     return State.lookUp(stateCode);
   }
   
@@ -110,14 +110,14 @@ public class ChannelStatusResponse extends ChannelMessage {
    * @return network number channel is set to
    */
   public int getNetworkNumber() {
-    return getDataElement(DataElements.CHANNEL_STATUS) & NETWORK_NUMBER_MASK;
+    return getDataElement(DataElement.CHANNEL_STATUS) & NETWORK_NUMBER_MASK;
   }
   
   /**
    * @return channel type of requested channel
    */
   public ChannelType getChannelType() {
-    int channelType = getDataElement(DataElements.CHANNEL_STATUS) & CHANNEL_TYPE_MASK;
+    int channelType = getDataElement(DataElement.CHANNEL_STATUS) & CHANNEL_TYPE_MASK;
     boolean shared = false;
     boolean oneway = false;
     if ( ( channelType & ChannelType.Types.ONEWAY_RECEIVE.code ) != 0 || 
@@ -136,7 +136,7 @@ public class ChannelStatusResponse extends ChannelMessage {
   }
   
   private void setStatusByte(int value) {
-	  setDataElement(DataElements.CHANNEL_STATUS,value);
+	  setDataElement(DataElement.CHANNEL_STATUS,value);
   }
   
   public static void main(String [] args) {

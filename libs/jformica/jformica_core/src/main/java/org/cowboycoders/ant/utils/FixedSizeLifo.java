@@ -19,7 +19,6 @@
 package org.cowboycoders.ant.utils;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 
 public class FixedSizeLifo<V> extends AbstractFixedSizeQueue<V> implements FixedSizeQueue<V> {
 

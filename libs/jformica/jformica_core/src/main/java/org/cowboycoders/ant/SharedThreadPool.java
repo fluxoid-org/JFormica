@@ -18,7 +18,6 @@
  */
 package org.cowboycoders.ant;
 
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -61,7 +60,7 @@ public class SharedThreadPool {
  	});
   }
   
-  private static void initPool(int coreSize, int maxSize, int timeout, TimeUnit timeoutUnit,
+private static void initPool(int coreSize, int maxSize, int timeout, TimeUnit timeoutUnit,
       BlockingQueue<Runnable> backingQueue) {
     dispatchPool = new ThreadPoolExecutor(coreSize,
         maxSize, 

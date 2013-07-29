@@ -18,11 +18,15 @@
  */
 package org.cowboycoders.ant.messages.data;
 
+import org.cowboycoders.ant.ChannelId;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.DeviceInfoQueryable;
+import org.cowboycoders.ant.messages.DeviceInfoSettable;
 import org.cowboycoders.ant.messages.ExtendedMessage;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.RssiInfoQueryable;
 import org.cowboycoders.ant.messages.TimestampInfoQueryable;
+import org.cowboycoders.ant.messages.ValidationException;
 
 /**
  * Extended broadcast data message
@@ -30,7 +34,7 @@ import org.cowboycoders.ant.messages.TimestampInfoQueryable;
  *
  */
 public class ExtendedBroadcastDataMessage extends BroadcastDataMessage
-  implements DeviceInfoQueryable, RssiInfoQueryable, TimestampInfoQueryable {
+  implements DeviceInfoQueryable, DeviceInfoSettable, RssiInfoQueryable, TimestampInfoQueryable {
     
   public ExtendedBroadcastDataMessage() {
       this(0);
@@ -73,6 +77,69 @@ public class ExtendedBroadcastDataMessage extends BroadcastDataMessage
     @Override
     public Byte getTransmissionType() {
       return ((ExtendedMessage)getBackendMessage()).getTransmissionType();
+    }
+    
+    public void setChannelId(ChannelId id) {
+    	((ExtendedMessage)getBackendMessage()).setChannelId(id);
+    }
+    
+    public ChannelId getChannelId() {
+    	ChannelId id = ChannelId.Builder.newInstance()
+        		.setDeviceNumber(getDeviceNumber())
+        		.setDeviceType(getDeviceType())
+        		.setTransmissonType(getTransmissionType())
+        		.build();
+    	return id;
+    }
+    
+	@Override
+	public void setDeviceNumber(int deviceId) throws ValidationException {
+		   ((ExtendedMessage)getBackendMessage()).setDeviceNumber(deviceId);
+	}
+
+	@Override
+	public void setDeviceType(int deviceType) throws ValidationException {
+	   ((ExtendedMessage)getBackendMessage()).setDeviceType(deviceType);
+		
+	}
+
+	@Override
+	public void setTransmissionType(int transmissionType)
+			throws ValidationException {
+	   ((ExtendedMessage)getBackendMessage()).setTransmissionType(transmissionType);
+	}
+    
+    public static void main(String [] args) {
+    	// TODO : convert this mess to a proper test
+    	ExtendedBroadcastDataMessage msg = new ExtendedBroadcastDataMessage();
+    	ChannelId id = ChannelId.Builder.newInstance()
+    		.setDeviceNumber(123)
+    		.setDeviceType(2)
+    		.setTransmissonType(34)
+    		.build();
+    	
+    	msg.setChannelId(id);
+    	((ExtendedMessage)msg.getBackendMessage()).setDataElement(DataElement.RSSI_VALUE, 67);
+    	//((ExtendedMessage)msg.getBackendMessage()).setDataElement(DataElements.RSSI_MEASUREMENT_TYPE, 28);
+    	
+    	msg.setChannelId(null);
+    	
+    	//msg.setChannelId(id);
+    	((ExtendedMessage)msg.getBackendMessage()).setDataElement(DataElement.RX_TIMESTAMP, 9999);
+    	System.out.println(msg.getDeviceNumber());
+    	System.out.println(msg.getDeviceType());
+    	System.out.println(msg.getTransmissionType());
+    	System.out.println(msg.getRssiValue());
+    	System.out.println(msg.getRssiThresholdConfig());
+    	System.out.println(msg.getRssiMeasurementType());
+    	System.out.println(msg.getRxTimeStamp());
+    	
+    	// this should clear all
+    	((ExtendedMessage)msg.getBackendMessage()).setDataElement(DataElement.RSSI_VALUE, null);
+    	System.out.println(msg.getRssiValue());
+    	System.out.println(msg.getRssiThresholdConfig());
+    	System.out.println(msg.getRssiMeasurementType());
+    	System.out.println(msg.getRxTimeStamp());
     }
     
     

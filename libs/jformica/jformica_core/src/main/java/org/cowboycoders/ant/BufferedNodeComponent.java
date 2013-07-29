@@ -23,7 +23,6 @@ import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.utils.SharedBuffer;
-import org.cowboycoders.ant.utils.TimestampQueryable;
 
 /**
  * Provides acknowledgement buffer and message buffer

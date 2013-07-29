@@ -128,6 +128,8 @@ public class AntMessageFactory {
       case VERSION:
         msg = new VersionResponse();
         break;
+	default:
+		break;
       
     }
     

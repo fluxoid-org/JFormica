@@ -22,7 +22,7 @@
 package org.cowboycoders.ant.messages.config;
 
 import org.cowboycoders.ant.messages.ChannelMessage;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.FatalMessageException;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageId;
@@ -38,9 +38,9 @@ public class ProximitySearchMessage extends ChannelMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.SEARCH_THRESHOLD,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.SEARCH_THRESHOLD,
   };
   
   /**
@@ -63,7 +63,7 @@ public class ProximitySearchMessage extends ChannelMessage {
   
   
   private void setThreshold(int threshold) throws ValidationException {
-    setAndValidateDataElement(DataElements.SEARCH_THRESHOLD, threshold);
+    setAndValidateDataElement(DataElement.SEARCH_THRESHOLD, threshold);
   }
 
 }

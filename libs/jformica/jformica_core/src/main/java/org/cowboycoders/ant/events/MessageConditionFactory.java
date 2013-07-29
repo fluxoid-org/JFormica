@@ -20,7 +20,6 @@ package org.cowboycoders.ant.events;
 
 import java.util.logging.Logger;
 
-import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.responses.Response;

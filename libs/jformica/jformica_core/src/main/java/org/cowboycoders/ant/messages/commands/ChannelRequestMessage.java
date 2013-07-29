@@ -22,7 +22,7 @@ import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.FatalMessageException;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 
 /**
  * Request channel / ant info
@@ -34,9 +34,9 @@ public class ChannelRequestMessage extends ChannelMessage {
   /**
    * The additional elements we are adding to channel message
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.CHANNEL_REQUEST_MSG_ID,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.CHANNEL_REQUEST_MSG_ID,
   };
   
   /**
@@ -97,7 +97,7 @@ public class ChannelRequestMessage extends ChannelMessage {
    * @throws ValidationException if fails validation
    */
   private void setRequest(Request request) throws ValidationException {
-    setAndValidateDataElement(DataElements.CHANNEL_REQUEST_MSG_ID, request.getMsgId());
+    setAndValidateDataElement(DataElement.CHANNEL_REQUEST_MSG_ID, request.getMsgId());
   }
 
 }

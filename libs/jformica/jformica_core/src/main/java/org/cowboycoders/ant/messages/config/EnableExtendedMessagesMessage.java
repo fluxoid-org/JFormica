@@ -21,7 +21,7 @@
  */
 package org.cowboycoders.ant.messages.config;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.StandardMessage;
@@ -37,9 +37,9 @@ public class EnableExtendedMessagesMessage extends StandardMessage {
    * @param enable true to enable
    */
   public EnableExtendedMessagesMessage(boolean enable) {
-    super(MessageId.RX_EXT_MESGS_ENABLE, new DataElements [] {
-        DataElements.FILLER_BYTE,
-        DataElements.EXTENDED_MESSAGE_FLAG
+    super(MessageId.RX_EXT_MESGS_ENABLE, new DataElement [] {
+        DataElement.FILLER_BYTE,
+        DataElement.EXTENDED_MESSAGE_FLAG
     } );
     
     byte flag = generateFlag(enable);
@@ -48,7 +48,7 @@ public class EnableExtendedMessagesMessage extends StandardMessage {
   
   
   private void setFlag(byte flag) {
-    setDataElement(DataElements.EXTENDED_MESSAGE_FLAG,(int) flag);
+    setDataElement(DataElement.EXTENDED_MESSAGE_FLAG,(int) flag);
   }
 
   /**

@@ -25,7 +25,7 @@ import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.FatalMessageException;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 
 /**
  * Sets search priority for channels.
@@ -38,9 +38,9 @@ public class ChannelSearchPriorityMessage extends ChannelMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.SEARCH_PRIORITY,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.SEARCH_PRIORITY,
   };
   
   /**
@@ -71,7 +71,7 @@ public class ChannelSearchPriorityMessage extends ChannelMessage {
     if (priority == null) {
       priority =0;
     }
-    setAndValidateDataElement(DataElements.SEARCH_PRIORITY, priority);
+    setAndValidateDataElement(DataElement.SEARCH_PRIORITY, priority);
     
   }
 

@@ -1,6 +1,5 @@
 package org.cowboycoders.ant.utils;
 
-import java.util.LinkedList;
 import java.util.Queue;
 
 public interface FixedSizeQueue<V> extends Queue<V>  {

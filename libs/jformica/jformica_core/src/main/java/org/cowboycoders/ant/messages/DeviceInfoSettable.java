@@ -18,6 +18,8 @@
  */
 package org.cowboycoders.ant.messages;
 
+import org.cowboycoders.ant.ChannelId;
+
 public interface DeviceInfoSettable {
 
   /**
@@ -40,5 +42,11 @@ public interface DeviceInfoSettable {
    * @throws ValidationException if not within expected range
    */
   public void setTransmissionType(int transmissionType) throws  ValidationException;
+  
+  /**
+   * Set all channel info at once.
+   * @param id {@link ChannelId} object encapsulating the channel id
+   */
+  public void setChannelId(ChannelId id);
 
 }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.cowboycoders.ant.ChannelId;
 import org.cowboycoders.ant.messages.DeviceInfoQueryable;
 import org.cowboycoders.ant.messages.RssiInfoQueryable;
 import org.cowboycoders.ant.messages.TimestampInfoQueryable;
@@ -258,6 +259,16 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 	
 		
 		
+	}
+
+	@Override
+	public ChannelId getChannelId() {
+    	ChannelId id = ChannelId.Builder.newInstance()
+        		.setDeviceNumber(getDeviceNumber())
+        		.setDeviceType(getDeviceType())
+        		.setTransmissonType(getTransmissionType())
+        		.build();
+    	return id;
 	}
 
 

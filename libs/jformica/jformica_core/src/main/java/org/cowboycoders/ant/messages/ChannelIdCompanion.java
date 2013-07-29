@@ -18,7 +18,8 @@
  */
 package org.cowboycoders.ant.messages;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.ChannelId;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
@@ -34,9 +35,6 @@ public class ChannelIdCompanion {
   
   private static final int PAIRING_FLAG_MASK = 0x80;
   private static final int DEVICE_TYPE_MASK =  0x7f;
-  private static final int MAX_DEVICE_TYPE = 127;
-  private static final int MAX_TRANSMISSION_TYPE = 255;
-  private static final int MAX_DEVICE_NUMBER = 65535;
 
   
   private StandardMessage message;
@@ -58,11 +56,11 @@ public class ChannelIdCompanion {
   * @throws ValidationException if out of limit
   */
  public void setDeviceType(int deviceType) throws ValidationException {
-   ValidationUtils.maxMinValidator(0, MAX_DEVICE_TYPE, deviceType, 
+   ValidationUtils.maxMinValidator(0, ChannelId.MAX_DEVICE_TYPE, deviceType, 
        MessageExceptionFactory.createMaxMinExceptionProducable("deviceType")
        );
    StandardMessage message = getMessage(); 
-   message.setPartialDataElement(DataElements.DEVICE_TYPE,deviceType,DEVICE_TYPE_MASK);
+   message.setPartialDataElement(DataElement.DEVICE_TYPE,deviceType,DEVICE_TYPE_MASK);
  }
  
 
@@ -72,7 +70,7 @@ public class ChannelIdCompanion {
  public void setPairingFlag(boolean setPairingFlag) {
    int flag = setPairingFlag ? 1 : 0;
    StandardMessage message = getMessage(); 
-   message.setPartialDataElement(DataElements.DEVICE_TYPE,flag,PAIRING_FLAG_MASK);
+   message.setPartialDataElement(DataElement.DEVICE_TYPE,flag,PAIRING_FLAG_MASK);
  }
 
 
@@ -84,11 +82,11 @@ public class ChannelIdCompanion {
 * 
 * */
  public void setTransmissionType(int transmissionType) throws ValidationException {
-   ValidationUtils.maxMinValidator(0, MAX_TRANSMISSION_TYPE, transmissionType, 
+   ValidationUtils.maxMinValidator(0, ChannelId.MAX_TRANSMISSION_TYPE, transmissionType, 
        MessageExceptionFactory.createMaxMinExceptionProducable("transmissionType")
        );
    StandardMessage message = getMessage(); 
-   message.setDataElement(DataElements.TRANSMISSION_TYPE, transmissionType);
+   message.setDataElement(DataElement.TRANSMISSION_TYPE, transmissionType);
    
  }
 
@@ -98,32 +96,32 @@ public class ChannelIdCompanion {
   * @throws ValidationException if out of limit
   */
  public void setDeviceNumber(int deviceNumber) throws ValidationException {
-   ValidationUtils.maxMinValidator(0, MAX_DEVICE_NUMBER, deviceNumber, 
+   ValidationUtils.maxMinValidator(0, ChannelId.MAX_DEVICE_NUMBER, deviceNumber, 
        MessageExceptionFactory.createMaxMinExceptionProducable("deviceNumber")
        );
    StandardMessage message = getMessage(); 
-   message.setDataElement(DataElements.DEVICE_NUMBER,deviceNumber);
+   message.setDataElement(DataElement.DEVICE_NUMBER,deviceNumber);
  }
  
  public int getDeviceNumber() {
 	 StandardMessage message = getMessage(); 
-	 return message.getDataElement(DataElements.DEVICE_NUMBER);
+	 return message.getDataElement(DataElement.DEVICE_NUMBER);
  }
  
  public int getTransmissionType() {
 	 StandardMessage message = getMessage(); 
-	 return message.getDataElement(DataElements.TRANSMISSION_TYPE);
+	 return message.getDataElement(DataElement.TRANSMISSION_TYPE);
  }
  
  public boolean isPairingFlagSet() {
 	 StandardMessage message = getMessage();
-	 int unmasked = message.getDataElement(DataElements.DEVICE_TYPE);
+	 int unmasked = message.getDataElement(DataElement.DEVICE_TYPE);
 	 return (unmasked & PAIRING_FLAG_MASK) > 0 ? true : false ;
  }
  
  public int getDeviceType() {
 	 StandardMessage message = getMessage();
-	 int unmasked = message.getDataElement(DataElements.DEVICE_TYPE);
+	 int unmasked = message.getDataElement(DataElement.DEVICE_TYPE);
 	 return (unmasked &  DEVICE_TYPE_MASK);
  }
   

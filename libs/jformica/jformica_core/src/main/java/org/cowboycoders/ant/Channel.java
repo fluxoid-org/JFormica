@@ -57,7 +57,6 @@ import org.cowboycoders.ant.messages.config.ChannelTxPowerMessage;
 import org.cowboycoders.ant.messages.config.ChannelUnassignMessage;
 import org.cowboycoders.ant.messages.config.FrequencyAgilityMessage;
 import org.cowboycoders.ant.messages.config.ProximitySearchMessage;
-import org.cowboycoders.ant.messages.config.TxPowerMessage;
 import org.cowboycoders.ant.messages.config.ChannelAssignMessage.ExtendedAssignment;
 import org.cowboycoders.ant.messages.config.ConfigListIdMessage;
 import org.cowboycoders.ant.messages.data.BurstDataMessage;

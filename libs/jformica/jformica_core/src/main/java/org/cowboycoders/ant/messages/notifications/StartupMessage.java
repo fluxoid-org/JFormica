@@ -18,7 +18,7 @@
  */
 package org.cowboycoders.ant.messages.notifications;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.StandardMessage;
@@ -34,9 +34,9 @@ public class StartupMessage extends StandardMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.STARTUP_INFO,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.STARTUP_INFO,
   };
   
   /**

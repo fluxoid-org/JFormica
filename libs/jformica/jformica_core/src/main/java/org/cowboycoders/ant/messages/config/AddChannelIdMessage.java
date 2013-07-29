@@ -27,7 +27,7 @@ import org.cowboycoders.ant.messages.FatalMessageException;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageExceptionFactory;
 import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
@@ -42,12 +42,12 @@ public class AddChannelIdMessage extends ChannelMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.DEVICE_NUMBER,
-    DataElements.DEVICE_TYPE,
-    DataElements.TRANSMISSION_TYPE,
-    DataElements.LIST_ID,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.DEVICE_NUMBER,
+    DataElement.DEVICE_TYPE,
+    DataElement.TRANSMISSION_TYPE,
+    DataElement.LIST_ID,
   };
   
   /** companion object we delegate shared methods to */
@@ -83,7 +83,7 @@ public class AddChannelIdMessage extends ChannelMessage {
     ValidationUtils.maxMinValidator(0, MAX_LIST_INDEX, listIndex, 
         MessageExceptionFactory.createMaxMinExceptionProducable("List index")
         );
-    setDataElement(DataElements.LIST_ID,listIndex);
+    setDataElement(DataElement.LIST_ID,listIndex);
   }
 
 

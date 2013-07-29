@@ -24,8 +24,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.cowboycoders.ant.ChannelId;
 import org.cowboycoders.ant.defines.AntMesg;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.utils.ByteUtils;
 
 /**
@@ -41,10 +42,10 @@ public class LegacyMessage extends Message
   private static final byte DATA_OFFSET = 5;
   private static final byte EXTENDED_OFFSET = 1;
   private static final byte PAYLOAD_LENGTH = 13;
-  private static final DataElements [] extendedElements = {
-    DataElements.DEVICE_NUMBER,
-    DataElements.DEVICE_TYPE, 
-    DataElements.TRANSMISSION_TYPE
+  private static final DataElement [] extendedElements = {
+    DataElement.DEVICE_NUMBER,
+    DataElement.DEVICE_TYPE, 
+    DataElement.TRANSMISSION_TYPE
     };
   
   /*
@@ -73,7 +74,7 @@ public class LegacyMessage extends Message
     // don't have to worry about if elements are
     // there or not as this is only called by constructor
     // and reset
-    for(DataElements element : extendedElements) {
+    for(DataElement element : extendedElements) {
       payload = getPayload();
       for (int i =0 ; i < element.getLength() ; i++) {
         payload.add(Byte.valueOf((byte)0));
@@ -204,14 +205,14 @@ public class LegacyMessage extends Message
   
 
   @Override
-  public Integer getExtendedData(DataElements element) {
+  public Integer getExtendedData(DataElement element) {
     Integer rtn = null;
     ArrayList<Byte> payload = getPayload();
     //DataElements [] extendedElements = {DataElements.DEVICE_NUMBER,
         //DataElements.DEVICE_TYPE, DataElements.TRANSMISSION_TYPE};
     
     int index = EXTENDED_OFFSET;
-    for (DataElements e : extendedElements) {
+    for (DataElement e : extendedElements) {
       if (e == element) {
         rtn = ByteUtils.lsbMerge(payload.subList(index, index += e.getLength()));
         break;
@@ -227,7 +228,7 @@ public class LegacyMessage extends Message
    * @param element to check
    * @return the maximum permitted value
    */
-  private int calculateMaxValue(DataElements element) {
+  private int calculateMaxValue(DataElement element) {
     return (int) Math.pow(2 , (element.getLength() * 8)) - 1 ;
   }
   
@@ -237,7 +238,7 @@ public class LegacyMessage extends Message
    * @param value the value to be checked
    * @throws ValidationException if value is not within sensible limits
    */
-  private void validateExtendedData(DataElements element, Integer value) throws ValidationException {
+  private void validateExtendedData(DataElement element, Integer value) throws ValidationException {
     int maxValue = calculateMaxValue(element);
     if (value > maxValue || value < 0 ) {
       throw new ValidationException("Invalid " + element + ": Must be between 0 and " + maxValue);
@@ -250,7 +251,7 @@ public class LegacyMessage extends Message
    * @param bytesToInsert a {@code List} of Bytes to insert
    * @return true on success, else false
    */
-  private boolean insertExtendedBytes(DataElements element, List<Byte> bytesToInsert) {
+  private boolean insertExtendedBytes(DataElement element, List<Byte> bytesToInsert) {
     assert bytesToInsert.size() == element.getLength() : 
       "Number of bytes to insert doesn't match expected element length";
     
@@ -258,7 +259,7 @@ public class LegacyMessage extends Message
     ArrayList<Byte> payload = getPayload();
     
     int index = EXTENDED_OFFSET;
-    for (DataElements e : extendedElements) {
+    for (DataElement e : extendedElements) {
       if (e == element) {
         for (byte b : bytesToInsert) {
           payload.set(index, b);
@@ -281,7 +282,7 @@ public class LegacyMessage extends Message
    * @param value the value that is being inserted
    * @throws ValidationException if requested value is out of expected range
    */
-  private void setDataElement(DataElements element, int value) throws ValidationException {
+  private void setDataElement(DataElement element, int value) throws ValidationException {
     
     if (!Arrays.asList(extendedElements).contains(element)) {
       throw new FatalMessageException("Arg, element, not in expected list");
@@ -304,7 +305,7 @@ public class LegacyMessage extends Message
    */
   @Override
   public void setDeviceNumber(int deviceId) throws  ValidationException {
-    DataElements element = DataElements.DEVICE_NUMBER;
+    DataElement element = DataElement.DEVICE_NUMBER;
     setDataElement(element,deviceId);
   }
   
@@ -313,7 +314,7 @@ public class LegacyMessage extends Message
    */
   @Override
   public void setDeviceType(int deviceType) throws  ValidationException {
-    DataElements element = DataElements.DEVICE_TYPE;
+    DataElement element = DataElement.DEVICE_TYPE;
     setDataElement(element,deviceType);
   }
   
@@ -322,7 +323,7 @@ public class LegacyMessage extends Message
    */
   @Override
   public void setTransmissionType(int transmissionType) throws  ValidationException {
-    DataElements element = DataElements.TRANSMISSION_TYPE;
+    DataElement element = DataElement.TRANSMISSION_TYPE;
     setDataElement(element,transmissionType);
   }
   
@@ -331,7 +332,7 @@ public class LegacyMessage extends Message
    */
   @Override
   public Integer getDeviceNumber() {
-    return getExtendedData(DataElements.DEVICE_NUMBER);
+    return getExtendedData(DataElement.DEVICE_NUMBER);
   }
   
   /* (non-Javadoc)
@@ -339,7 +340,7 @@ public class LegacyMessage extends Message
    */
   @Override
   public Byte getDeviceType() {
-    return getExtendedData(DataElements.DEVICE_TYPE).byteValue();
+    return getExtendedData(DataElement.DEVICE_TYPE).byteValue();
   }
   
   /* (non-Javadoc)
@@ -347,7 +348,7 @@ public class LegacyMessage extends Message
    */
   @Override
   public Byte getTransmissionType() {
-    return getExtendedData(DataElements.TRANSMISSION_TYPE).byteValue();
+    return getExtendedData(DataElement.TRANSMISSION_TYPE).byteValue();
   }
 
 
@@ -359,6 +360,25 @@ public class LegacyMessage extends Message
     super.reset();
     addExtendedElementsToPayload();
   }
+
+
+@Override
+public void setChannelId(ChannelId id) {
+	setDeviceNumber(id.getDeviceNumber());
+	setDeviceType(id.getDeviceType());
+	setTransmissionType(id.getTransmissonType());
+}
+
+
+@Override
+public ChannelId getChannelId() {
+  	ChannelId id = ChannelId.Builder.newInstance()
+      		.setDeviceNumber(getDeviceNumber())
+      		.setDeviceType(getDeviceType())
+      		.setTransmissonType(getTransmissionType())
+      		.build();
+  	return id;
+}
   
   
   
