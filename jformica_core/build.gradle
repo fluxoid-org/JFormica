@@ -9,6 +9,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: '**/*.jar')
     testCompile "junit:junit:4.8.2"
     testCompile 'org.mockito:mockito-all:1.9.5'
+    testCompile 'net.vidageek:mirror:1.6.1'
 }
 
 task copyJarToAndroid(type: Copy, dependsOn: 'deleteAndroidJar') {
