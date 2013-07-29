@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -21,7 +21,7 @@
  */
 package org.cowboycoders.ant.messages.config;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.FatalMessageException;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageExceptionFactory;
@@ -42,10 +42,10 @@ public class TxPowerMessage extends StandardMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.FILLER_BYTE,
-    DataElements.TX_POWER,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.FILLER_BYTE,
+    DataElement.TX_POWER,
   };
   
   /**
@@ -71,7 +71,7 @@ public class TxPowerMessage extends StandardMessage {
     ValidationUtils.maxMinValidator(0, MAX_TX_POWER, power, 
         MessageExceptionFactory.createMaxMinExceptionProducable("Transmit power")
         );
-    setDataElement(DataElements.TX_POWER,power);
+    setDataElement(DataElement.TX_POWER,power);
     
   }
 

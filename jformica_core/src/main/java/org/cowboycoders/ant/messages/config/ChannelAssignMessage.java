@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -25,7 +25,7 @@ import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.ChannelType;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 
 /**
  * Channel assignment message
@@ -57,10 +57,10 @@ public class ChannelAssignMessage extends ChannelMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.CHANNEL_TYPE,
-    DataElements.NETWORK_NUMBER,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.CHANNEL_TYPE,
+    DataElement.NETWORK_NUMBER,
     //DataElements.EXTENDED_ASSIGNMENT,
   };
   
@@ -107,7 +107,7 @@ public class ChannelAssignMessage extends ChannelMessage {
   }
 
   public void setNetworkNumber(int network) {
-    setDataElement(DataElements.NETWORK_NUMBER,network);
+    setDataElement(DataElement.NETWORK_NUMBER,network);
   }
 
   private void setExtendedAssignment(Set<ExtendedAssignment> extended) {
@@ -115,17 +115,17 @@ public class ChannelAssignMessage extends ChannelMessage {
       return;
     }
     // this is optional so, we didn't add it on the constructor
-    addOptionalDataElement(DataElements.EXTENDED_ASSIGNMENT);
+    addOptionalDataElement(DataElement.EXTENDED_ASSIGNMENT);
     int code = 0;
     for (ExtendedAssignment ea : extended) {
       code  |= ea.code;
     }
-    setDataElement(DataElements.EXTENDED_ASSIGNMENT, code);
+    setDataElement(DataElement.EXTENDED_ASSIGNMENT, code);
     
   }
 
   private void setChannelType(ChannelType type) {
-    setDataElement(DataElements.CHANNEL_TYPE,type.getChannelTypeCode());
+    setDataElement(DataElement.CHANNEL_TYPE,type.getChannelTypeCode());
   }
   
 

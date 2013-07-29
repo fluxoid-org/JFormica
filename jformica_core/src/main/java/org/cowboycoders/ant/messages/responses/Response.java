@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -24,33 +24,33 @@ package org.cowboycoders.ant.messages.responses;
 import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 
 /**
- * Sent in response to channel event 
+ * Dual purpose class that encompasses events and responses
  * @author will
  *
  */
-public class ChannelResponse extends ChannelMessage{
+public class Response extends ChannelMessage {
   
   /**
    * The additional elements we are adding to channel message
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.MESSAGE_ID,
-    DataElements.RESPONSE_CODE,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.MESSAGE_ID,
+    DataElement.RESPONSE_CODE,
   };
   
   /**
    * Populated with {@code decode()} 
    * @param channelNo channel event occured on
    */
-  public ChannelResponse(Integer channelNo) {
+  public Response(Integer channelNo) {
     super(MessageId.RESPONSE_EVENT, channelNo,additionalElements);
   }
 
-  public ChannelResponse() {
+  public Response() {
     this(0);
   }
 
@@ -71,11 +71,11 @@ public class ChannelResponse extends ChannelMessage{
    *         message sent.
    */
   public MessageId getMessageId() {
-    return MessageId.lookUp(getDataElement(DataElements.MESSAGE_ID).byteValue());
+    return MessageId.lookUp(getDataElement(DataElement.MESSAGE_ID).byteValue());
   }
   
   public ResponseCode getResponseCode() {
-    return ResponseCode.lookUp(getDataElement(DataElements.RESPONSE_CODE).byteValue());
+    return ResponseCode.lookUp(getDataElement(DataElement.RESPONSE_CODE).byteValue());
   }
   
   

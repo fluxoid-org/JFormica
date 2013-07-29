@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -16,24 +16,38 @@
  *     You should have received a copy of the GNU General Public License
  *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.cowboycoders.ant.messages.commands;
+package org.cowboycoders.ant.messages.responses.exceptions;
 
-import org.cowboycoders.ant.messages.ChannelMessage;
-import org.cowboycoders.ant.messages.MessageId;
+import org.cowboycoders.ant.AntError;
 
 /**
- * Opens channel in continuous scanning mode
+ * Thrown when ant chip receives a message which has "invalid parameters"
  * @author will
  *
  */
-public class ChannelOpenRxScanMode extends ChannelMessage {
-  
-  
-  /**
-   * Should set up channel 0 as slave before sending this
-   */
-  public ChannelOpenRxScanMode() {
-    super(MessageId.OPEN_RX_SCAN, 0);
-  }
+public class InvalidMessageException extends AntError {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -767937266435117460L;
+
+	public InvalidMessageException() {
+		super();
+	}
+
+	public InvalidMessageException(String detailMessage, Throwable throwable) {
+		super(detailMessage, throwable);
+	}
+
+	public InvalidMessageException(String detailMessage) {
+		super(detailMessage);
+	}
+
+	public InvalidMessageException(Throwable throwable) {
+		super(throwable);
+	}
+	
+	
 
 }

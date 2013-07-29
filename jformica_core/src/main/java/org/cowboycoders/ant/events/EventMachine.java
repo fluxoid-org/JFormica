@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -18,11 +18,6 @@
  */
 package org.cowboycoders.ant.events;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Condition;
@@ -31,15 +26,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import java.util.logging.Logger;
 
-import org.cowboycoders.ant.BufferedNodeComponent;
 import org.cowboycoders.ant.interfaces.AntChipInterface;
 import org.cowboycoders.ant.messages.AntMessageFactory;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
-import org.cowboycoders.ant.messages.responses.ChannelResponse;
-import org.cowboycoders.ant.utils.FixedSizeFifo;
-import org.cowboycoders.ant.utils.FixedSizeQueue;
 
 
 

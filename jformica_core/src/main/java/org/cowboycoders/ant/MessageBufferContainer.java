@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -23,11 +23,11 @@ import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.utils.Containable;
 import org.cowboycoders.ant.utils.FixedSizeLifo;
 
-public class ContainedMessageBuffer<T extends Containable<? extends StandardMessage>> extends FixedSizeLifo<T> {
+public class MessageBufferContainer<T extends Containable<? extends StandardMessage>> extends FixedSizeLifo<T> {
 
   private MessageCondition condition;
 
-  public ContainedMessageBuffer(int maxSize, MessageCondition condition) {
+  public MessageBufferContainer(int maxSize, MessageCondition condition) {
     super(maxSize);
     this.condition = condition;
   }

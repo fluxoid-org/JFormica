@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -18,7 +18,7 @@
  */
 package org.cowboycoders.ant.messages.responses;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.StandardMessage;
@@ -33,14 +33,14 @@ public class VersionResponse extends StandardMessage{
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements;
+  private static DataElement [] additionalElements;
   
   private static final byte VERSION_STRING_LENGTH = 11;
   
   static {
-    additionalElements = new DataElements[VERSION_STRING_LENGTH];
+    additionalElements = new DataElement[VERSION_STRING_LENGTH];
     for (int i = 0 ; i< additionalElements.length; i++) {
-      additionalElements[i] = DataElements.VERSION_STRING_BYTE;
+      additionalElements[i] = DataElement.VERSION_STRING_BYTE;
     }
     
   }
@@ -60,7 +60,7 @@ public class VersionResponse extends StandardMessage{
   public String getVersionString() {
     char [] string = new char[VERSION_STRING_LENGTH];
     for (int i = 0 ; i< VERSION_STRING_LENGTH; i++) {
-      string[i] = (char)getDataElement(DataElements.VERSION_STRING_BYTE,i).intValue();
+      string[i] = (char)getDataElement(DataElement.VERSION_STRING_BYTE,i).intValue();
     }
     return new String(string);
   }

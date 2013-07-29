@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -18,13 +18,13 @@
  */
 package org.cowboycoders.ant.messages.config;
 
+import org.cowboycoders.ant.ChannelId;
 import org.cowboycoders.ant.messages.ChannelIdCompanion;
 import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.FatalMessageException;
-import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 
 /**
  * ChannelId message
@@ -40,9 +40,9 @@ public class ChannelIdMessage extends ChannelMessage {
 	/**
 	 * The additional elements we are adding to channelmessage
 	 */
-	private static DataElements[] additionalElements = new DataElements[] {
-			DataElements.DEVICE_NUMBER, DataElements.DEVICE_TYPE,
-			DataElements.TRANSMISSION_TYPE, };
+	private static DataElement[] additionalElements = new DataElement[] {
+			DataElement.DEVICE_NUMBER, DataElement.DEVICE_TYPE,
+			DataElement.TRANSMISSION_TYPE, };
 
 	/**
 	 * ChannelIdMessage with all bells and whistles
@@ -128,6 +128,15 @@ public class ChannelIdMessage extends ChannelMessage {
 
 	public int getDeviceType() {
 		return companion.getDeviceType();
+	}
+	
+	public ChannelId getChannelId() {
+		return ChannelId.Builder.newInstance()
+				.setDeviceNumber(getDeviceNumber())
+				.setDeviceType(getDeviceType())
+				.setTransmissonType(getTransmissionType())
+				.setPairingFlag(isPairingFlagSet())
+				.build();
 	}
 
 }

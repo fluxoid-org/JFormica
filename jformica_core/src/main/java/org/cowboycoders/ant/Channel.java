@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -42,17 +42,29 @@ import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.commands.ChannelCloseMessage;
 import org.cowboycoders.ant.messages.commands.ChannelOpenMessage;
+import org.cowboycoders.ant.messages.commands.ChannelOpenRxScanModeMessage;
+import org.cowboycoders.ant.messages.commands.ChannelRequestMessage;
+import org.cowboycoders.ant.messages.commands.ChannelRequestMessage.Request;
+import org.cowboycoders.ant.messages.config.AddChannelIdMessage;
 import org.cowboycoders.ant.messages.config.ChannelAssignMessage;
 import org.cowboycoders.ant.messages.config.ChannelFrequencyMessage;
 import org.cowboycoders.ant.messages.config.ChannelIdMessage;
+import org.cowboycoders.ant.messages.config.ChannelLowPrioritySearchTimeoutMessage;
 import org.cowboycoders.ant.messages.config.ChannelPeriodMessage;
+import org.cowboycoders.ant.messages.config.ChannelSearchPriorityMessage;
 import org.cowboycoders.ant.messages.config.ChannelSearchTimeoutMessage;
+import org.cowboycoders.ant.messages.config.ChannelTxPowerMessage;
 import org.cowboycoders.ant.messages.config.ChannelUnassignMessage;
+import org.cowboycoders.ant.messages.config.FrequencyAgilityMessage;
+import org.cowboycoders.ant.messages.config.ProximitySearchMessage;
 import org.cowboycoders.ant.messages.config.ChannelAssignMessage.ExtendedAssignment;
+import org.cowboycoders.ant.messages.config.ConfigListIdMessage;
 import org.cowboycoders.ant.messages.data.BurstDataMessage;
 import org.cowboycoders.ant.messages.data.BurstData;
 import org.cowboycoders.ant.messages.nonstandard.CombinedBurst;
-import org.cowboycoders.ant.messages.responses.ChannelResponse;
+import org.cowboycoders.ant.messages.responses.Response;
+import org.cowboycoders.ant.messages.responses.ChannelStatusResponse;
+import org.cowboycoders.ant.messages.responses.ChannelStatusResponse.State;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
 import org.cowboycoders.ant.utils.BurstMessageSequenceGenerator;
 import org.cowboycoders.ant.utils.ByteUtils;
@@ -63,7 +75,7 @@ public class Channel {
 
 	public final static Logger LOGGER = Logger.getLogger(EventMachine.class
 			.getName());
-	
+
 	private static final int RAW_CHANNEL_PERIOD_DEFAULT = 8192;
 
 	private static final double CHANNEL_PERIOD_SCALE_FACTOR = 32768.0;
@@ -75,8 +87,9 @@ public class Channel {
 			.pow(10, 9);
 
 	private static final long BURST_TIMEOUT_NANOS_DEFAULT = rawChannelPeriodToDefaultTimeout(RAW_CHANNEL_PERIOD_DEFAULT);
-	
-	private static long  rawChannelPeriodToDefaultTimeout (final int rawChannelPeriod) {
+
+	private static long rawChannelPeriodToDefaultTimeout(
+			final int rawChannelPeriod) {
 		return (long) (BURST_TIMEOUT_SCALE_FACTOR
 				* (rawChannelPeriod / CHANNEL_PERIOD_SCALE_FACTOR) * CONVERSION_FACTOR_SECONDS_TO_NANOSECONDS);
 	}
@@ -89,7 +102,7 @@ public class Channel {
 	public Node getParent() {
 		return parent;
 	}
-	
+
 	private Long lastBurstTimeStamp;
 
 	private long burstTimeout = BURST_TIMEOUT_NANOS_DEFAULT;
@@ -100,7 +113,7 @@ public class Channel {
 
 	private String name = UUID.randomUUID().toString();
 
-	private boolean isFree = true;
+	private boolean free = true;
 
 	/**
 	 * The channel messaging period in seconds * 32768. Maximum messaging period
@@ -149,15 +162,79 @@ public class Channel {
 	 * @return the isFree
 	 */
 	public synchronized boolean isFree() {
-		return isFree;
+		return free;
 	}
 
 	/**
 	 * @param isFree
 	 *            the isFree to set
 	 */
-	protected synchronized void setFree(boolean isFree) {
-		this.isFree = isFree;
+	protected synchronized void setFree(boolean free) {
+		LOGGER.entering(Channel.class.getSimpleName(), "setFree");
+		
+		// Make sure channel is in reusable state
+		if (free) {
+			cleanUp();
+		}
+		
+		// clean up complete, set free		
+		this.free = free;
+		LOGGER.exiting(Channel.class.getSimpleName(), "setFree");
+	}
+	
+	/**
+	 * Performs clean up operations so that the channel is ready to use again.
+	 */
+	private void cleanUp() {
+		
+		// assume assigned, so we don't leave in assigned state
+		State state = ChannelStatusResponse.State.ASSIGNED;
+		try {
+			ChannelStatusResponse status = this.requestStatus();
+			state = status.getState();
+		} catch (ChannelError e){
+			// ignore (assume assigned)
+			LOGGER.warning("Error requesting channel status");
+		}
+		
+		LOGGER.finer("pre close: " + state);
+		
+		// if channel is open (try and close)
+		if (state.equals(State.TRACKING) || state.equals(State.SEARCHING)) {
+			try {
+				this.close();
+				
+			} catch (ChannelError e){
+				LOGGER.warning("Error closing channel in state: " + state);
+			}
+		}
+		
+		// clear the black list
+		this.blacklist(null);
+		
+		// update status
+		try {
+			ChannelStatusResponse status = this.requestStatus();
+			state = status.getState();
+		} catch (ChannelError e){
+			// ignore (assume assigned)
+			LOGGER.warning("Error requesting channel status");
+		}
+		
+		LOGGER.finer("pre unassign: " + state);
+		
+		// channel is assigned, but not open
+		if (state.equals(State.ASSIGNED)) {
+			try {
+				this.unassign();
+				
+			} catch (ChannelError e){
+				LOGGER.warning("Error unassigning channel in state: " + state);
+			}
+		}
+		
+		// remove all channelListeners
+		removeAllRxListeners();
 	}
 
 	/**
@@ -258,7 +335,7 @@ public class Channel {
 
 		@Override
 		public boolean test(StandardMessage msg) {
-			if (!(msg instanceof ChannelResponse))
+			if (!(msg instanceof Response))
 				return false;
 			if (!(msg instanceof ChannelMessage))
 				return false;
@@ -270,7 +347,7 @@ public class Channel {
 		}
 
 	}
-	
+
 	/**
 	 * Filters burst messages if listeners exist for {@link CombinedBurst}s
 	 * 
@@ -283,12 +360,14 @@ public class Channel {
 
 		@Override
 		public boolean test(StandardMessage msg) {
-			if (burstMessenger.getListenerCount() > 0 && (msg instanceof BurstData)) return false;
+			if (burstMessenger.getListenerCount() > 0
+					&& (msg instanceof BurstData))
+				return false;
 			return true;
 		}
 
 	}
-	
+
 	private final BurstFilterCondition burstFilterCondition = new BurstFilterCondition();
 
 	/**
@@ -305,8 +384,10 @@ public class Channel {
 			@Override
 			public void receiveMessage(ChannelMessage message) {
 				// filter burst messages if we are listening for combined
-				if (!burstFilterCondition.test(message) && listener != burstListener) return;
-				
+				if (!burstFilterCondition.test(message)
+						&& listener != burstListener)
+					return;
+
 				if (clazz.isInstance(message)
 						&& message.getChannelNumber() == number) {
 					listener.receiveMessage(clazz.cast(message));
@@ -334,6 +415,18 @@ public class Channel {
 
 	}
 	
+	public synchronized void removeAllRxListeners() {
+		for (Object key: mAdapterListenerMap.keySet()) {
+			@SuppressWarnings("unchecked")
+			BroadcastListener<ChannelMessage> listener = (BroadcastListener<ChannelMessage>) key;
+			
+			// don't remove internal listeners !
+			if (listener.equals(burstListener)) {
+				continue;
+			}
+			removeRxListener(listener);
+		}
+	}
 
 	/**
 	 * With internal locking
@@ -419,6 +512,18 @@ public class Channel {
 		} catch (TimeoutException e) {
 			handleTimeOutException(e);
 		}
+	}
+	
+	/**
+	 * Sets the channelId
+	 * See also {@link Channel#setId(int, int, int, boolean)}
+	 * @param channelId
+	 */
+	public void setId(ChannelId channelId) {
+		this.setId(channelId.getDeviceNumber(),
+				channelId.getDeviceType(),
+				channelId.getTransmissonType(),
+				channelId.isPairingFlagSet());
 	}
 
 	/**
@@ -635,19 +740,25 @@ public class Channel {
 			handleTimeOutException(e);
 		}
 	}
-	
+
 	/**
-	 * Sends a byte array as a burst message. Will split into 
-	 * {@link AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE} long chunks,
-	 * so if you want complete control, make sure the total length is
-	 * a multiple of this number. 
+	 * Sends a byte array as a burst message. Will split into
+	 * {@link AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE} long chunks, so if you
+	 * want complete control, make sure the total length is a multiple of this
+	 * number.
 	 * 
-	 * @param data array to send a burst
-	 * @param timeout timeout for complete burst
-	 * @param timeoutUnit unit for timeout
-	 * @throws InterruptedException if thread interrupted whilst waiting for completion
-	 * @throws TimeoutException if timeout expires
-	 * @throws TransferException on transfer error
+	 * @param data
+	 *            array to send a burst
+	 * @param timeout
+	 *            timeout for complete burst
+	 * @param timeoutUnit
+	 *            unit for timeout
+	 * @throws InterruptedException
+	 *             if thread interrupted whilst waiting for completion
+	 * @throws TimeoutException
+	 *             if timeout expires
+	 * @throws TransferException
+	 *             on transfer error
 	 */
 	public void sendBurst(byte[] data, Long timeout, TimeUnit timeoutUnit)
 			throws InterruptedException, TimeoutException, TransferException {
@@ -678,9 +789,9 @@ public class Channel {
 				public boolean test(StandardMessage msg) {
 					if (completed.test(msg))
 						return true;
-					ChannelResponse r = null;
-					if (msg instanceof ChannelResponse) {
-						r = (ChannelResponse) msg;
+					Response r = null;
+					if (msg instanceof Response) {
+						r = (Response) msg;
 					}
 					if (failed.test(msg)) {
 						throw new TransferException(r.getMessageId(),
@@ -788,21 +899,25 @@ public class Channel {
 		}
 
 	};
-	
+
 	/**
-	 * Listen for combined burst messages. Adding a burst listener will
-	 * prevent any burst messages being sent to this channels
-	 * RxListeners. See : {@link Channel#registerRxListener(BroadcastListener, Class)}
-	 * @param listener new listener
+	 * Listen for combined burst messages. Adding a burst listener will prevent
+	 * any burst messages being sent to this channels RxListeners. See :
+	 * {@link Channel#registerRxListener(BroadcastListener, Class)}
+	 * 
+	 * @param listener
+	 *            new listener
 	 */
 	public synchronized void registerBurstListener(
 			BroadcastListener<CombinedBurst> listener) {
 		burstMessenger.addBroadcastListener(listener);
 	}
-	
+
 	/**
 	 * Stop listening for combined burst messages
-	 * @param listener new listener
+	 * 
+	 * @param listener
+	 *            new listener
 	 */
 	public synchronized void removeBurstListener(
 			BroadcastListener<CombinedBurst> listener) {
@@ -818,27 +933,253 @@ public class Channel {
 		return rawChannelPeriod / CHANNEL_PERIOD_SCALE_FACTOR;
 
 	}
-	
+
 	/**
 	 * Gets burst timeout
+	 * 
 	 * @return timeout in a nanoseconds
 	 */
 	public long getBurstTimeout() {
 		return burstTimeout;
 	}
-	
+
 	/**
-	 * Sets burst timeout manually. Must be called after setting new period, as this
-	 * resets to the default value;
+	 * Sets burst timeout manually. Must be called after setting new period, as
+	 * this resets to the default value;
 	 * 
-	 * @param burstTimeout new timeout in nanoseconds
-	 * @throws IllegalArgumentException if timeout below zero
+	 * @param burstTimeout
+	 *            new timeout in nanoseconds
+	 * @throws IllegalArgumentException
+	 *             if timeout below zero
 	 */
 	public void setBurstTimeout(long burstTimeout) {
 		if (burstTimeout < 0) {
-			throw new IllegalArgumentException("timeout must be grater than zero");
+			throw new IllegalArgumentException(
+					"timeout must be grater than zero");
 		}
 		this.burstTimeout = burstTimeout;
 	}
+	
+	
+	/**
+	 * Utility method to request channel status. Default timeout of 1 second.
+	 * @return {@link ChannelStatusResponse) encompassing response
+	 * @throws ChannelError on timeout, if interrupted whilst waiting or status not received;
+	 */
+	public ChannelStatusResponse requestStatus() throws ChannelError {
+		
+		ChannelRequestMessage msg = new  ChannelRequestMessage(Request.CHANNEL_STATUS);
+		
+		MessageCondition condition = MessageConditionFactory.newInstanceOfCondition(ChannelStatusResponse.class);
+		
+			ChannelStatusResponse response = null;
+			
+			try {
+				response = (ChannelStatusResponse) sendAndWaitForMessage(
+						msg, condition, 1L, TimeUnit.SECONDS, null);
+			} catch (InterruptedException e) {
+				throw new ChannelError(e);
+			} catch (TimeoutException e) {
+				throw new ChannelError(e);
+			}
+			
+			return response;
+			
 
+	}
+	
+	  /**
+	   * Registers an event listener. To remove user {@link Channel#removeRxListener(BroadcastListener));
+	   * @param handler event handler
+	   */
+	  public void registerEventHandler(ChannelEventHandler handler) {
+		  this.registerRxListener(handler, Response.class);
+	  }
+	  
+	  /**
+	   * Adds an item to the exclusion/inclusion list. This is a per channel list with a maximum
+	   * of four entries (0 ... 3). Must call {@link Channel#configureExclusionInclusionList(int, boolean)
+	   * to activate.
+	   * @param index the index to change
+	   * @param id {@link ChannelId} to filter
+	   */
+	  public void updateExclusionInclusionList(int index, ChannelId id) {
+		  	ChannelMessage msg = new AddChannelIdMessage(id.getDeviceNumber(),
+		  			id.getDeviceType(),
+		  			id.getTransmissonType(), 
+		  			index);
+			MessageCondition condition = MessageConditionFactory
+					.newResponseCondition(msg.getId(),
+							ResponseCode.RESPONSE_NO_ERROR);
+			try {
+				sendAndWaitForMessage(msg, condition, 1L,
+						TimeUnit.SECONDS, null);
+			} catch (InterruptedException e) {
+				handleTimeOutException(e);
+			} catch (TimeoutException e) {
+				handleTimeOutException(e);
+			}
+	  }
+	  
+	  /**
+	   * Determines how many ids in the exclusion/inclusion list
+	   * and whether it is a black or white list.
+	   * 
+	   * Must be called before {@link Channel#open()} and only works on slaves. The
+	   * behaviour is undefined if used on a master.
+	   * @param listSize the number of ids you want to exclude/ include
+	   * @param exclude true for blacklist, false fore white-list
+	   */
+	  public void configureExclusionInclusionList(int listSize, boolean exclude) {
+		  	ChannelMessage msg = new ConfigListIdMessage(listSize,exclude);
+			MessageCondition condition = MessageConditionFactory
+					.newResponseCondition(msg.getId(),
+							ResponseCode.RESPONSE_NO_ERROR);
+			try {
+				sendAndWaitForMessage(msg, condition, 1L,
+						TimeUnit.SECONDS, null);
+			} catch (InterruptedException e) {
+				handleTimeOutException(e);
+			} catch (TimeoutException e) {
+				handleTimeOutException(e);
+			}
+	  }
+	  
+	 /**
+	  * Convenience method to update and configure exclusion/inclusion list. Must be called
+	  * before {@link Channel#open}
+	  * @param ids to black/white list
+	  * @param exclude true for blacklist, false fore white
+	  */
+	 private void configureExclusionInclusionList(ChannelId [] ids, boolean exclude) throws IllegalArgumentException {
+		 if (ids.length > 4) {
+			 throw new IllegalArgumentException("a maximum of 4 channel ids is permitted");
+		 }
+		 for (int i = 0 ; i < ids.length ; i++) {
+			 updateExclusionInclusionList(i,ids[i]);
+		 }
+		 configureExclusionInclusionList(ids.length,exclude);
+	 }
+	 
+	 /**
+	  * Blacklists {@link ChannelId}s. 
+	  * 
+	  * You should check the ant chip has the capability to have exclusion/inclusion lists.
+	  * 
+	  * Must be called after assigning, but before opening channel. Can only be used on slave channels,
+	  * attempting to use on a master results in undefined behaviour.
+	  * 
+	  * @param ids array containing ids to blacklist (max length: 4) or a zero length array to disable.
+	  */
+	 public void blacklist(ChannelId [] ids) {
+		 if (ids == null) {
+			 configureExclusionInclusionList(0, true);
+			 return;
+		 }
+		 configureExclusionInclusionList(ids,true);
+	 }
+	 
+	 /**
+	  * Whitelist an array of ChannelIds. 
+	  * 
+	  * For more details see {@link Channel#blacklist(ChannelId[]))
+	  * 
+	  * @param ids array containing ids to blacklist (max length: 4) or a zero length array to disable.
+	  */
+	 public void whitelist(ChannelId [] ids) {
+		 if (ids == null) {
+			 configureExclusionInclusionList(0, false);
+			 return;
+		 }
+		 configureExclusionInclusionList(ids,true);
+	 }
+	 
+	 /**
+	  * Waits for response NO_ERROR for a maximum of 1 second
+	  * @param msg to send
+	  * @throws ChannelError can be caused by TimeoutException, InterruptedException or thrown outright
+	  * 		as a response to an error
+	  */
+	 public void sendAndWaitForResponseNoError(ChannelMessage msg) throws ChannelError {
+			MessageCondition condition = MessageConditionFactory
+					.newResponseCondition(msg.getId(),
+							ResponseCode.RESPONSE_NO_ERROR);
+			try {
+				sendAndWaitForMessage(msg, condition, 1L,
+						TimeUnit.SECONDS, null);
+			} catch (InterruptedException e) {
+				handleTimeOutException(e);
+			} catch (TimeoutException e) {
+				handleTimeOutException(e);
+			}
+	 }
+	 
+		/**
+		 * Sets channel transmit power
+		 * See table 9.4.3 in ANT protocol as this is chip dependent.
+		 * Maximum powerLevel 4, minimum 0. Some chips only support up to level 3.
+		 * @param powerLevel newPowerLevel 
+		 */
+		public void setTransmitPower(int powerLevel) {
+			ChannelMessage msg = new ChannelTxPowerMessage(powerLevel);
+			sendAndWaitForResponseNoError(msg);
+		}
+		
+		/**
+		 * Sets the proximity search threshold for this channel. 
+		 * 
+		 * @param threshold new threshold, must be between 0 and 10. A zero value will disable, whilst
+		 * 		  larger values will find devices further away
+		 */
+		public void setProximitySearchThreshold(int threshold) {
+			ChannelMessage msg = new ProximitySearchMessage(threshold);
+			sendAndWaitForResponseNoError(msg);
+		}
+		
+		/**
+		 * Configures frequency agility for this channel. Should be used in conjunction with {@link ExtendedAssignment}.FREQUENCY_AGILITY_ENABLE
+		 * at assign time. Do not use with one-way or shared channels. Support chip dependent
+		 * 
+		 * @param frequency1 The primary operating frequency offset in MHz from 2400MHz. Valid range: 0-124 Mhz
+		 * @param frequency2 The secondary operating frequency offset in MHz from 2400MHz. Valid range: 0-124 Mhz
+		 * @param frequency3 The tertiary operating frequency offset in MHz from 2400MHz. Valid range: 0-124 Mhz
+		 */
+		public void configureFrequencyAgility(int frequency1, int frequency2,  int frequency3) {
+			ChannelMessage msg = new FrequencyAgilityMessage(frequency1,frequency2,frequency3);
+			sendAndWaitForResponseNoError(msg);
+		}
+		
+		/**
+		 * Sets a Low priority search timeout
+		 * Low priority search does not interrupt other channels; Support chip dependent.
+		 * @param timeout timeout in seconds / 2.5. Maximum value: 255, 0 disables.
+		 */
+		public void setLowPrioirtySearchTimeout(int timeout) {
+			ChannelMessage msg = new ChannelLowPrioritySearchTimeoutMessage(timeout);
+			sendAndWaitForResponseNoError(msg);
+		}
+		
+		/**
+		 * Sets channel search priority. Higher priorities take precedence. This applies
+		 * any time a when several channels go to search. Support device specific.
+		 * 
+		 * @param priority new priority. Default value: 0 ; Range: 0-255 
+		 */
+		public void setSearchPriority(int priority) {
+			ChannelMessage msg = new ChannelSearchPriorityMessage(priority);
+			sendAndWaitForResponseNoError(msg);
+		}
+		
+		/**
+		 * Listens to all devices matching configured {@link ChannelId} regardless
+		 * of radio frequency and period. Two way communication can be achieved by
+		 * sending an ExtendedDataMessage with the channel id of the channel you wish to communicate with.
+		 * 
+		 * All other channels must be closed to use this method. The channel should
+		 * be assigned and configured as a slave. 
+		 */
+		public void openInRxScanMode() {
+			ChannelMessage msg = new ChannelOpenRxScanModeMessage();
+			sendAndWaitForResponseNoError(msg);
+		}
 }

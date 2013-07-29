@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -25,7 +25,7 @@ package org.cowboycoders.ant.messages;
  */
 public class Constants {
   
-  public enum DataElements {
+  public enum DataElement {
   
   CHANNEL_ID (1),
   
@@ -105,16 +105,16 @@ public class Constants {
    * DataElement with length
    * @param length of data element
    */
-  DataElements(int length) {
+  DataElement(int length) {
     this(length,null,null);
   }
   
-  DataElements(int length, Integer maxValue) {
+  DataElement(int length, Integer maxValue) {
     this(length,maxValue,null);
     
   }
   
-  DataElements(int length, Integer maxValue, Integer minValue) {
+  DataElement(int length, Integer maxValue, Integer minValue) {
     setLength((byte) length);
     setMaxValue(maxValue);
     setMinValue(minValue);

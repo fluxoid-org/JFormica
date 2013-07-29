@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -48,6 +48,7 @@ public enum ResponseCode {
    EVENT_CHANNEL_ACTIVE                       (0x0F),
   
   /** only enabled in FIT1 */
+   EVENT_TRANSFER_NEXT_DATA_BLOCK			  (0x11),
    EVENT_TRANSFER_TX_NEXT_MESSAGE             (0x11),
 
   /** returned on attempt to perform an action from the wrong channel state */
@@ -122,7 +123,7 @@ public enum ResponseCode {
    EVENT_PASS_THRU                            (0x82),
 
   /** INTERNAL: Event to replace any event we do not wish to go out, will also zero the size of the Tx message */
-   EVENT_BLOCKED                              (0xFF),
+   EVENT_BLOCKED                              (0xFF), 
    
    ;
    

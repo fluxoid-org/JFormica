@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -21,7 +21,7 @@ package org.cowboycoders.ant.messages;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.utils.ListUtils;
 
 public abstract class ChannelMessage extends StandardMessage {
@@ -36,20 +36,20 @@ public abstract class ChannelMessage extends StandardMessage {
    * @throws ValidationException 
    */
   public ChannelMessage(MessageId id, Integer channelNo,
-      ArrayList<DataElements> messageElements) {
+      ArrayList<DataElement> messageElements) {
     this(null,id, channelNo,messageElements);
   }
   
   public ChannelMessage(MessageId id, Integer channelNo,
-      DataElements [] messageElements) {
+      DataElement [] messageElements) {
     this(null,id, channelNo,
         messageElements);
   }
   
   public ChannelMessage(Message backend,MessageId id, Integer channelNo,
-      DataElements [] messageElements) {
+      DataElement [] messageElements) {
     this(backend,id, channelNo,
-        new ArrayList<DataElements>(Arrays.asList(messageElements)));
+        new ArrayList<DataElement>(Arrays.asList(messageElements)));
   }
   
   /**
@@ -60,7 +60,7 @@ public abstract class ChannelMessage extends StandardMessage {
    * @throws ValidationException 
    */
   public ChannelMessage(MessageId id, Integer channelNo) {
-    this(null,id, channelNo,new DataElements[0]);
+    this(null,id, channelNo,new DataElement[0]);
   }
   
   /**
@@ -73,10 +73,10 @@ public abstract class ChannelMessage extends StandardMessage {
    * @throws FatalMessageException on error creating the message
    */
   public ChannelMessage(Message message, MessageId id, Integer channelNo,
-      ArrayList<DataElements> messageElements) {
+      ArrayList<DataElement> messageElements) {
     super(message, id, ListUtils.prefixList(
         messageElements, 
-        new DataElements [] {DataElements.CHANNEL_ID})
+        new DataElement [] {DataElement.CHANNEL_ID})
         );
         try {
           setChannelNumber(channelNo.byteValue());
@@ -100,7 +100,7 @@ public abstract class ChannelMessage extends StandardMessage {
     //ArrayList<Byte >payload = getStandardPayload();
     //payload.set(CHANNEL_NO_OFFSET, channelNumber);
    //setStandardPayload(payload);
-    setDataElement(DataElements.CHANNEL_ID, channelNumber);
+    setDataElement(DataElement.CHANNEL_ID, channelNumber);
   }
   
   /**
@@ -110,7 +110,7 @@ public abstract class ChannelMessage extends StandardMessage {
   public int getChannelNumber(){
     //ArrayList<Byte >payload = getStandardPayload();
     //return payload.get(CHANNEL_NO_OFFSET);
-    return getDataElement(DataElements.CHANNEL_ID);
+    return getDataElement(DataElement.CHANNEL_ID);
   }
   
   // TODO: validate that message id is a suitable value

@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -26,7 +26,7 @@ import org.cowboycoders.ant.utils.SharedBuffer;
 public class SharedMetaBuffer<V extends Containable<? extends StandardMessage>> extends SharedBuffer<V> {
 
   public SharedMetaBuffer(int length, MessageCondition condition) {
-    super(new ContainedMessageBuffer<V>(length, condition));
+    super(new MessageBufferContainer<V>(length, condition));
   }
   
   

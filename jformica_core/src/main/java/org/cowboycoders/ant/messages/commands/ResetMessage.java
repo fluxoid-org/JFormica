@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -18,7 +18,7 @@
  */
 package org.cowboycoders.ant.messages.commands;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.StandardMessage;
@@ -33,9 +33,9 @@ public class ResetMessage extends StandardMessage {
   /**
    * The additional elements we are adding to channel message
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.FILLER_BYTE,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.FILLER_BYTE,
   };
   
   public ResetMessage() {

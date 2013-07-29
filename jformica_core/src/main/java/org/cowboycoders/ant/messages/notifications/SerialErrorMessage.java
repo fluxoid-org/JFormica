@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -23,7 +23,7 @@ import java.util.List;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.StandardMessage;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 
 /**
  * Sent if ant chip detects an error
@@ -35,9 +35,9 @@ public class SerialErrorMessage extends StandardMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.ERROR_CODE,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.ERROR_CODE,
     // additional elements contain original message
   };
   

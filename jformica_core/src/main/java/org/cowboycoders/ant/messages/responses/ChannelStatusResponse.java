@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.ChannelType;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.MasterChannelType;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
@@ -39,9 +39,9 @@ public class ChannelStatusResponse extends ChannelMessage {
   /**
    * The additional elements we are adding to channel message
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.CHANNEL_STATUS,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.CHANNEL_STATUS,
   };
   
   public enum State {
@@ -55,13 +55,13 @@ public class ChannelStatusResponse extends ChannelMessage {
     private static Map <Byte,State> ordinalMap =
         new HashMap<Byte,State>();
     
-    State() {
-      put();
-    }
     
-    private void put() {
-      ordinalMap.put((byte)this.ordinal(), this);
-    }
+    static {
+        for( State s : State.values() ) {
+        	ordinalMap.put((byte) s.ordinal(), s);
+        }
+      }
+    
     
     /**
      * 
@@ -74,10 +74,10 @@ public class ChannelStatusResponse extends ChannelMessage {
     
   }
   
-  private static final byte STATE_MASK = 1 << 0 + 1 << 1;
-  private static final byte NETWORK_NUMBER_MASK = 1 << 2 + 1 << 3;
-  private static final byte CHANNEL_TYPE_MASK = 
-      (byte) (1 << 4 + 1 << 5 + 1 << 6 + 1 << 7);
+  private static final int STATE_MASK = (1 << 0) + (1 << 1);
+  private static final int NETWORK_NUMBER_MASK = (1 << 2) + (1 << 3);
+  private static final int CHANNEL_TYPE_MASK = 
+      ((1 << 4) + (1 << 5) + (1 << 6) + (1 << 7));
   
   public ChannelStatusResponse(Integer channelNo) {
     super(MessageId.CHANNEL_STATUS, channelNo,additionalElements);
@@ -102,7 +102,7 @@ public class ChannelStatusResponse extends ChannelMessage {
    * @return State of Channel
    */
   public State getState() {
-    int stateCode = getDataElement(DataElements.CHANNEL_STATUS) & STATE_MASK;
+    int stateCode = getDataElement(DataElement.CHANNEL_STATUS) & STATE_MASK;
     return State.lookUp(stateCode);
   }
   
@@ -110,14 +110,14 @@ public class ChannelStatusResponse extends ChannelMessage {
    * @return network number channel is set to
    */
   public int getNetworkNumber() {
-    return getDataElement(DataElements.CHANNEL_STATUS) & NETWORK_NUMBER_MASK;
+    return getDataElement(DataElement.CHANNEL_STATUS) & NETWORK_NUMBER_MASK;
   }
   
   /**
    * @return channel type of requested channel
    */
   public ChannelType getChannelType() {
-    int channelType = getDataElement(DataElements.CHANNEL_STATUS) & CHANNEL_TYPE_MASK;
+    int channelType = getDataElement(DataElement.CHANNEL_STATUS) & CHANNEL_TYPE_MASK;
     boolean shared = false;
     boolean oneway = false;
     if ( ( channelType & ChannelType.Types.ONEWAY_RECEIVE.code ) != 0 || 
@@ -133,6 +133,17 @@ public class ChannelStatusResponse extends ChannelMessage {
     }
     
     return new SlaveChannelType(shared,oneway);
+  }
+  
+  private void setStatusByte(int value) {
+	  setDataElement(DataElement.CHANNEL_STATUS,value);
+  }
+  
+  public static void main(String [] args) {
+	  ChannelStatusResponse res = new ChannelStatusResponse();
+	  res.setStatusByte(2);
+	  System.out.println(res.getState());
+	  System.out.println(State.lookUp(2));
   }
   
   

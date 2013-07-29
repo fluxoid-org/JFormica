@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -22,7 +22,7 @@
 package org.cowboycoders.ant.messages.config;
 
 import org.cowboycoders.ant.messages.ChannelMessage;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.FatalMessageException;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageExceptionFactory;
@@ -34,16 +34,16 @@ import org.cowboycoders.ant.utils.ValidationUtils;
  * @author will
  *
  */
-public class ChannelTXPowerMessage extends ChannelMessage {
+public class ChannelTxPowerMessage extends ChannelMessage {
   
   private static final int MAX_TX_POWER = 4;
   
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.CHANNEL_TX_POWER,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.CHANNEL_TX_POWER,
   };
   
   /**
@@ -51,13 +51,17 @@ public class ChannelTXPowerMessage extends ChannelMessage {
    * @param channelNo target channel number
    * @param power (max : 4)
    */
-  public ChannelTXPowerMessage(Integer channelNo, int txPower) {
+  public ChannelTxPowerMessage(Integer channelNo, int txPower) {
     super(MessageId.CHANNEL_RADIO_TX_POWER, channelNo,additionalElements);
     try {
       setTxPower(txPower);
     } catch (ValidationException e) {
       throw new FatalMessageException("Error setting values", e);
     }
+  }
+  
+  public ChannelTxPowerMessage(int txPower) {
+	  this(0,txPower);
   }
   
   /**
@@ -69,7 +73,7 @@ public class ChannelTXPowerMessage extends ChannelMessage {
     ValidationUtils.maxMinValidator(0, MAX_TX_POWER, power, 
         MessageExceptionFactory.createMaxMinExceptionProducable("Transmit power")
         );
-    setDataElement(DataElements.CHANNEL_TX_POWER,power);
+    setDataElement(DataElement.CHANNEL_TX_POWER,power);
     
   }
 

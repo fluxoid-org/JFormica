@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -19,7 +19,7 @@
 package org.cowboycoders.ant.messages.config;
 
 import org.cowboycoders.ant.messages.ChannelMessage;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.FatalMessageException;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageExceptionFactory;
@@ -38,10 +38,10 @@ public class ConfigListIdMessage extends ChannelMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.LIST_SIZE,
-    DataElements.INCLUDE_EXCLUDE_FLAG,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.LIST_SIZE,
+    DataElement.INCLUDE_EXCLUDE_FLAG,
   };
   
   /**
@@ -59,10 +59,19 @@ public class ConfigListIdMessage extends ChannelMessage {
       throw new FatalMessageException("Error setting values", e);
     }
   }
+  
+  /**
+   * Channel number set to zero.
+   * @param listSize
+   * @param exclude
+   */
+  public ConfigListIdMessage(int listSize, boolean exclude) {
+	  this(0,listSize,exclude);
+  }
 
   private void setExcludeInclude(boolean exclude) {
     int flag = exclude ? 1 : 0;
-    setDataElement(DataElements.INCLUDE_EXCLUDE_FLAG,flag);
+    setDataElement(DataElement.INCLUDE_EXCLUDE_FLAG,flag);
     
   }
   
@@ -74,7 +83,7 @@ public class ConfigListIdMessage extends ChannelMessage {
     ValidationUtils.maxMinValidator(0, MAX_LIST_SIZE, listSize, 
         MessageExceptionFactory.createMaxMinExceptionProducable("Transmit power")
         );
-    setDataElement(DataElements.LIST_SIZE,listSize);
+    setDataElement(DataElement.LIST_SIZE,listSize);
   }
 
 }

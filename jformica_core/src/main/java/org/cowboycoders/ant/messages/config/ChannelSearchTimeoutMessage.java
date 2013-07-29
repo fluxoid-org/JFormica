@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -22,7 +22,7 @@
 package org.cowboycoders.ant.messages.config;
 
 import org.cowboycoders.ant.messages.ChannelMessage;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.FatalMessageException;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageExceptionFactory;
@@ -41,9 +41,9 @@ public class ChannelSearchTimeoutMessage extends ChannelMessage {
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElements [] additionalElements = 
-      new DataElements [] {
-    DataElements.SEARCH_TIMEOUT,
+  private static DataElement [] additionalElements = 
+      new DataElement [] {
+    DataElement.SEARCH_TIMEOUT,
   };
   
   /**
@@ -70,7 +70,7 @@ public class ChannelSearchTimeoutMessage extends ChannelMessage {
     ValidationUtils.maxMinValidator(0, MAX_SEARCH_TIMEOUT, timeout, 
         MessageExceptionFactory.createMaxMinExceptionProducable("Search timeout")
         );
-    setDataElement(DataElements.SEARCH_TIMEOUT,timeout);
+    setDataElement(DataElement.SEARCH_TIMEOUT,timeout);
     
   }
 

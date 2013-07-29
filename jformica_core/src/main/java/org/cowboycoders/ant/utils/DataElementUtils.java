@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.cowboycoders.ant.messages.FatalMessageException;
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 
 /**
  * @author will
@@ -50,8 +50,8 @@ public class DataElementUtils {
    */
   public static boolean setDataElement(
       ArrayList<Byte> payload,
-      DataElements [] messageElements,      
-      DataElements element, 
+      DataElement [] messageElements,      
+      DataElement element, 
       Integer value,
       int offset,
       int skip
@@ -85,8 +85,8 @@ public class DataElementUtils {
    */
   private static boolean insertElementBytes(
       ArrayList<Byte> payload,
-      DataElements [] messageElements,
-      DataElements element,
+      DataElement [] messageElements,
+      DataElement element,
       List<Byte> bytesToInsert,
       int offset,
       int skip
@@ -97,7 +97,7 @@ public class DataElementUtils {
     boolean completed = false;
     int elementCount = 0;
     int index = offset;
-    for (DataElements e : messageElements) {
+    for (DataElement e : messageElements) {
       if (e == element) {
         if (elementCount == skip) {
           for (byte b : bytesToInsert) {
@@ -126,8 +126,8 @@ public class DataElementUtils {
    */
   public static Integer getDataElement(
       ArrayList<Byte> payload,
-      DataElements [] messageElements,
-      DataElements element, 
+      DataElement [] messageElements,
+      DataElement element, 
       int offset,
       int skip) {
     
@@ -138,7 +138,7 @@ public class DataElementUtils {
     Integer rtn = null;
     int elementCount = 0;
     int index = offset;
-    for (DataElements e : messageElements) {
+    for (DataElement e : messageElements) {
       if (e == element) {
         if (elementCount == skip) {
           rtn = ByteUtils.lsbMerge(payload.subList(index, index += e.getLength()));

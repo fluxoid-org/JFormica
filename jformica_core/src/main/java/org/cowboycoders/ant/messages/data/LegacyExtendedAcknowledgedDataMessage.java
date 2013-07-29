@@ -1,5 +1,5 @@
 /**
- *     Copyright (c) 2012, Will Szumski
+ *     Copyright (c) 2013, Will Szumski
  *
  *     This file is part of formicidae.
  *
@@ -18,6 +18,7 @@
  */
 package org.cowboycoders.ant.messages.data;
 
+import org.cowboycoders.ant.ChannelId;
 import org.cowboycoders.ant.messages.DeviceInfoQueryable;
 import org.cowboycoders.ant.messages.DeviceInfoSettable;
 import org.cowboycoders.ant.messages.LegacyMessage;
@@ -72,5 +73,23 @@ public class LegacyExtendedAcknowledgedDataMessage extends BroadcastDataMessage
         throws ValidationException {
       ((LegacyMessage)getBackendMessage()).setTransmissionType(transmissionType);
       
+    }
+
+    @Override
+    public void setChannelId(ChannelId id) {
+    	setDeviceNumber(id.getDeviceNumber());
+    	setDeviceType(id.getDeviceType());
+    	setTransmissionType(id.getTransmissonType());
+    }
+
+
+    @Override
+    public ChannelId getChannelId() {
+      	ChannelId id = ChannelId.Builder.newInstance()
+          		.setDeviceNumber(getDeviceNumber())
+          		.setDeviceType(getDeviceType())
+          		.setTransmissonType(getTransmissionType())
+          		.build();
+      	return id;
     }
 }
