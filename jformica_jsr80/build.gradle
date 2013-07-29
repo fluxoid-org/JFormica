@@ -1,6 +1,22 @@
 apply plugin: 'java'
+apply plugin: 'maven'
 
 dependencies {
     compile project(':jformica_core'), fileTree(dir: 'libs', include: '**/*.jar')
     testCompile "junit:junit:4.8.2"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }
