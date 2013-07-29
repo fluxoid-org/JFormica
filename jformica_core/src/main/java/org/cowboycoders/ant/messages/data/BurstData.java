@@ -22,6 +22,7 @@ import org.cowboycoders.ant.messages.Message;
 import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.utils.ByteUtils;
 
 /**
  * Common functionality to all burst message types
@@ -78,7 +79,7 @@ public abstract class BurstData extends DataMessage {
    * @return sequence number of this burst packet
    */
   public int getSequenceNumber() {
-    return getDataElement(DataElements.CHANNEL_ID).byteValue() & SEQUENCE_MASK;
+    return (getDataElement(DataElements.CHANNEL_ID) & SEQUENCE_MASK) >>> 5 ;
   }
   
   
