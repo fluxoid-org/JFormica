@@ -725,7 +725,7 @@ public class Channel {
 			if (type != null && type instanceof MasterChannelType) {
 				MessageCondition masterTransmitting = MessageConditionFactory
 						.newResponseCondition(MessageId.EVENT,ResponseCode.EVENT_TX);
-				parent.getEvm().waitForCondition(masterTransmitting, 5L, TimeUnit.NANOSECONDS, null);
+				parent.getEvm().waitForCondition(masterTransmitting, 5L, TimeUnit.SECONDS, null);
 			}
 			
 			
