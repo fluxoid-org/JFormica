@@ -28,6 +28,7 @@ import java.util.List;
 import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.utils.BitUtils;
 import org.cowboycoders.ant.utils.DataElementUtils;
+import org.cowboycoders.ant.utils.IntUtils;
 import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
@@ -328,16 +329,10 @@ public abstract class StandardMessage
    */
   protected void setPartialDataElement(DataElement element, int value, int mask) {
     int wholeElement = getDataElement(element);
-    int clearMask = mask ^ (~0);
-    int shift = BitUtils.getMaxZeroBitIndex(mask) + 1;
-    if (shift < 0) {
-      throw new FatalMessageException("value cannot be larger than mask");
-    }
-    value = value << shift;
-    wholeElement &= clearMask;
-    wholeElement |= (mask & value);
+    wholeElement = IntUtils.setMaskedBits(wholeElement,mask ,value);
     setDataElement(element, wholeElement);
   }
+
   
   /**
    * Convenience method to perform a max-min validation before setting

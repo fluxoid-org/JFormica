@@ -100,6 +100,8 @@ public class Node {
 
 	@Override
 	public boolean test(StandardMessage msg) {
+		// this can occur ir using a sender
+		if(transmittedMessage == null) return false;
 		// make sure it a response/event
 		if (!MessageConditionFactory.newResponseCondition(transmittedMessage.getId(),null).test(msg)) return false;
 		Response response = (Response)msg;

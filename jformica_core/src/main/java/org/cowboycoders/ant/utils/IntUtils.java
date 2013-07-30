@@ -18,6 +18,8 @@
  */
 package org.cowboycoders.ant.utils;
 
+import org.cowboycoders.ant.messages.FatalMessageException;
+
 public class IntUtils {
   
   private IntUtils(){};
@@ -29,6 +31,32 @@ public class IntUtils {
    */
   public static Long unsignedIntToLong(int value) {
     return value & 0xffffffffL;
+  }
+  
+  /**
+   * Sets individual bits of given {@code int} specified
+   * using a mask and value. The value's left most bit is aligned
+   * with the left most bit of the mask. Values must be positive,
+   * with a value no greater that the maximum number that can be
+   * represented by the masked bits.
+   * 
+   * The mask's bits must be contiguous, or the behaviour
+   * is undefined.
+   * 
+   * @param wholeElement the whole element to apply the mask to
+   * @param value the value to set in the mask bits
+   * @param mask only bits marked in mask are changed
+   */
+  public static int setMaskedBits(int wholeElement,int mask, int value) {
+		int clearMask = mask ^ (~0);
+	    int shift = BitUtils.getMaxZeroBitIndex(mask) + 1;
+	    if (shift < 0) {
+	      throw new FatalMessageException("value cannot be larger than mask");
+	    }
+	    value = value << shift;
+	    wholeElement &= clearMask;
+	    wholeElement |= (mask & value);
+		return wholeElement;
   }
 
 }
