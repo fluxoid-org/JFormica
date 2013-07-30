@@ -1,4 +1,3 @@
-
 buildscript {
     repositories {
         mavenCentral()
@@ -8,38 +7,32 @@ buildscript {
     }
 }
 
+subprojects { project ->
+    logger.info('applying license to ' + project.name)
+    apply plugin: 'license'
 
-rootDir.eachFile() { file-> 
-if (file.isDirectory() && file.getName().startsWith('jformica')) { 
-    logger.info('applying license to ' + file.getName() )
-    project(':' + file.getName() ){
-        apply plugin: 'license'
-
-        license {
-            header rootProject.file('LICENSE')
-             strictCheck true
-        }
-
+    license {
+        header rootProject.file('LICENSE')
+        strictCheck true
     }
-}  
-} 
-
+}
 
 allprojects {
-    
-
-
-    version = '0.0.5'
+    version = '0.0.5-SNAPSHOT'
     repositories {
         mavenCentral()
     }
 
     tasks.withType(Compile) {
         options.compilerArgs << "-Xlint:unchecked"
-  }
+    }
 
+    apply plugin: 'idea'
+    apply plugin: 'maven'
+}
 
-
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.6'
 }
 
 

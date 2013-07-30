@@ -8,6 +8,8 @@ task "create-dirs" << {
 dependencies {
     compile fileTree(dir: 'libs', include: '**/*.jar')
     testCompile "junit:junit:4.8.2"
+    testCompile 'org.mockito:mockito-all:1.9.5'
+    testCompile 'net.vidageek:mirror:1.6.1'
 }
 
 task copyJarToAndroid(type: Copy, dependsOn: 'deleteAndroidJar') {
@@ -40,11 +42,17 @@ gradle.taskGraph.afterTask { Task task, TaskState state ->
 }
 
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
 task javadocJar(type: Jar, dependsOn:javadoc) {
      classifier = 'javadoc'
      from javadoc.destinationDir
 }
 
 artifacts {
-     archives javadocJar
+    archives sourcesJar
+    archives javadocJar
 }  

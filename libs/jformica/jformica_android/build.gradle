@@ -1,58 +1,56 @@
-    apply plugin : 'android-library'
+apply plugin: 'android-library'
 
-    android {
-        target = "android-15"
-	compileSdkVersion 15
-  	buildToolsVersion "17"
+android {
+    compileSdkVersion 15
+    buildToolsVersion "17"
 
-    	defaultConfig {
-       		      minSdkVersion 14
-        	      targetSdkVersion 15
-    		      }
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 15
     }
+}
 
-    android {
-        sourceSets {
-            main {
-                manifest {
-                    srcFile 'AndroidManifest.xml'
-                }
-                java {
-                    srcDir 'src'
-                    exclude 'some/unwanted/package/**'
-                }
-                res {
-                    srcDir 'res'
-                }
-                assets {
-                    srcDir 'assets'
-                }
-                resources {
-                    srcDir 'src'
-                }
+android {
+    sourceSets {
+        main {
+            manifest {
+                srcFile 'AndroidManifest.xml'
             }
-            test {
-                java {
-                    srcDir 'tests/src'
-                }
+            java {
+                srcDir 'src'
+                exclude 'some/unwanted/package/**'
+            }
+            res {
+                srcDir 'res'
+            }
+            assets {
+                srcDir 'assets'
+            }
+            resources {
+                srcDir 'src'
+            }
+        }
+        test {
+            java {
+                srcDir 'tests/src'
             }
         }
     }
+}
 
 
 
-    dependencies {
-        compile project(':jformica_core'), fileTree(dir: 'libs', include: '**/*.jar')
-    }
+dependencies {
+    compile project(':jformica_core'), fileTree(dir: 'libs', include: '**/*.jar')
+}
 
+//apply plugin : 'java'
 
-    //apply plugin : 'java'
+//task javadocJar(type: Jar, dependsOn:javadoc) {
+// classifier = 'javadoc'
+// from javadoc.destinationDir
+//}
 
-    //task javadocJar(type: Jar, dependsOn:javadoc) {
-    // classifier = 'javadoc'
-    // from javadoc.destinationDir
-    //}
-
-    //artifacts {
-    //     archives javadocJar
-    //}
+//artifacts {
+//     archives javadocJar
+//}
