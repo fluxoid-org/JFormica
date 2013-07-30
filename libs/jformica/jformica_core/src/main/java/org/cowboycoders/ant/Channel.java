@@ -115,6 +115,8 @@ public class Channel {
 	private String name = UUID.randomUUID().toString();
 
 	private boolean free = true;
+	
+	private MessageCondition channelFilterCondition;
 
 	/**
 	 * The channel messaging period in seconds * 32768. Maximum messaging period
@@ -288,8 +290,10 @@ public class Channel {
 	public Channel(Node parent, int number) {
 		setParent(parent);
 		setNumber(number);
+		channelFilterCondition = new ChannelInstanceCondition(number);
 		this.registerRxListener(burstListener, BurstDataMessage.class);
 	}
+	
 
 	public static class ChannelInstanceCondition implements MessageCondition {
 
@@ -609,7 +613,7 @@ public class Channel {
 			throws InterruptedException, TimeoutException {
 
 		return parent.sendAndWaitForMessage(msg, condition, timeout,
-				timeoutUnit, channelSender, receipt);
+				timeoutUnit, channelSender, receipt, channelFilterCondition);
 
 	}
 
@@ -865,7 +869,7 @@ public class Channel {
 			try {
 
 				parent.sendAndWaitForMessage(null, condition, timeout,
-						timeoutUnit, massSender, null);
+						timeoutUnit, massSender, null,channelFilterCondition);
 
 			} catch (RuntimeException e) {
 				Throwable cause = e.getCause();
@@ -1199,14 +1203,4 @@ public class Channel {
 			sendAndWaitForResponseNoError(msg);
 		}
 		
-		
-		//FIXME: remove / fix
-		private MessageMetaWrapper<StandardMessage> sendABurstMessage(ChannelMessage msg) {
-			try {
-				return this.send(msg);
-			} catch (Exception e) {
-				LOGGER.warning("failed to send a burst message");
-			}
-			return null;
-		}
 }

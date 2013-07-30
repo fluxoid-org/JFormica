@@ -515,12 +515,41 @@ public class Node {
     
   }
   
+  
+  public StandardMessage sendAndWaitForMessage(
+	      final StandardMessage msg, 
+	      final MessageCondition condition,
+	      final Long timeout, final TimeUnit timeoutUnit,
+	      final MessageSender sender,
+	      final Receipt receipt) 
+	          throws InterruptedException, TimeoutException {
+	  	return this.sendAndWaitForMessage(msg, condition, timeout, timeoutUnit, sender, receipt, null);
+
+	}
+  
+  /**
+   * 
+   * @param msg the message to send or null if sent from a {@link MessageSender}
+   * @param condition indicates that a receive message is the one you were waiting for
+   * @param timeout combined with {@code timeoutUnit} to determine maximum period of time to wait for a response
+   * satisfying {@code condition}
+   * @param timeoutUnit unit of time used for timeouts
+   * @param sender used to customise the send method or send multiple messages. Can be null.
+   * @param receipt stamped with meta information
+   * @param errorCheckCondition {@link MessageCondition#test(StandardMessage)} should return true if 
+   * message should checked for against list of error codes. A null value will match all messages.
+   * 							
+   * @return message satisfying {@code condition}
+   * @throws InterruptedException
+   * @throws TimeoutException
+   */
   public StandardMessage sendAndWaitForMessage(
       final StandardMessage msg, 
       final MessageCondition condition,
       final Long timeout, final TimeUnit timeoutUnit,
       final MessageSender sender,
-      final Receipt receipt) 
+      final Receipt receipt,
+      final MessageCondition errorCheckCondition) 
           throws InterruptedException, TimeoutException {
     final LockExchangeContainer lockContainer = new LockExchangeContainer();
     final TransmissionErrorCondition errorCondition = new TransmissionErrorCondition(msg);
@@ -537,9 +566,13 @@ public class Node {
 				return true;
 			}
 			
-			// indicates whether or not we interested in this message as an error event
-			return errorCondition.test(msg);
+			// this allows addition check to made e.g channel number matches
+			if (errorCheckCondition == null || errorCheckCondition.test(msg)) {
+				// throws an exception on failure
+				errorCondition.test(msg);
+			}
 			
+			return false;
 		}
     	
     };
