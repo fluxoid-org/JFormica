@@ -328,7 +328,12 @@ public abstract class StandardMessage
    */
   protected void setPartialDataElement(DataElement element, int value, int mask) {
     int wholeElement = getDataElement(element);
-    int clearMask = mask ^ (~0);
+    wholeElement = setMaskedBits(value, mask, wholeElement);
+    setDataElement(element, wholeElement);
+  }
+
+public int setMaskedBits(int value, int mask, int wholeElement) {
+	int clearMask = mask ^ (~0);
     int shift = BitUtils.getMaxZeroBitIndex(mask) + 1;
     if (shift < 0) {
       throw new FatalMessageException("value cannot be larger than mask");
@@ -336,8 +341,8 @@ public abstract class StandardMessage
     value = value << shift;
     wholeElement &= clearMask;
     wholeElement |= (mask & value);
-    setDataElement(element, wholeElement);
-  }
+	return wholeElement;
+}
   
   /**
    * Convenience method to perform a max-min validation before setting

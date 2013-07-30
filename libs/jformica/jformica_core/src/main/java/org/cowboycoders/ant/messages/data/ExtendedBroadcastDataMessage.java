@@ -113,12 +113,18 @@ public class ExtendedBroadcastDataMessage extends BroadcastDataMessage
     	// TODO : convert this mess to a proper test
     	ExtendedBroadcastDataMessage msg = new ExtendedBroadcastDataMessage();
     	ChannelId id = ChannelId.Builder.newInstance()
-    		.setDeviceNumber(123)
+    		.setDeviceNumber(31769)
     		.setDeviceType(2)
-    		.setTransmissonType(34)
+    		.setTransmissonType(0)
     		.build();
     	
     	msg.setChannelId(id);
+    	
+		for (byte b : msg.encode()) {
+			System.out.printf("%2x:", b);
+		}
+		System.out.println();
+    	
     	((ExtendedMessage)msg.getBackendMessage()).setDataElement(DataElement.RSSI_VALUE, 67);
     	//((ExtendedMessage)msg.getBackendMessage()).setDataElement(DataElements.RSSI_MEASUREMENT_TYPE, 28);
     	

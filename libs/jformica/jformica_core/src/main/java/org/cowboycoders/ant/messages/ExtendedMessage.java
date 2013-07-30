@@ -45,12 +45,17 @@ public class ExtendedMessage extends Message implements
 	public static final byte MIN_LENGTH = 10;
 
 	public enum ExtendedFlag {
-		DISABLE((byte) 0x00), ENABLE_RX_TIMESTAMP((byte) 0x20,
+		DISABLE((byte) 0x00), 
+		ENABLE_RX_TIMESTAMP(
+				(byte) 0x20,
 				DataElement.RX_TIMESTAMP), ENABLE_RSSI_OUTPUT((byte) 0x40,
 				DataElement.RSSI_MEASUREMENT_TYPE,
-				DataElement.RSSI_THRESHOLD_CONFIG, DataElement.RSSI_VALUE), ENABLE_CHANNEL_ID(
-				(byte) 0x80, DataElement.DEVICE_TYPE,
-				DataElement.DEVICE_NUMBER, DataElement.TRANSMISSION_TYPE);
+				DataElement.RSSI_THRESHOLD_CONFIG, DataElement.RSSI_VALUE), 
+		ENABLE_CHANNEL_ID(
+				(byte) 0x80, 
+				DataElement.DEVICE_NUMBER,
+				DataElement.DEVICE_TYPE,
+				DataElement.TRANSMISSION_TYPE);
 
 		private byte mask;
 		private DataElement[] elements;
@@ -193,8 +198,8 @@ public class ExtendedMessage extends Message implements
 	 */
 	@Override
 	public List<Byte> getPayloadToSend() {
-		// strip off extended data
-		List<Byte> standardDataPacket = getStandardPayload();
+		// don't strip off extended data
+		List<Byte> standardDataPacket = super.getStandardPayload();
 		return standardDataPacket;
 	}
 

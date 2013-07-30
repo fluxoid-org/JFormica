@@ -1182,4 +1182,15 @@ public class Channel {
 			ChannelMessage msg = new ChannelOpenRxScanModeMessage();
 			sendAndWaitForResponseNoError(msg);
 		}
+		
+		
+		//FIXME: remove / fix
+		private MessageMetaWrapper<StandardMessage> sendABurstMessage(ChannelMessage msg) {
+			try {
+				return this.send(msg);
+			} catch (Exception e) {
+				LOGGER.warning("failed to send a burst message");
+			}
+			return null;
+		}
 }
