@@ -28,6 +28,7 @@ import org.cowboycoders.ant.ChannelId;
 import org.cowboycoders.ant.defines.AntMesg;
 import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.utils.ByteUtils;
+import org.cowboycoders.ant.utils.IntUtils;
 import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
@@ -38,7 +39,7 @@ import org.cowboycoders.ant.utils.ValidationUtils;
  * 
  */
 public class ExtendedMessage extends Message implements
-		ExtendedInformationQueryable, DeviceInfoQueryable, RssiInfoQueryable,
+		ExtendedInformationQueryable, DeviceInfoQueryable, DeviceInfoSettable, RssiInfoQueryable,
 		TimestampInfoQueryable {
 
 	public static final byte EXTENDED_FLAG_OFFSET = 9;
@@ -317,6 +318,7 @@ public class ExtendedMessage extends Message implements
 		if (rtn == null) {
 			return null;
 		}
+		rtn = rtn & ChannelId.DEVICE_TYPE_MASK;
 		return rtn.byteValue();
 	}
 
@@ -400,9 +402,10 @@ public class ExtendedMessage extends Message implements
 			setDataElement(DataElement.DEVICE_NUMBER, null);
 			return;
 		}
-		setDataElement(DataElement.DEVICE_NUMBER, id.getDeviceNumber());
-		setDataElement(DataElement.TRANSMISSION_TYPE, id.getTransmissonType());
-		setDataElement(DataElement.DEVICE_TYPE, id.getDeviceType());
+		setDeviceNumber(id.getDeviceNumber());
+		setDeviceType(id.getDeviceType());
+		setTransmissionType(id.getTransmissonType());
+		setPairingFlag(id.isPairingFlagSet());
 	}
 	
 	/**
@@ -559,7 +562,12 @@ public class ExtendedMessage extends Message implements
 		   ValidationUtils.maxMinValidator(0, ChannelId.MAX_DEVICE_TYPE, deviceType, 
 			       MessageExceptionFactory.createMaxMinExceptionProducable("deviceType")
 			       );
-		   setDataElement(DataElement.DEVICE_TYPE, deviceType); 
+		   Integer wholeElement = getExtendedData(DataElement.DEVICE_TYPE);
+		   if (wholeElement == null) {
+			   wholeElement = 0;
+		   }
+		   wholeElement = IntUtils.setMaskedBits(wholeElement, ChannelId.DEVICE_TYPE_MASK, deviceType);
+		   setDataElement(DataElement.DEVICE_TYPE, wholeElement); 
 	}
 
 	public void setDeviceNumber(int deviceId) {
@@ -575,8 +583,31 @@ public class ExtendedMessage extends Message implements
 	      		.setDeviceNumber(getDeviceNumber())
 	      		.setDeviceType(getDeviceType())
 	      		.setTransmissonType(getTransmissionType())
+	      		.setPairingFlag(isPairingFlagSet())
 	      		.build();
 	  	return id;
 	}
+
+	@Override
+	public Boolean isPairingFlagSet() {
+		 Integer unmasked = getExtendedData(DataElement.DEVICE_TYPE);
+		 if (unmasked == null) {
+			 return null;
+		 }
+		 return (unmasked & ChannelId.PAIRING_FLAG_MASK) > 0 ? true : false ;
+	}
+
+	@Override
+	public void setPairingFlag(boolean pair) {
+		int value = pair ? 1 : 0;
+		Integer wholeElement = getExtendedData(DataElement.DEVICE_TYPE);
+		   if (wholeElement == null) {
+			   wholeElement = 0;
+		   }
+		value = IntUtils.setMaskedBits(wholeElement, ChannelId.PAIRING_FLAG_MASK, value);
+		setDataElement(DataElement.DEVICE_TYPE, value); 
+	}
+
+
 
 }

@@ -48,5 +48,11 @@ public interface DeviceInfoSettable {
    * @param id {@link ChannelId} object encapsulating the channel id
    */
   public void setChannelId(ChannelId id);
+  
+  /**
+   * Pairing flag setting
+   * @param pair true to enable pairing flag, false otherwise.
+   */
+  public abstract void setPairingFlag(boolean pair);
 
 }

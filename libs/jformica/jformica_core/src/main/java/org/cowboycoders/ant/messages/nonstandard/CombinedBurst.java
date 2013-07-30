@@ -285,9 +285,19 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
         		.setDeviceNumber(getDeviceNumber())
         		.setDeviceType(getDeviceType())
         		.setTransmissonType(getTransmissionType())
+        		.setPairingFlag(this.isPairingFlagSet())
         		.build();
     	return id;
 	}
+
+	@Override
+	public Boolean isPairingFlagSet() {
+		if (deviceInfo == null) {
+			return null;
+		}
+		return deviceInfo.isPairingFlagSet();
+	}
+
 
 
 	
