@@ -20,6 +20,7 @@ package org.cowboycoders.ant.events;
 
 import java.util.logging.Logger;
 
+import org.cowboycoders.ant.TransferException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.responses.Response;
@@ -172,6 +173,36 @@ public class MessageConditionFactory {
   public static MessageCondition newEventCondition()
   {
     return EVENT_FILTER_CONDITION;
+  }
+  
+  
+  /**
+   * Checks for {@code ResponseCode.EVENT_TRANSFER_TX_COMPLETED}, throws a
+   * {@link TransferException} on {@code ResponseCode.EVENT_TRANSFER_TX_FAILED}.
+   * 
+   * Used for sending {@link AcknowledgedDataMessage}s
+   * 
+   * @return the condition satisfying the above
+   */
+  public static MessageCondition newAcknowledgedCondition()
+  {
+		final MessageCondition complete = MessageConditionFactory.newResponseCondition(MessageId.EVENT,ResponseCode.EVENT_TRANSFER_TX_COMPLETED);
+		final MessageCondition failed = MessageConditionFactory.newResponseCondition(MessageId.EVENT,ResponseCode.EVENT_TRANSFER_TX_FAILED);
+		MessageCondition condition = new MessageCondition() {
+
+			@Override
+			public boolean test(StandardMessage msg) {
+				if (complete.test(msg)) return true;
+				if (failed.test(msg)) {
+					Response response = (Response)msg;
+					throw new TransferException(response.getId(),  response.getResponseCode(), "didn't receive an acknowledgement");
+				}
+				return false;
+			}
+			
+		};
+		
+		return condition;
   }
   
   

@@ -30,7 +30,7 @@ import org.cowboycoders.ant.messages.MessageId;
  * @author will
  *
  */
-public class LegacyExtendedBurstDataMessage extends AcknowledgedDataMessage
+public class LegacyExtendedBurstDataMessage extends BurstDataMessage
   implements DeviceInfoQueryable, DeviceInfoSettable{
     
   public LegacyExtendedBurstDataMessage() {
