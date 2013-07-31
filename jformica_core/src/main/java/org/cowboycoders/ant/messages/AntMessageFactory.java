@@ -27,7 +27,7 @@ import org.cowboycoders.ant.messages.data.ExtendedAcknowledgedDataMessage;
 import org.cowboycoders.ant.messages.data.ExtendedBroadcastDataMessage;
 import org.cowboycoders.ant.messages.data.ExtendedBurstDataMessage;
 import org.cowboycoders.ant.messages.data.LegacyExtendedAcknowledgedDataMessage;
-import org.cowboycoders.ant.messages.data.LegacyExtendedBroadcastDataMessage;
+import org.cowboycoders.ant.messages.data.LegacyExtendedAcknowledgedDataMessage;
 import org.cowboycoders.ant.messages.data.LegacyExtendedBurstDataMessage;
 import org.cowboycoders.ant.messages.notifications.SerialErrorMessage;
 import org.cowboycoders.ant.messages.notifications.StartupMessage;
@@ -94,7 +94,7 @@ public class AntMessageFactory {
         break;
         
       case EXT_BROADCAST_DATA:
-        msg = new LegacyExtendedBroadcastDataMessage();
+        msg = new LegacyExtendedAcknowledgedDataMessage();
         break;
         
       case SERIAL_ERROR:

@@ -30,17 +30,17 @@ import org.cowboycoders.ant.messages.MessageId;
  * @author will
  *
  */
-public class LegacyExtendedAcknowledgedDataMessage extends BroadcastDataMessage
-  implements DeviceInfoQueryable, DeviceInfoSettable {
+public class LegacyExtendedAcknowledgedDataMessage extends AcknowledgedDataMessage
+  implements DeviceInfoQueryable, DeviceInfoSettable{
     
   public LegacyExtendedAcknowledgedDataMessage() {
       this(0);
     }
 
     public LegacyExtendedAcknowledgedDataMessage(int channel) {
-      super(new LegacyMessage(), MessageId.EXT_BROADCAST_DATA, channel);
+      super(new LegacyMessage(), MessageId.EXT_ACKNOWLEDGED_DATA, channel);
     }
-
+    
     @Override
     public Integer getDeviceNumber() {
       return ((LegacyMessage)getBackendMessage()).getDeviceNumber();
@@ -55,7 +55,7 @@ public class LegacyExtendedAcknowledgedDataMessage extends BroadcastDataMessage
     public Byte getTransmissionType() {
       return ((LegacyMessage)getBackendMessage()).getDeviceType();
     }
-    
+
     @Override
     public void setDeviceNumber(int deviceId) throws ValidationException {
       ((LegacyMessage)getBackendMessage()).setDeviceNumber(deviceId);
@@ -74,7 +74,6 @@ public class LegacyExtendedAcknowledgedDataMessage extends BroadcastDataMessage
       ((LegacyMessage)getBackendMessage()).setTransmissionType(transmissionType);
       
     }
-
     @Override
     public void setChannelId(ChannelId id) {
     	setDeviceNumber(id.getDeviceNumber());
@@ -94,6 +93,7 @@ public class LegacyExtendedAcknowledgedDataMessage extends BroadcastDataMessage
           		.build();
       	return id;
     }
+    
 
 	@Override
 	public void setPairingFlag(boolean pair) {
@@ -104,9 +104,5 @@ public class LegacyExtendedAcknowledgedDataMessage extends BroadcastDataMessage
 	public Boolean isPairingFlagSet() {
 		return ((LegacyMessage)getBackendMessage()).isPairingFlagSet();
 	}
-
-
-
-
 
 }

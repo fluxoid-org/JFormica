@@ -63,6 +63,7 @@ import org.cowboycoders.ant.messages.config.ConfigListIdMessage;
 import org.cowboycoders.ant.messages.data.BurstDataMessage;
 import org.cowboycoders.ant.messages.data.BurstData;
 import org.cowboycoders.ant.messages.nonstandard.CombinedBurst;
+import org.cowboycoders.ant.messages.nonstandard.CombinedBurst.StatusFlag;
 import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.messages.responses.ChannelStatusResponse;
 import org.cowboycoders.ant.messages.responses.ChannelStatusResponse.State;
@@ -900,7 +901,19 @@ public class Channel {
 
 			}
 			burst = burstBuilder.addMessage(message);
+			
 			notifyListeners(burst);
+			
+			// sequence error might be start of new sequence so try re-adding
+			if (burst != null && burst.getStatusFlags().contains(StatusFlag.ERROR_SEQUENCE_INVALID)) {
+				burst = burstBuilder.addMessage(message);
+				
+				// case first message is also last
+				if (burst != null && burst.isComplete()) {
+					notifyListeners(burst);
+				}
+			}
+			
 			lastBurstTimeStamp = newTimeStamp;
 		}
 
