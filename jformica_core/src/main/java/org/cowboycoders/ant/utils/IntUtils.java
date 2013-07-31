@@ -51,7 +51,7 @@ public class IntUtils {
 		int clearMask = mask ^ (~0);
 	    int shift = BitUtils.getMaxZeroBitIndex(mask) + 1;
 	    if (shift < 0) {
-	      throw new FatalMessageException("value cannot be larger than mask");
+	      throw new IllegalArgumentException("value cannot be larger than mask");
 	    }
 	    value = value << shift;
 	    wholeElement &= clearMask;

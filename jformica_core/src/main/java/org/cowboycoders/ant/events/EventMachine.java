@@ -95,7 +95,11 @@ public class EventMachine  {
     @Override
     public void receiveMessage(StandardMessage message) {
     	
-    	if(!condition.test(message)) return;
+    	try {
+    		if(!condition.test(message)) return;
+    	} catch (Exception e) {
+    		// we re-test the condition later back on calling thread
+    	}
       
 	    MessageMetaWrapper<StandardMessage> wrappedMessage =
 	         new MessageMetaWrapper<StandardMessage>(message);
@@ -129,6 +133,9 @@ public class EventMachine  {
 	    } finally {
 	    	messageUpdateLock.unlock();
 	    }
+	    
+	    // retest to throw an exception on calling thread
+	    condition.test(wrappedMessage.unwrap());
 	    
 	    return wrappedMessage;
     }
@@ -182,9 +189,14 @@ public class EventMachine  {
         }
       }
       
-      MessageMetaWrapper<StandardMessage> rtn = listener.getReply(timeout, timeoutUnit);
+      MessageMetaWrapper<StandardMessage> rtn = null;
       
-      removeRxListener(listener);
+      // don't leave extraneous listeners if an exception is thrown
+      try {
+          rtn = listener.getReply(timeout, timeoutUnit);
+      } finally {
+          removeRxListener(listener);
+      }
       
       return rtn;
     

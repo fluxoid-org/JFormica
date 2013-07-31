@@ -90,6 +90,7 @@ public class ExtendedBurstDataMessage extends BurstDataMessage
       		.setDeviceNumber(getDeviceNumber())
       		.setDeviceType(getDeviceType())
       		.setTransmissonType(getTransmissionType())
+      		.setPairingFlag(isPairingFlagSet())
       		.build();
   	return id;
   }
@@ -109,6 +110,17 @@ public class ExtendedBurstDataMessage extends BurstDataMessage
 	public void setTransmissionType(int transmissionType)
 			throws ValidationException {
 	   ((ExtendedMessage)getBackendMessage()).setTransmissionType(transmissionType);
+	}
+	
+	@Override
+	public void setPairingFlag(boolean pair) {
+		((ExtendedMessage)getBackendMessage()).setPairingFlag(pair);
+		
+	}
+
+	@Override
+	public Boolean isPairingFlagSet() {
+		return ((ExtendedMessage)getBackendMessage()).isPairingFlagSet();
 	}
   
 

@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'eclipse'
 
 task "create-dirs" << {
    sourceSets*.java.srcDirs*.each { it.mkdirs() }
@@ -56,3 +57,10 @@ artifacts {
     archives sourcesJar
     archives javadocJar
 }  
+
+eclipse {
+  project {
+    name = 'JFormica - core'
+    comment = 'Core functionality independent of drivers'
+  }
+}

@@ -84,13 +84,14 @@ public class ExtendedBroadcastDataMessage extends BroadcastDataMessage
     }
     
     public ChannelId getChannelId() {
-    	ChannelId id = ChannelId.Builder.newInstance()
-        		.setDeviceNumber(getDeviceNumber())
-        		.setDeviceType(getDeviceType())
-        		.setTransmissonType(getTransmissionType())
-        		.build();
-    	return id;
-    }
+      	ChannelId id = ChannelId.Builder.newInstance()
+          		.setDeviceNumber(getDeviceNumber())
+          		.setDeviceType(getDeviceType())
+          		.setTransmissonType(getTransmissionType())
+          		.setPairingFlag(isPairingFlagSet())
+          		.build();
+      	return id;
+      }
     
 	@Override
 	public void setDeviceNumber(int deviceId) throws ValidationException {
@@ -108,45 +109,16 @@ public class ExtendedBroadcastDataMessage extends BroadcastDataMessage
 			throws ValidationException {
 	   ((ExtendedMessage)getBackendMessage()).setTransmissionType(transmissionType);
 	}
-    
-    public static void main(String [] args) {
-    	// TODO : convert this mess to a proper test
-    	ExtendedBroadcastDataMessage msg = new ExtendedBroadcastDataMessage();
-    	ChannelId id = ChannelId.Builder.newInstance()
-    		.setDeviceNumber(31769)
-    		.setDeviceType(2)
-    		.setTransmissonType(0)
-    		.build();
-    	
-    	msg.setChannelId(id);
-    	
-		for (byte b : msg.encode()) {
-			System.out.printf("%2x:", b);
-		}
-		System.out.println();
-    	
-    	((ExtendedMessage)msg.getBackendMessage()).setDataElement(DataElement.RSSI_VALUE, 67);
-    	//((ExtendedMessage)msg.getBackendMessage()).setDataElement(DataElements.RSSI_MEASUREMENT_TYPE, 28);
-    	
-    	msg.setChannelId(null);
-    	
-    	//msg.setChannelId(id);
-    	((ExtendedMessage)msg.getBackendMessage()).setDataElement(DataElement.RX_TIMESTAMP, 9999);
-    	System.out.println(msg.getDeviceNumber());
-    	System.out.println(msg.getDeviceType());
-    	System.out.println(msg.getTransmissionType());
-    	System.out.println(msg.getRssiValue());
-    	System.out.println(msg.getRssiThresholdConfig());
-    	System.out.println(msg.getRssiMeasurementType());
-    	System.out.println(msg.getRxTimeStamp());
-    	
-    	// this should clear all
-    	((ExtendedMessage)msg.getBackendMessage()).setDataElement(DataElement.RSSI_VALUE, null);
-    	System.out.println(msg.getRssiValue());
-    	System.out.println(msg.getRssiThresholdConfig());
-    	System.out.println(msg.getRssiMeasurementType());
-    	System.out.println(msg.getRxTimeStamp());
-    }
-    
-    
+	
+	@Override
+	public void setPairingFlag(boolean pair) {
+		((ExtendedMessage)getBackendMessage()).setPairingFlag(pair);
+		
+	}
+
+	@Override
+	public Boolean isPairingFlagSet() {
+		return ((ExtendedMessage)getBackendMessage()).isPairingFlagSet();
+	}
+     
 }

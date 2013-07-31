@@ -83,13 +83,14 @@ implements DeviceInfoQueryable, DeviceInfoSettable, RssiInfoQueryable, Timestamp
     }
     
     public ChannelId getChannelId() {
-    	ChannelId id = ChannelId.Builder.newInstance()
-        		.setDeviceNumber(getDeviceNumber())
-        		.setDeviceType(getDeviceType())
-        		.setTransmissonType(getTransmissionType())
-        		.build();
-    	return id;
-    }
+      	ChannelId id = ChannelId.Builder.newInstance()
+          		.setDeviceNumber(getDeviceNumber())
+          		.setDeviceType(getDeviceType())
+          		.setTransmissonType(getTransmissionType())
+          		.setPairingFlag(isPairingFlagSet())
+          		.build();
+      	return id;
+      }
 
 	@Override
 	public void setDeviceNumber(int deviceId) throws ValidationException {
@@ -107,7 +108,20 @@ implements DeviceInfoQueryable, DeviceInfoSettable, RssiInfoQueryable, Timestamp
 			throws ValidationException {
 	   ((ExtendedMessage)getBackendMessage()).setTransmissionType(transmissionType);
 	}
-    
+
+
+	@Override
+	public void setPairingFlag(boolean pair) {
+		((ExtendedMessage)getBackendMessage()).setPairingFlag(pair);
+		
+	}
+
+	@Override
+	public Boolean isPairingFlagSet() {
+		return ((ExtendedMessage)getBackendMessage()).isPairingFlagSet();
+	}
+
+
     
    
 }

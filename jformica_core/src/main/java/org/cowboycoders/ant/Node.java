@@ -47,6 +47,7 @@ import org.cowboycoders.ant.interfaces.AntChipInterface;
 import org.cowboycoders.ant.interfaces.AntStatus;
 import org.cowboycoders.ant.interfaces.AntStatusUpdate;
 import org.cowboycoders.ant.messages.ChannelMessage;
+import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.commands.ChannelRequestMessage;
@@ -100,15 +101,22 @@ public class Node {
 
 	@Override
 	public boolean test(StandardMessage msg) {
-		// this can occur ir using a sender
-		if(transmittedMessage == null) return false;
-		// make sure it a response/event
-		if (!MessageConditionFactory.newResponseCondition(transmittedMessage.getId(),null).test(msg)) return false;
-		Response response = (Response)msg;
-		// indicate we are interested in this message if an exception needs to be thrown
-		if(ResponseExceptionFactory.getFactory().map(response.getResponseCode()) != null) {
-			return true;
+		// for message senders we look at all message ids
+		MessageId id =  null;
+		
+		// else we look for particular id
+		if (transmittedMessage != null) {
+			id = transmittedMessage.getId();
 		}
+
+		// make sure it a response/event
+		if (!MessageConditionFactory.newResponseCondition(id,null).test(msg)) return false;
+		Response response = (Response)msg;
+		
+		// throw an exception if response is a known error condition (this will be re-thrown on waiting thread)
+		ResponseExceptionFactory.getFactory().throwOnError(response.getResponseCode());
+		
+		// this condition only throw exceptions on errors (always return false)
 		return false;
 	}
 	  
@@ -436,7 +444,7 @@ public class Node {
           if (cause instanceof TimeoutException) {
             throw new TimeoutException("timeout waiting for lock excahnge");
           }
-          throw new RuntimeException(e);
+          throw new RuntimeException(cause);
           }
     } else {
       sentMeta = sender.send(msg);
@@ -455,7 +463,7 @@ public class Node {
       if (cause instanceof RuntimeException) {
     	  throw ((RuntimeException)cause);
       }
-      throw new RuntimeException(e);
+      throw new RuntimeException(cause);
     }
     
     // message is in charge of updating sent messages
@@ -507,12 +515,41 @@ public class Node {
     
   }
   
+  
+  public StandardMessage sendAndWaitForMessage(
+	      final StandardMessage msg, 
+	      final MessageCondition condition,
+	      final Long timeout, final TimeUnit timeoutUnit,
+	      final MessageSender sender,
+	      final Receipt receipt) 
+	          throws InterruptedException, TimeoutException {
+	  	return this.sendAndWaitForMessage(msg, condition, timeout, timeoutUnit, sender, receipt, null);
+
+	}
+  
+  /**
+   * 
+   * @param msg the message to send or null if sent from a {@link MessageSender}
+   * @param condition indicates that a receive message is the one you were waiting for
+   * @param timeout combined with {@code timeoutUnit} to determine maximum period of time to wait for a response
+   * satisfying {@code condition}
+   * @param timeoutUnit unit of time used for timeouts
+   * @param sender used to customise the send method or send multiple messages. Can be null.
+   * @param receipt stamped with meta information
+   * @param errorCheckCondition {@link MessageCondition#test(StandardMessage)} should return true if 
+   * message should checked for against list of error codes. A null value will match all messages.
+   * 							
+   * @return message satisfying {@code condition}
+   * @throws InterruptedException
+   * @throws TimeoutException
+   */
   public StandardMessage sendAndWaitForMessage(
       final StandardMessage msg, 
       final MessageCondition condition,
       final Long timeout, final TimeUnit timeoutUnit,
       final MessageSender sender,
-      final Receipt receipt) 
+      final Receipt receipt,
+      final MessageCondition errorCheckCondition) 
           throws InterruptedException, TimeoutException {
     final LockExchangeContainer lockContainer = new LockExchangeContainer();
     final TransmissionErrorCondition errorCondition = new TransmissionErrorCondition(msg);
@@ -529,9 +566,13 @@ public class Node {
 				return true;
 			}
 			
-			// indicates whether or not we interested in this message as an error event
-			return errorCondition.test(msg);
+			// this allows addition check to made e.g channel number matches
+			if (errorCheckCondition == null || errorCheckCondition.test(msg)) {
+				// throws an exception on failure
+				errorCondition.test(msg);
+			}
 			
+			return false;
 		}
     	
     };
@@ -542,10 +583,6 @@ public class Node {
       public MessageMetaWrapper<StandardMessage> execute() throws InterruptedException, TimeoutException {
     	  MessageMetaWrapper<StandardMessage> response =  
     			  evm.waitForCondition(conditionWithChecks, timeout, timeoutUnit, lockContainer);
-    	  // check if we were interested in this message as an error event
-    	  if (errorCondition.test(response.unwrap())) {
-    		  ResponseExceptionFactory.getFactory().throwOnError((Response)response.unwrap());
-    	  }
     	  return response;
       }
       

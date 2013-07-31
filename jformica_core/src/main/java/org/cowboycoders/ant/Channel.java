@@ -37,6 +37,7 @@ import org.cowboycoders.ant.events.MessageCondition;
 import org.cowboycoders.ant.events.MessageConditionFactory;
 import org.cowboycoders.ant.messages.ChannelMessage;
 import org.cowboycoders.ant.messages.ChannelType;
+import org.cowboycoders.ant.messages.MasterChannelType;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
@@ -114,6 +115,8 @@ public class Channel {
 	private String name = UUID.randomUUID().toString();
 
 	private boolean free = true;
+	
+	private MessageCondition channelFilterCondition;
 
 	/**
 	 * The channel messaging period in seconds * 32768. Maximum messaging period
@@ -287,8 +290,10 @@ public class Channel {
 	public Channel(Node parent, int number) {
 		setParent(parent);
 		setNumber(number);
+		channelFilterCondition = new ChannelInstanceCondition(number);
 		this.registerRxListener(burstListener, BurstDataMessage.class);
 	}
+	
 
 	public static class ChannelInstanceCondition implements MessageCondition {
 
@@ -375,6 +380,8 @@ public class Channel {
 	 * from the original to the new one
 	 */
 	private Map<Object, BroadcastListener<ChannelMessage>> mAdapterListenerMap = new HashMap<Object, BroadcastListener<ChannelMessage>>();
+	
+	private ChannelType type;
 
 	public synchronized <V extends ChannelMessage> void registerRxListener(
 			final BroadcastListener<V> listener, final Class<V> clazz) {
@@ -606,7 +613,7 @@ public class Channel {
 			throws InterruptedException, TimeoutException {
 
 		return parent.sendAndWaitForMessage(msg, condition, timeout,
-				timeoutUnit, channelSender, receipt);
+				timeoutUnit, channelSender, receipt, channelFilterCondition);
 
 	}
 
@@ -679,6 +686,7 @@ public class Channel {
 		} catch (TimeoutException e) {
 			handleTimeOutException(e);
 		}
+		type = null ;
 	}
 
 	public synchronized void assign(NetworkKey key,
@@ -703,6 +711,8 @@ public class Channel {
 		} catch (TimeoutException e) {
 			handleTimeOutException(e);
 		}
+		
+		this.type = assignMessage.getType();
 
 	}
 
@@ -713,11 +723,22 @@ public class Channel {
 						ResponseCode.RESPONSE_NO_ERROR);
 		try {
 			sendAndWaitForMessage(msg, condition, 1L, TimeUnit.SECONDS, null);
+			
+			// if master channel detect wait for first transmission, else ChannelClosedExceptions
+			// are thrown
+			if (type != null && type instanceof MasterChannelType) {
+				MessageCondition masterTransmitting = MessageConditionFactory
+						.newResponseCondition(MessageId.EVENT,ResponseCode.EVENT_TX);
+				parent.getEvm().waitForCondition(masterTransmitting, 5L, TimeUnit.SECONDS, null);
+			}
+			
+			
 		} catch (InterruptedException e) {
 			handleTimeOutException(e);
 		} catch (TimeoutException e) {
 			handleTimeOutException(e);
 		}
+		
 	}
 
 	public synchronized void close() {
@@ -848,11 +869,10 @@ public class Channel {
 			try {
 
 				parent.sendAndWaitForMessage(null, condition, timeout,
-						timeoutUnit, massSender, null);
+						timeoutUnit, massSender, null,channelFilterCondition);
 
 			} catch (RuntimeException e) {
-				// two levels deep
-				Throwable cause = e.getCause().getCause();
+				Throwable cause = e.getCause();
 				if (cause != null && cause instanceof TransferException) {
 					throw (TransferException) cause;
 				} else {
@@ -1183,14 +1203,4 @@ public class Channel {
 			sendAndWaitForResponseNoError(msg);
 		}
 		
-		
-		//FIXME: remove / fix
-		private MessageMetaWrapper<StandardMessage> sendABurstMessage(ChannelMessage msg) {
-			try {
-				return this.send(msg);
-			} catch (Exception e) {
-				LOGGER.warning("failed to send a burst message");
-			}
-			return null;
-		}
 }

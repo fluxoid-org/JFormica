@@ -29,14 +29,7 @@ import org.cowboycoders.ant.utils.ValidationUtils;
  */
 public class ChannelIdCompanion {
   
-  /**
-   * @param message Message methods affect
-   */
-  
-  private static final int PAIRING_FLAG_MASK = 0x80;
-  private static final int DEVICE_TYPE_MASK =  0x7f;
 
-  
   private StandardMessage message;
   
   public ChannelIdCompanion(StandardMessage message) {
@@ -60,7 +53,7 @@ public class ChannelIdCompanion {
        MessageExceptionFactory.createMaxMinExceptionProducable("deviceType")
        );
    StandardMessage message = getMessage(); 
-   message.setPartialDataElement(DataElement.DEVICE_TYPE,deviceType,DEVICE_TYPE_MASK);
+   message.setPartialDataElement(DataElement.DEVICE_TYPE,deviceType,ChannelId.DEVICE_TYPE_MASK);
  }
  
 
@@ -70,7 +63,7 @@ public class ChannelIdCompanion {
  public void setPairingFlag(boolean setPairingFlag) {
    int flag = setPairingFlag ? 1 : 0;
    StandardMessage message = getMessage(); 
-   message.setPartialDataElement(DataElement.DEVICE_TYPE,flag,PAIRING_FLAG_MASK);
+   message.setPartialDataElement(DataElement.DEVICE_TYPE,flag,ChannelId.PAIRING_FLAG_MASK);
  }
 
 
@@ -116,13 +109,13 @@ public class ChannelIdCompanion {
  public boolean isPairingFlagSet() {
 	 StandardMessage message = getMessage();
 	 int unmasked = message.getDataElement(DataElement.DEVICE_TYPE);
-	 return (unmasked & PAIRING_FLAG_MASK) > 0 ? true : false ;
+	 return (unmasked & ChannelId.PAIRING_FLAG_MASK) > 0 ? true : false ;
  }
  
  public int getDeviceType() {
 	 StandardMessage message = getMessage();
 	 int unmasked = message.getDataElement(DataElement.DEVICE_TYPE);
-	 return (unmasked &  DEVICE_TYPE_MASK);
+	 return (unmasked &  ChannelId.DEVICE_TYPE_MASK);
  }
   
 

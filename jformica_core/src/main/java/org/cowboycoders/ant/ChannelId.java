@@ -29,6 +29,8 @@ public class ChannelId {
 	public static final int MAX_DEVICE_TYPE = 127;
 	public static final int MAX_TRANSMISSION_TYPE = 255;
 	public static final int MAX_DEVICE_NUMBER = 65535;
+	public static final int PAIRING_FLAG_MASK = 0x80;
+	public static final int DEVICE_TYPE_MASK =  0x7f;
 	
 	private boolean pair;
 	private int transmissonType;

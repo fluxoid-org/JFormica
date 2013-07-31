@@ -63,9 +63,11 @@ public class ChannelAssignMessage extends ChannelMessage {
     DataElement.NETWORK_NUMBER,
     //DataElements.EXTENDED_ASSIGNMENT,
   };
+
+  private ChannelType type;
   
-  
-  /**
+
+/**
    * Assignment message - multiple extended assignment options
    * @param channelNo of channel we are assigning
    * @param type type of channel required
@@ -75,6 +77,7 @@ public class ChannelAssignMessage extends ChannelMessage {
   public ChannelAssignMessage(Integer channelNo, ChannelType type,
       Set<ExtendedAssignment> extended) {
     super(MessageId.ASSIGN_CHANNEL, channelNo,additionalElements);
+    this.type = type;
     setChannelType(type);
     setExtendedAssignment(extended);
     setNetworkNumber(0);
@@ -127,6 +130,10 @@ public class ChannelAssignMessage extends ChannelMessage {
   private void setChannelType(ChannelType type) {
     setDataElement(DataElement.CHANNEL_TYPE,type.getChannelTypeCode());
   }
+  
+  public ChannelType getType() {
+	return type;
+}
   
 
   

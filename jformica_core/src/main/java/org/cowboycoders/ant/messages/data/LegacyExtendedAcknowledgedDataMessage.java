@@ -80,6 +80,7 @@ public class LegacyExtendedAcknowledgedDataMessage extends BroadcastDataMessage
     	setDeviceNumber(id.getDeviceNumber());
     	setDeviceType(id.getDeviceType());
     	setTransmissionType(id.getTransmissonType());
+    	setPairingFlag(id.isPairingFlagSet());
     }
 
 
@@ -89,7 +90,23 @@ public class LegacyExtendedAcknowledgedDataMessage extends BroadcastDataMessage
           		.setDeviceNumber(getDeviceNumber())
           		.setDeviceType(getDeviceType())
           		.setTransmissonType(getTransmissionType())
+          		.setPairingFlag(isPairingFlagSet())
           		.build();
       	return id;
     }
+
+	@Override
+	public void setPairingFlag(boolean pair) {
+		((LegacyMessage)getBackendMessage()).setPairingFlag(pair);
+	}
+
+	@Override
+	public Boolean isPairingFlagSet() {
+		return ((LegacyMessage)getBackendMessage()).isPairingFlagSet();
+	}
+
+
+
+
+
 }

@@ -329,7 +329,11 @@ public abstract class StandardMessage
    */
   protected void setPartialDataElement(DataElement element, int value, int mask) {
     int wholeElement = getDataElement(element);
-    wholeElement = IntUtils.setMaskedBits(wholeElement,mask ,value);
+    try {
+    	wholeElement = IntUtils.setMaskedBits(wholeElement,mask ,value);
+    } catch (IllegalArgumentException e) {
+    	throw new FatalMessageException(e);
+    }
     setDataElement(element, wholeElement);
   }
 

@@ -44,6 +44,17 @@ public interface DeviceInfoQueryable {
    * Gets device info in form of a {@link ChannelId}
    * @return the {@link ChannelId} containing the device settings
    */
+  
+  /**
+   * Pairing flag setting
+   * @return true if pairing flag is set, false if it is not, null if not available
+   */
+  public abstract Boolean isPairingFlagSet();
+  
+  /**
+   * ChannelID info associated with this {@code Object}
+   * @return the {@link ChannelId} info associated with this {@code Object}
+   */
   public abstract ChannelId getChannelId();
 
 }
