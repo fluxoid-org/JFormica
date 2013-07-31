@@ -184,7 +184,7 @@ public class MessageConditionFactory {
    * 
    * @return the condition satisfying the above
    */
-  public static MessageCondition newAcknowlodgedCondition()
+  public static MessageCondition newAcknowledgedCondition()
   {
 		final MessageCondition complete = MessageConditionFactory.newResponseCondition(MessageId.EVENT,ResponseCode.EVENT_TRANSFER_TX_COMPLETED);
 		final MessageCondition failed = MessageConditionFactory.newResponseCondition(MessageId.EVENT,ResponseCode.EVENT_TRANSFER_TX_FAILED);
