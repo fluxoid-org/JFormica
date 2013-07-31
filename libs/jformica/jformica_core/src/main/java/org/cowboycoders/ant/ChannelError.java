@@ -18,7 +18,7 @@
  */
 package org.cowboycoders.ant;
 
-public class ChannelError extends RuntimeException{
+public class ChannelError extends AntError{
 
   /**
    * 
