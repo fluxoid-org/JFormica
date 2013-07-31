@@ -9,3 +9,6 @@ local.settings
 *.iws
 *.ipr
 jformica_android/gen
+**/.settings
+*.project
+*.classpath
