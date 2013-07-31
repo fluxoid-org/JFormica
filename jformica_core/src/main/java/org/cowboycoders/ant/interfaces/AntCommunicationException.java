@@ -21,11 +21,13 @@
  */
 package org.cowboycoders.ant.interfaces;
 
+import org.cowboycoders.ant.AntError;
+
 /**
  * @author will
  *
  */
-public class AntCommunicationException extends RuntimeException {
+public class AntCommunicationException extends AntError {
 
   /**
    * 

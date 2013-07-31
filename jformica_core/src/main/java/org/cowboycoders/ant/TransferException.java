@@ -28,7 +28,7 @@ import org.cowboycoders.ant.messages.responses.ResponseCode;
  * @author will
  *
  */
-public class TransferException extends RuntimeException {
+public class TransferException extends ChannelError {
  
 
   private static final long serialVersionUID = 1L;
