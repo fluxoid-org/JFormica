@@ -18,7 +18,7 @@ import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.nonstandard.CombinedBurst;
-import org.cowboycoders.ant.messages.responses.ChannelResponse;
+import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
 import org.cowboycoders.ant.utils.BurstMessageSequenceGenerator;
 import org.cowboycoders.ant.utils.ByteUtils;
