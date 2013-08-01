@@ -22,7 +22,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 
 public class ChannelTest {
 
@@ -31,7 +30,7 @@ public class ChannelTest {
 
     @Before
     public void setup() {
-        Node node = spy(new Node(mock(AbstractAntTransceiver.class)));
+        Node node = new Node(mock(AbstractAntTransceiver.class));
         channel = new Channel(node, 0);
     }
     
@@ -157,8 +156,8 @@ public class ChannelTest {
     		count++;
     	}
     	
-    	boolean recievedAtLeastAsLongSent = (bursts.get(1).getData().length >= data2.length);
-    	assertTrue(recievedAtLeastAsLongSent);
+    	boolean receivedAtLeastAsLongSent = (bursts.get(1).getData().length >= data2.length);
+    	assertTrue(receivedAtLeastAsLongSent);
     }
 
 
