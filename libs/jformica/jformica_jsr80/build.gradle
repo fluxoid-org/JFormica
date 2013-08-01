@@ -27,6 +27,6 @@ eclipse {
   project {
     name = 'JFormica - JSR80'
     comment = 'JSR80 driver'
-    projects = ['JFormica - core']
+    referencedProjects = ['JFormica - core']
   }
 }
