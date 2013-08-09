@@ -5,8 +5,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import net.vidageek.mirror.dsl.Mirror;
 
-import org.cowboycoders.ant.*;
-
 import static org.junit.Assert.*;
 
 import org.junit.Test;

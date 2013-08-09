@@ -699,6 +699,12 @@ public class Channel {
 	public synchronized void assign(NetworkKey key,
 			ChannelAssignMessage assignMessage) {
 		int networkNumber = 0;
+		
+		// don't leak associated networks
+		if(assignedNetwork != null) {
+			assignedNetwork.free();
+			assignedNetwork = null;
+		}
 		// look up network from node
 		assignedNetwork = parent.getNetworkForKey(key);
 		

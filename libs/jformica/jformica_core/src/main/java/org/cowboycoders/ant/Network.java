@@ -22,7 +22,13 @@ public class Network {
 	private NetworkKey networkKey;
 	
 	private NetworkListener networkListener;
-
+	
+	/**
+	 * 
+	 * @param number the internal ant network id
+	 * @param networkKey key associated with this network
+	 * @param networkListener used to register for notifications
+	 */
 	protected Network(int number, NetworkKey networkKey,
 			NetworkListener networkListener) {
 		super();
@@ -35,21 +41,36 @@ public class Network {
 		this(network.getNumber(),network.getNetworkKey(),network.getNetworkListener());
 		refCount = network.refCount;
 	}
-
+	
+	/**
+	 * Register that you are using this network and it should not be reassigned.
+	 */
 	protected void use() {
 		refCount.incrementAndGet();
 	}
 	
+	/**
+	 * Should be called when you no longer wish to use this network. Should only be called once, so
+	 * null your reference after calling.
+	 */
 	public void free() {
 		if (refCount.decrementAndGet() <= 0 && networkListener != null ) {
 			networkListener.onFree(this);
 		}
 	}
-
+	
+	/**
+	 * Provides the internal ant network
+	 * @return internal ant network id
+	 */
 	public int getNumber() {
 		return number;
 	}
-
+	
+	/**
+	 * Current {@link NetworkKey} associated with this network or null if no association exists.
+	 * @return
+	 */
 	public NetworkKey getNetworkKey() {
 		return networkKey;
 	}
