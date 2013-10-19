@@ -20,10 +20,6 @@
 
 import static org.junit.Assert.*;
 
-
-
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -36,6 +32,7 @@ import java.util.logging.Level;
 import org.cowboycoders.ant.AntError;
 import org.cowboycoders.ant.Channel;
 import org.cowboycoders.ant.NetworkKey;
+import org.cowboycoders.ant.NetworkKeys;
 import org.cowboycoders.ant.Node;
 import org.cowboycoders.ant.Receipt;
 import org.cowboycoders.ant.TransferException;
@@ -168,7 +165,7 @@ public class AntTransceiverTest {
     
   }
   
-  @Test
+  //@Test
   public void test_init() throws InterruptedException, TimeoutException {
     //Object mBound = bindService(new Intent(MainActivity.getAppContext(), DummyService.class));
     //antchip.start();
@@ -309,7 +306,7 @@ class BushidoData {
 	
 }
     
-@Test
+//@Test
 public void testCompare(){
 	int[] packet = {0xad , 0x01 , 0x03 , 0x0a , 0x00 , 0x00, 0x0a, 0x02};
 	int[] pattern = {0xad, 0x01, 0x03}; 
@@ -366,20 +363,15 @@ class Listener implements BroadcastListener<BroadcastDataMessage> {
 }
   
   
-  //@Test
+  @Test
   public void test_hrm() throws InterruptedException, TimeoutException {
     
     int repeats = 10;
     
     Node n = new Node(antchip);
     
-    NetworkKey key = new NetworkKey(0xB9,0xA5,0x21,0xFB,0xBD,0x72,0xC3,0x45);
-    key.setName("N:ANT+");
-    
     n.start();
     n.reset();
-    
-    n.setNetworkKey(0, key);
     
     
     Channel c;
@@ -388,7 +380,7 @@ class Listener implements BroadcastListener<BroadcastDataMessage> {
     c.setName("C:BUSHIDO");
     
     SlaveChannelType channelType = new SlaveChannelType();
-    c.assign("N:ANT+", channelType);
+    c.assign(NetworkKeys.ANT_SPORT, channelType);
     
     c.registerRxListener(new Listener(), BroadcastDataMessage.class);
     
@@ -489,7 +481,7 @@ class Listener implements BroadcastListener<BroadcastDataMessage> {
     c.setName("C:HRM");
     
     MasterChannelType channelType = new MasterChannelType();
-    c.assign("N:ANT+", channelType);
+    c.assign(NetworkKeys.ANT_SPORT, channelType);
     
     
     c.setId(33, 1, 1, false);

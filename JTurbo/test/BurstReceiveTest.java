@@ -20,10 +20,6 @@
 
 import static org.junit.Assert.*;
 
-
-
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -36,6 +32,7 @@ import java.util.logging.Level;
 import org.cowboycoders.ant.AntError;
 import org.cowboycoders.ant.Channel;
 import org.cowboycoders.ant.NetworkKey;
+import org.cowboycoders.ant.NetworkKeys;
 import org.cowboycoders.ant.Node;
 import org.cowboycoders.ant.Receipt;
 import org.cowboycoders.ant.TransferException;
@@ -217,9 +214,6 @@ public class BurstReceiveTest {
 		// initialises node with chosen driver 
 		Node node = new Node(antchip);
 		
-		// ANT+ key 
-		NetworkKey key = new NetworkKey(0xB9,0xA5,0x21,0xFB,0xBD,0x72,0xC3,0x45);
-		key.setName("N:ANT+");
 		
 		/* must be called before any configuration takes place */
 		node.start();
@@ -227,8 +221,6 @@ public class BurstReceiveTest {
 		/* sends reset request : resets channels to default state */
 		node.reset();
 
-		// sets network key of network zero
-		node.setNetworkKey(0, key);
 
 		Channel channel = node.getFreeChannel();
 		
@@ -239,7 +231,7 @@ public class BurstReceiveTest {
 		ChannelType channelType = new SlaveChannelType();
 		
 		// use ant network key "N:ANT+" 
-		channel.assign("N:ANT+", channelType);
+		channel.assign(NetworkKeys.ANT_SPORT, channelType);
 		
 		
 		/******* start device specific configuration ******/
@@ -287,8 +279,6 @@ public class BurstReceiveTest {
 				    Node node = new Node(new AntTransceiver(1));
 				    
 					// ANT+ key 
-					NetworkKey key = new NetworkKey(0xB9,0xA5,0x21,0xFB,0xBD,0x72,0xC3,0x45);
-					key.setName("N:ANT+");
 					
 					/* must be called before any configuration takes place */
 					node.start();
@@ -296,8 +286,7 @@ public class BurstReceiveTest {
 					/* sends reset request : resets channels to default state */
 					node.reset();
 
-					// sets network key of network zero
-					node.setNetworkKey(0, key);
+
 
 					Channel channel = node.getFreeChannel();
 					
@@ -308,7 +297,7 @@ public class BurstReceiveTest {
 					ChannelType channelType = new MasterChannelType();
 					
 					// use ant network key "N:ANT+" 
-					channel.assign("N:ANT+", channelType);
+					channel.assign(NetworkKeys.ANT_SPORT, channelType);
 				    
 				    
 					/******* start device specific configuration ******/

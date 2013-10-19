@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 import org.cowboycoders.ant.AntLogger;
 import org.cowboycoders.ant.Channel;
 import org.cowboycoders.ant.NetworkKey;
+import org.cowboycoders.ant.NetworkKeys;
 import org.cowboycoders.ant.Node;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.events.MessageCondition;
@@ -100,7 +101,6 @@ public class BushidoHeadunit extends AntTurboTrainer {
       new ArrayList<BroadcastListener<? extends ChannelMessage>>();
   
   private Node node;
-  private NetworkKey key;
   private Channel channel;
 //  private ExecutorService channelExecutorService = Executors.newSingleThreadExecutor();
   private EnqueuedMessageSender channelMessageSender;
@@ -377,8 +377,6 @@ public class BushidoHeadunit extends AntTurboTrainer {
   public BushidoHeadunit(Node node) {
     super(node);
     this.node = node;
-    this.key = new NetworkKey(0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00);
-    key.setName("N:PUBLIC");
   }
   
   /**
@@ -415,7 +413,6 @@ public class BushidoHeadunit extends AntTurboTrainer {
 	}   
 	  
     node.start();
-    node.setNetworkKey(0, key);
     channel = node.getFreeChannel();
     
     if (channel == null) {
@@ -423,7 +420,7 @@ public class BushidoHeadunit extends AntTurboTrainer {
     }
     channel.setName("C:BUSHIDO");
     SlaveChannelType channelType = new SlaveChannelType();
-    channel.assign("N:PUBLIC", channelType);
+    channel.assign(NetworkKeys.ANT_PUBLIC, channelType);
     
     channel.setId(0, 0x52, 0, false);
     

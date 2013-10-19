@@ -20,7 +20,6 @@
 package org.cowboycoders.ant.temp;
 
 import static org.junit.Assert.*;
-
 import static org.cowboycoders.ant.utils.ArrayUtils.*;
 
 import java.lang.Thread.State;
@@ -32,6 +31,7 @@ import java.util.logging.Level;
 
 import org.cowboycoders.ant.Channel;
 import org.cowboycoders.ant.NetworkKey;
+import org.cowboycoders.ant.NetworkKeys;
 import org.cowboycoders.ant.Node;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.events.MessageCondition;
@@ -243,21 +243,17 @@ public class BushidoBrakeTest {
   
   public void doStartUp() {
     int repeats = 10;
-      
-    NetworkKey key = new NetworkKey(0,0,0,0,0,0,0,0);
-    key.setName("N:ANT+");
     
     n.start();
     n.reset();
     
-    n.setNetworkKey(0, key);
     
     assertNotNull(c = n.getFreeChannel());
     
     c.setName("C:BUSHIDO");
     
     MasterChannelType channelType = new MasterChannelType();
-    c.assign("N:ANT+", channelType);
+    c.assign(NetworkKeys.ANT_PUBLIC, channelType);
     
     c.registerRxListener(listener, BroadcastDataMessage.class);
     

@@ -3188,4 +3188,12 @@ limitations under the License.
     
     <string name="turbotrainer_select_title">Select Turbo Trainer</string>
   	<string name="turbotrainer_select_summary">Choose a turbo trainer to use</string>
+  	<string name="bushido_brake_calibrate_status_message">Status message</string>
+  	<string name="bushido_brake_calibrate_start">Speed up to 40km/h</string>
+  	<string name="bushido_brake_calibrate_stop">Stop pedalling</string>
+  	<string name="bushido_brake_calibrate_resume">Resume pedalling</string>
+  	<string name="bushido_brake_calibrate_calibration_value">Calibration value: </string>
+  	<string name="bushido_brake_calibrate_speed_label">current speed</string>
+  	<string name="bushido_brake_calibrate_speed_unknown">unknown</string>
+  	
 </resources>

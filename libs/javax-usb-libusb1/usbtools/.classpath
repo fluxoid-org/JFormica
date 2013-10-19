@@ -3,13 +3,13 @@
 	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry including="**/*.java" kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/javalibusb1"/>
 	<classpathentry kind="src" path="/javax.usb"/>
 	<classpathentry kind="src" path="/javax.usb-extra"/>
-	<classpathentry kind="lib" path="/javalibusb1/target/javalibusb1-1.0.1-1-SNAPSHOT-amd64-Linux-gpp-jni.nar"/>
-	<classpathentry kind="lib" path="/javalibusb1/target/javalibusb1-1.0.1-1-SNAPSHOT-noarch.nar"/>
-	<classpathentry kind="lib" path="/javalibusb1/target/javalibusb1-1.0.1-1-SNAPSHOT.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="target/usbtools-1.0.1-1-SNAPSHOT-all/usbtools-1.0.1-1-SNAPSHOT/repo/commons-io/commons-io/1.4/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="/home/will/code/CyclismoProject/libs/javax-usb-libusb1/javalibusb1/target/javalibusb1-1.0.1-1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/home/will/code/CyclismoProject/libs/javax-usb-libusb1/javalibusb1/target/javalibusb1-1.0.1-1-SNAPSHOT-amd64-Linux-gpp-jni.nar"/>
+	<classpathentry kind="lib" path="/home/will/code/CyclismoProject/libs/javax-usb-libusb1/javalibusb1/target/javalibusb1-1.0.1-1-SNAPSHOT-noarch.nar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/javalibusb1"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

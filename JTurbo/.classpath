@@ -7,9 +7,11 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/JFormica - core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JFormica - JSR80"/>
 	<classpathentry kind="src" path="/Location"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/javalibusb1"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/javax.usb"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/javax.usb-extra"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/usbtools"/>
+	<classpathentry kind="lib" path="/home/will/workspace/jformica_examples/jformica_java/lib/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="/home/will/workspace/jformica_examples/jformica_java/lib/usb4java-1.0.0.jar"/>
+	<classpathentry kind="lib" path="/home/will/workspace/jformica_examples/jformica_java/lib/usb4java-1.0.0-natives.jar"/>
+	<classpathentry kind="lib" path="/home/will/workspace/jformica_examples/jformica_java/lib/usb4java-1.0.0-no-natives.jar"/>
+	<classpathentry kind="lib" path="/home/will/workspace/jformica_examples/jformica_java/lib/usb4java-1.0.0-sources.jar"/>
+	<classpathentry kind="lib" path="/home/will/workspace/jformica_examples/jformica_java/lib/usb-api-1.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

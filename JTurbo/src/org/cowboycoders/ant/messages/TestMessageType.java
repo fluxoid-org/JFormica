@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.cowboycoders.ant.messages.Constants.DataElements;
+import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.config.ChannelAssignMessage;
 import org.cowboycoders.ant.messages.config.ChannelIdMessage;
 import org.cowboycoders.ant.messages.config.NetworkKeyMessage;
@@ -68,12 +68,12 @@ public class TestMessageType {
     
     //big.add(18);
     for (int i=0 ; i <8 ; i++) {
-      msg6.addOptionalDataElement(DataElements.DATA);
+      msg6.addOptionalDataElement(DataElement.DATA);
     }
     
-    msg6.setDataElement(DataElements.DATA, 0x22,7);
+    msg6.setDataElement(DataElement.DATA, 0x22,7);
     
-    System.out.printf("%x",msg6.getDataElement(DataElements.DATA, 7));
+    System.out.printf("%x",msg6.getDataElement(DataElement.DATA, 7));
 
    System.out.printf(" Integer %x",new Long(0x9fffffffffffffffl));
     System.out.println();
@@ -147,9 +147,9 @@ public class TestMessageType {
     System.out.println();
     System.out.println();
     
-      System.out.println(msg4.getExtendedData(DataElements.TRANSMISSION_TYPE));
+      System.out.println(msg4.getExtendedData(DataElement.TRANSMISSION_TYPE));
       msg2.setTransmissionType(127);
-      System.out.println(msg2.getExtendedData(DataElements.TRANSMISSION_TYPE));
+      System.out.println(msg2.getExtendedData(DataElement.TRANSMISSION_TYPE));
       System.out.println(msg4.getTransmissionType());
 
     
@@ -165,7 +165,7 @@ public class TestMessageType {
     
     System.out.println();
     
-    System.out.println(DataElements.DEVICE_NUMBER.getMaxValue());
+    System.out.println(DataElement.DEVICE_NUMBER.getMaxValue());
     //try {
     //  msg3.setChannelNumber((byte) 10);
     //} catch (MessageException e) {

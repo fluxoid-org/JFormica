@@ -35,7 +35,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import org.cowboycoders.ant.Channel;
-import org.cowboycoders.ant.NetworkKey;
+import org.cowboycoders.ant.NetworkKeys;
 import org.cowboycoders.ant.Node;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.events.MessageCondition;
@@ -45,18 +45,13 @@ import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 import org.cowboycoders.ant.utils.AntUtils;
 import org.cowboycoders.ant.utils.ArrayUtils;
-import org.cowboycoders.ant.utils.BigIntUtils;
 import org.cowboycoders.ant.utils.ChannelMessageSender;
 import org.cowboycoders.ant.utils.EnqueuedMessageSender;
-import org.cowboycoders.pid.PidParameterController;
 import org.cowboycoders.turbotrainers.AntTurboTrainer;
 import org.cowboycoders.turbotrainers.Parameters.CommonParametersInterface;
 import org.cowboycoders.turbotrainers.Mode;
-import org.cowboycoders.turbotrainers.PowerModelManipulator;
 import org.cowboycoders.turbotrainers.TooFewAntChannelsAvailableException;
 import org.cowboycoders.turbotrainers.TurboTrainerDataListener;
-import org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake.CallibrationCallback;
-import org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake.VersionRequestCallback;
 import org.cowboycoders.utils.IterationOperator;
 import org.cowboycoders.utils.IterationUtils;
 
@@ -89,7 +84,6 @@ public class BushidoBrake extends AntTurboTrainer {
 	private ArrayList<BroadcastListener<? extends ChannelMessage>> listeners = new ArrayList<BroadcastListener<? extends ChannelMessage>>();
 
 	private Node node;
-	private NetworkKey key;
 	private Channel channel;
 	private EnqueuedMessageSender channelMessageSender;
 	private BrakeModel model;
@@ -303,9 +297,6 @@ public class BushidoBrake extends AntTurboTrainer {
 		super(node);
 		this.resistanceController = controller;
 		this.node = node;
-		this.key = new NetworkKey(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-				0x00);
-		key.setName("N:PUBLIC");
 	}
 
 	/**
@@ -335,7 +326,6 @@ public class BushidoBrake extends AntTurboTrainer {
 
 	public void startConnection() throws InterruptedException, TimeoutException {
 		node.start();
-		node.setNetworkKey(0, key);
 		channel = node.getFreeChannel();
 
 		if (channel == null) {
@@ -343,7 +333,7 @@ public class BushidoBrake extends AntTurboTrainer {
 		}
 		channel.setName("C:BUSHIDO_BRAKE");
 		SlaveChannelType channelType = new SlaveChannelType();
-		channel.assign("N:PUBLIC", channelType);
+		channel.assign(NetworkKeys.ANT_PUBLIC, channelType);
 
 		channel.setId(0, 0x51, 0, false);
 
@@ -892,10 +882,16 @@ public class BushidoBrake extends AntTurboTrainer {
 					}
 					else {
 						StringBuilder packet = new StringBuilder();
-						Formatter formatter = new Formatter(packet);
-						for (byte b : data) {
-							formatter.format("%02x:", b);
+						Formatter formatter = null;
+						try {
+							formatter = new Formatter(packet);
+							for (byte b : data) {
+								formatter.format("%02x:", b);
+							}
+						} finally {
+							if (formatter != null) formatter.close();
 						}
+		
 						LOGGER.warning("unknown status packet: "
 								+ packet.toString());
 					}

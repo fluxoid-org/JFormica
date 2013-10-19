@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2010 Google Inc. Licensed under the Apache License, Version 
+	2.0 (the "License"); you may not use this file except in compliance with 
+	the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="match_parent" android:layout_width="match_parent"
+	android:orientation="vertical">
+
+
+	<LinearLayout style="@style/ScrollView.WithBottomButtons"
+		android:layout_width="match_parent" android:layout_height="wrap_content"
+		android:gravity="center" android:orientation="vertical"
+		android:weightSum="10">
+
+		<TextView android:id="@+id/bushido_brake_calibrate_speed_title"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="2"
+			android:text="@string/bushido_brake_calibrate_status_message"
+			android:textAppearance="?android:attr/textAppearanceLarge" />
+
+		<TableLayout android:layout_width="fill_parent"
+			android:layout_weight="8" android:layout_height="wrap_content"
+			android:stretchColumns="0,1">
+
+
+			<TableRow android:id="@+id/tableRow1" android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+
+				<TextView android:id="@+id/bushido_brake_calibrate_speed_label"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:text="@string/bushido_brake_calibrate_speed_label"
+					android:textAppearance="?android:attr/textAppearanceLarge" />
+
+				<TextView android:id="@+id/bushido_brake_calibration_current_speed"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:text="@string/bushido_brake_calibrate_speed_unknown"
+					android:textAppearance="?android:attr/textAppearanceLarge" />
+
+			</TableRow>
+
+			<TableRow android:id="@+id/tableRow2" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+
+
+			<TableRow android:id="@+id/tableRow3" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+
+
+			<TableRow android:id="@+id/tableRow4" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+
+		</TableLayout>
+
+
+	</LinearLayout>
+
+
+	<LinearLayout style="@style/BottomButtonBar">
+		<include layout="@layout/generic_edit_buttons" />
+	</LinearLayout>
+</LinearLayout>
