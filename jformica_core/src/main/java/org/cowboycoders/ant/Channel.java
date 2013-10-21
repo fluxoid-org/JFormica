@@ -97,6 +97,8 @@ public class Channel {
 	}
 
 	private Node parent;
+	
+	private Network assignedNetwork;
 
 	/**
 	 * @return the parent
@@ -239,6 +241,9 @@ public class Channel {
 		
 		// remove all channelListeners
 		removeAllRxListeners();
+		
+		// clear name
+		this.setName(UUID.randomUUID().toString());
 	}
 
 	/**
@@ -472,30 +477,26 @@ public class Channel {
 		return msg;
 	}
 
-	/**
-	 * Sets network of channel and assigns it
-	 * 
-	 * @param netKeyName
-	 * @param assignMessage
-	 */
-	public void assign(String netKeyName, ChannelAssignMessage assignMessage) {
-		NetworkKey key = parent.getNetworkKey(netKeyName);
-		assign(key, assignMessage);
-	}
 
 	/**
 	 * Sets network of channel and assigns it
 	 * 
 	 * @see org.cowboycoders.ant.messages.ChannelAssignMessage
-	 * @param netKeyName
+	 * @param key
 	 * @param type
 	 *            channel type
 	 * @param extended
 	 *            extended assignment parameters
 	 */
-	public void assign(String netKeyName, ChannelType type,
+	public void assign(NetworkKey key, ChannelType type,
 			ExtendedAssignment... extended) {
-		assign(netKeyName, new ChannelAssignMessage(0, type, extended));
+		assign(key, new ChannelAssignMessage(0, type, extended));
+	}
+	
+	public void assign(Network network, ChannelType type,
+			ExtendedAssignment... extended) {
+		ChannelAssignMessage msg = new ChannelAssignMessage(network.getNumber(), type, extended);
+		sendAndWaitForResponseNoError(msg);
 	}
 
 	/**
@@ -687,14 +688,28 @@ public class Channel {
 		} catch (TimeoutException e) {
 			handleTimeOutException(e);
 		}
-		type = null ;
+		type = null;
+		
+		if (assignedNetwork != null) {
+			assignedNetwork.free();
+			assignedNetwork = null;
+		}
 	}
 
 	public synchronized void assign(NetworkKey key,
 			ChannelAssignMessage assignMessage) {
 		int networkNumber = 0;
-		if (key != null) {
-			networkNumber = key.getNumber();
+		
+		// don't leak associated networks
+		if(assignedNetwork != null) {
+			assignedNetwork.free();
+			assignedNetwork = null;
+		}
+		// look up network from node
+		assignedNetwork = parent.getNetworkForKey(key);
+		
+		if (assignedNetwork != null) {
+			networkNumber = assignedNetwork.getNumber();
 		} else {
 			LOGGER.warning("network key not found: default to network 0");
 		}
