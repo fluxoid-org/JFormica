@@ -180,7 +180,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
 			short deviceId = usbDescriptor.getDeviceId();
 			matchingDevices = UsbUtils.getUsbDevicesWithId(rootHub,
 					vendorId, deviceId);
-			if (devices.isEmpty()) continue;
+			if (matchingDevices.isEmpty()) continue;
 			devices.addAll(matchingDevices);
 		}
 
