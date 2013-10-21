@@ -37,6 +37,7 @@ package org.cowboycoders.ant.interfaces;
  *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -68,22 +69,12 @@ public class AntTransceiver extends AbstractAntTransceiver {
 			.getName());
 
 	public static final Level LOG_LEVEL = Level.SEVERE;
-
+	
 	static {
 		// set logging level
 		AntTransceiver.LOGGER.setLevel(LOG_LEVEL);
 	}
-
-	/**
-	 * usb device id
-	 */
-	private static final short DEVICE_ID = 0x1008;
-
-	/**
-	 * usb vendor
-	 */
-	private static final short VENDOR_ID = 0x0fcf;
-
+	
 	/**
 	 * sync byte
 	 */
@@ -131,10 +122,24 @@ public class AntTransceiver extends AbstractAntTransceiver {
 	private UsbReader usbReader;
 
 	// private int deviceNumber;
-
+	
+	/**
+	 * Looks for all known {@link org.cowboycoders.ant.interfaces.AntDeviceId}}
+	 * @param deviceNumber
+	 */
 	public AntTransceiver(int deviceNumber) {
+		this(null,deviceNumber);
+
+	}
+	
+	/**
+	 * Search for a specific device 
+	 * @param antId
+	 * @param deviceNumber
+	 */
+	public AntTransceiver(AntDeviceId antId, int deviceNumber) {
 		// this.deviceNumber = deviceNumber;
-		doInit(deviceNumber);
+		doInit(antId,deviceNumber);
 
 	}
 
@@ -145,7 +150,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
 
 	}
 
-	private void doInit(int deviceNumber) {
+	private void doInit(AntDeviceId antId, int deviceNumber) {
 		UsbServices usbServices = null;
 		UsbHub rootHub;
 
@@ -157,9 +162,29 @@ public class AntTransceiver extends AbstractAntTransceiver {
 		} catch (UsbException e) {
 			throw new AntCommunicationException(e);
 		}
+		
+		List<UsbDevice> devices = new ArrayList<UsbDevice>();
+		AntDeviceId [] deviceSearchList;
+		
+		// populate an array of device ids we wish to search for
+		if (antId != null) { // case : specific device requested
+			deviceSearchList = new AntDeviceId [] {antId};
+		} else { // case : look for all suitable devices
+			deviceSearchList = AntDeviceId.values();
+		}
+		
+		for (AntDeviceId device : deviceSearchList) {
+			List<UsbDevice> matchingDevices;
+			DeviceDescriptor usbDescriptor = device.getUsbDescriptor();
+			short vendorId = usbDescriptor.getVendorId(); 
+			short deviceId = usbDescriptor.getDeviceId();
+			matchingDevices = UsbUtils.getUsbDevicesWithId(rootHub,
+					vendorId, deviceId);
+			if (devices.isEmpty()) continue;
+			devices.addAll(matchingDevices);
+		}
 
-		List<UsbDevice> devices = UsbUtils.getUsbDevicesWithId(rootHub,
-				VENDOR_ID, DEVICE_ID);
+
 
 		// devices = UsbUtils.getAllUsbDevices(rootHub);
 
