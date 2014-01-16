@@ -35,18 +35,18 @@ public abstract class ChannelMessage extends StandardMessage {
    * for param explanations.
    * @throws ValidationException 
    */
-  public ChannelMessage(MessageId id, Integer channelNo,
+  protected ChannelMessage(MessageId id, Integer channelNo,
       ArrayList<DataElement> messageElements) {
     this(null,id, channelNo,messageElements);
   }
   
-  public ChannelMessage(MessageId id, Integer channelNo,
+  protected ChannelMessage(MessageId id, Integer channelNo,
       DataElement [] messageElements) {
     this(null,id, channelNo,
         messageElements);
   }
   
-  public ChannelMessage(Message backend,MessageId id, Integer channelNo,
+  protected ChannelMessage(Message backend,MessageId id, Integer channelNo,
       DataElement [] messageElements) {
     this(backend,id, channelNo,
         new ArrayList<DataElement>(Arrays.asList(messageElements)));
@@ -59,7 +59,7 @@ public abstract class ChannelMessage extends StandardMessage {
    * for param explanations.
    * @throws ValidationException 
    */
-  public ChannelMessage(MessageId id, Integer channelNo) {
+  protected ChannelMessage(MessageId id, Integer channelNo) {
     this(null,id, channelNo,new DataElement[0]);
   }
   
@@ -72,7 +72,7 @@ public abstract class ChannelMessage extends StandardMessage {
    *        to the the standard channel message list of elements
    * @throws FatalMessageException on error creating the message
    */
-  public ChannelMessage(Message message, MessageId id, Integer channelNo,
+  protected ChannelMessage(Message message, MessageId id, Integer channelNo,
       ArrayList<DataElement> messageElements) {
     super(message, id, ListUtils.prefixList(
         messageElements, 
