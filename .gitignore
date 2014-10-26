@@ -12,3 +12,6 @@ jformica_android/gen
 **/.settings
 *.project
 *.classpath
+
+out/*
+.gradle/*
