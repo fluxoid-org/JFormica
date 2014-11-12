@@ -30,15 +30,15 @@ import org.cowboycoders.ant.messages.Constants.DataElement;
  *
  */
 public class ChannelRequestMessage extends ChannelMessage {
-  
+
   /**
    * The additional elements we are adding to channel message
    */
-  private static DataElement [] additionalElements = 
+  private static DataElement [] additionalElements =
       new DataElement [] {
     DataElement.CHANNEL_REQUEST_MSG_ID,
   };
-  
+
   /**
    * Supported request messages
    * @author will
@@ -51,9 +51,9 @@ public class ChannelRequestMessage extends ChannelMessage {
     CAPABILITIES(0x54),
     SERIAL_NUMBER(0x61),
     ;
-    
+
     byte msgId;
-    
+
     /**
      * @return the msgId
      */
@@ -82,16 +82,16 @@ public class ChannelRequestMessage extends ChannelMessage {
       throw new FatalMessageException("Error setting values",e);
     }
   }
-  
+
   /**
-   * Use default channel (zero). If sent though {@link org.cowycoders.ant.Channel} this
+   * Use default channel (zero). If sent though {TODO : fix link org.cowycoders.ant.Channel} this
    * will be set to the corresponding channel number associated with that instance.
-   * @param request
+   * @param request TODO : to document
    */
   public ChannelRequestMessage(Request request) {
 	  this(0,request);
   }
-  
+
   /**
    * @param request to set
    * @throws ValidationException if fails validation

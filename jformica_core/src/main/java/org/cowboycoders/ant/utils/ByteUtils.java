@@ -24,19 +24,19 @@ import java.util.Collections;
 import java.util.List;
 
 public class ByteUtils {
-  
+
   private ByteUtils() {}
-  
+
   /**
    * Converts a byte (which is being treated as unsigned) to
    * an int (i.e negative byte values return positive int values)
-   * @param byteIn
-   * @return
+   * @param byteIn to document
+   * @return to document
    */
   public static int unsignedByteToInt(byte byteIn) {
     return byteIn & 0xFF;
   }
-  
+
   public static Byte [] boxArray(byte [] unboxed) {
     Byte [] rtn = new Byte[unboxed.length];
     int i =0;
@@ -45,7 +45,7 @@ public class ByteUtils {
     }
     return rtn;
   }
-  
+
   public static byte [] unboxArray(Byte [] boxed) {
     byte [] rtn = new byte[boxed.length];
     int i =0;
@@ -54,7 +54,7 @@ public class ByteUtils {
     }
     return rtn;
   }
-  
+
   public static byte [] reverseArray(byte [] input) {
     byte [] rtn = new byte[input.length];
     int i = input.length;
@@ -63,7 +63,7 @@ public class ByteUtils {
     }
     return rtn;
   }
-  
+
 	public static byte [] joinArray(byte [] ... arrays) {
 		int totalLength = 0;
 		for (byte [] array : arrays) {
@@ -71,7 +71,7 @@ public class ByteUtils {
 		}
 		// allocate
 		byte [] joined = new byte[totalLength];
-		
+
 		int nextIndex = 0;
 		for (byte [] array: arrays ) {
 			for (int i = nextIndex ; i < array.length + nextIndex ; i++) {
@@ -79,10 +79,10 @@ public class ByteUtils {
 			}
 			nextIndex += array.length;
 		}
-		
+
 		return joined;
 	}
-	
+
 
 	public static int [] unsignedBytesToInts(Byte [] bytes) {
 	  int [] rtn = new int[bytes.length];
@@ -103,7 +103,7 @@ public class ByteUtils {
 	public static boolean arrayStartsWith(Byte[] pattern, Byte[] data){
 		return ArrayUtils.arrayStartsWith(pattern, data);
 	}
-	
+
 	public static boolean arrayStartsWith(byte [] pattern, byte [] data) {
 	    for (int i=0; i<pattern.length; i++) {
 	        if (data[i] != pattern[i]) {
@@ -112,25 +112,25 @@ public class ByteUtils {
 	    }
 	    return true;
 	}
-	
+
 	public static void main (String [] args) {
 		byte [] one = new byte[] {1,2,3};
 		byte [] two = new byte[] {4};
 		byte [] three = new byte[] {};
 		byte [] four = new byte[] {5,6,7,8,9};
-		
+
 		for (byte b : ByteUtils.joinArray(one,two,three,four)) {
 			System.out.println(b);
 		}
-		
-		
+
+
 		  System.out.println(ByteUtils.lsbMerge(Arrays.asList(new Byte [] {(byte) 0xd0,(byte) 0xaf})));
 	}
-	
+
 	/*
 	 * Utility classes that contain methods to
 	 * convert byte arrays to integers and back.
-	 * 
+	 *
 	 * Could replace with a more generic implementation based on
 	 * BigInteger {@see BigIntUtils}
 	 * @author will
@@ -139,7 +139,7 @@ public class ByteUtils {
 
 	/**
 	   * Least significant byte first
-	   * @param list of bytes to merge into an Integer
+	   * @param data list of bytes to merge into an Integer
 	   * @return the merger of the bytes
 	   */
 	  public static Integer lsbMerge(List<Byte> data) {
@@ -156,7 +156,7 @@ public class ByteUtils {
 	   * Splits a list of bytes ordered with least significant byte first
 	   * @param in integer to split
 	   * @param numberOfBytes number of bytes to produce
-	   * @return
+	   * @return to document
 	   */
 	  public static List<Byte> lsbSplit(Integer in, int numberOfBytes) {
 	    List<Byte> bytes = new ArrayList<Byte>();
@@ -171,7 +171,7 @@ public class ByteUtils {
 	   * Splits a list of bytes ordered with most significant byte first
 	   * @param in integer to split
 	   * @param numberOfBytes number of bytes to produce
-	   * @return
+	   * @return to document
 	   */
 	  public static List<Byte> msbSplit(Integer in, int numberOfBytes) {
 	    List<Byte> rtn = lsbSplit(in,numberOfBytes);
@@ -181,7 +181,7 @@ public class ByteUtils {
 
 	/**
 	   * Most significant byte first
-	   * @param list of bytes to merge into an Integer
+	   * @param data list of bytes to merge into an Integer
 	   * @return the merger of the bytes
 	   */
 	  public static Integer msbMerge(List<Byte> data) {
@@ -194,12 +194,12 @@ public class ByteUtils {
 	   * Splits a byte array into smaller chunks
 	   * @param data array to split
 	   * @param packetLength chunk size
-	   * @return
+	   * @return to document
 	   */
 	  public static List<byte[]> splitByteArray(final byte[] data, final int packetLength) {
-	    List<byte[]> split = new ArrayList<byte[]>();  
+	    List<byte[]> split = new ArrayList<byte[]>();
 	    int wholePackets = (int)(data.length / packetLength);
-	
+
 	    int index = 0;
 	    for (int i = 0 ; i < wholePackets ; i++) {
 	      byte [] dataPacket = new byte[packetLength];
@@ -220,15 +220,15 @@ public class ByteUtils {
 	      }
 	      split.add(dataPacket);
 	    }
-	    
+
 	    return split;
-	  
+
 	  }
-	  
-	  
-	  
-	  
-	  
-  
+
+
+
+
+
+
 
 }

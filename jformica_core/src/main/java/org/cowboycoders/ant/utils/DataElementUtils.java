@@ -17,7 +17,7 @@
  *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * 
+ *
  */
 package org.cowboycoders.ant.utils;
 
@@ -33,14 +33,14 @@ import org.cowboycoders.ant.messages.Constants.DataElement;
  *
  */
 public class DataElementUtils {
-  
+
   private DataElementUtils() {
-    
+
   }
-  
+
   /**
    * Sets a DataElement in a payload
-   * @param payload to modify 
+   * @param payload to modify
    * @param messageElements describe the composition of the payload
    * @param element to modify
    * @param value to set {@code element} to
@@ -50,8 +50,8 @@ public class DataElementUtils {
    */
   public static boolean setDataElement(
       ArrayList<Byte> payload,
-      DataElement [] messageElements,      
-      DataElement element, 
+      DataElement [] messageElements,
+      DataElement element,
       Integer value,
       int offset,
       int skip
@@ -59,20 +59,20 @@ public class DataElementUtils {
     if (!Arrays.asList(messageElements).contains(element)) {
       throw new FatalMessageException("Arg, element, not in expected list");
     }
-    
+
     boolean completed = false;
     List<Byte> insertionBytes = ByteUtils.lsbSplit(value, element.getLength());
-    
+
     completed = insertElementBytes(payload, messageElements, element, insertionBytes, offset,skip);
-    
+
     if (!completed) {
       throw new FatalMessageException("Byte insertion failed");
     }
-    
+
     return completed;
-    
+
   }
-  
+
   /**
    * Inserts data, given as  a {@code List} of Bytes, into a payload
    * @param payload the payload to insert bytes into
@@ -91,9 +91,9 @@ public class DataElementUtils {
       int offset,
       int skip
       ) {
-    assert bytesToInsert.size() == element.getLength() : 
+    assert bytesToInsert.size() == element.getLength() :
       "Number of bytes to insert doesn't match expected element length";
-    
+
     boolean completed = false;
     int elementCount = 0;
     int index = offset;
@@ -112,29 +112,30 @@ public class DataElementUtils {
       }
       index += e.getLength();
     }
-    
+
     return completed;
   }
-  
+
   /**
    * Gets the data associated with a given {@code DataElement}
    * @param payload to get the data from
    * @param messageElements describes the composition of the payload
    * @param element to get data for
    * @param offset in payload to start of messageElements
-   * @return
+   * @param skip in payload to start of messageElements
+   * @return data element
    */
   public static Integer getDataElement(
       ArrayList<Byte> payload,
       DataElement [] messageElements,
-      DataElement element, 
+      DataElement element,
       int offset,
       int skip) {
-    
+
     if (!Arrays.asList(messageElements).contains(element)) {
       throw new FatalMessageException("Arg, element, not in expected list");
     }
-    
+
     Integer rtn = null;
     int elementCount = 0;
     int index = offset;
@@ -148,7 +149,7 @@ public class DataElementUtils {
       }
       index += e.getLength();
     }
-    
+
     return rtn;
   }
 

@@ -3,8 +3,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.4', 'nl.javadude.gradle.plugins:license-gradle-plugin:0.5.0'
+        classpath 'com.android.tools.build:gradle:0.13.+', 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
     }
+	
+	
 }
 
 subprojects { project ->
@@ -13,7 +15,7 @@ subprojects { project ->
 
     license {
         header rootProject.file('LICENSE')
-        strictCheck true
+        // strictCheck true
     }
 }
 
@@ -23,16 +25,35 @@ allprojects {
         mavenCentral()
     }
 
-    tasks.withType(Compile) {
+    tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked"
     }
 
     apply plugin: 'idea'
     apply plugin: 'maven'
+
+//	apply plugin: 'maven-publish'
+//	group = 'org.cowboycoders.ant'
+//	version = '0.0.5-SNAPSHOT'
+//	publishing {
+//    	publications {
+//        	mavenJava(MavenPublication) {
+//            	from components.
+//        	}
+//    	}
+//    	repositories {
+//        	maven {
+//            	// change to point to your repo, e.g. http://my.org/repo
+//            	url "$buildDir/repo"
+//        	}
+//    	}
+//	}	
+
+	
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.6'
+    gradleVersion = '2.1'
 }
 
 

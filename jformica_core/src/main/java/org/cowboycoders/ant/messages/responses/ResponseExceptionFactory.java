@@ -28,17 +28,17 @@ import org.cowboycoders.ant.messages.responses.exceptions.*;
  *
  */
 public class ResponseExceptionFactory {
-	
+
 	private ResponseExceptionFactory() {
-		
+
 	}
-	
+
 	private static ResponseExceptionFactory factory = new ResponseExceptionFactory();
-	
+
 	public static ResponseExceptionFactory getFactory() {
 		return factory;
 	}
-	
+
 	/**
 	 * Maps response codes to exceptions or null if response does not indicate an error
 	 * condition
@@ -71,11 +71,11 @@ public class ResponseExceptionFactory {
 				return null;
 		}
 	}
-	
+
 	/**
 	 * Throws the appropriate exception on error response
-	 * @param response
-	 * @throws RuntimeException
+	 * @param response TODO : document this
+	 * @throws RuntimeException TODO : document this
 	 */
 	public void throwOnError(ResponseCode response) throws RuntimeException {
 		RuntimeException e = map(response);
@@ -83,12 +83,12 @@ public class ResponseExceptionFactory {
 			throw e;
 		}
 	}
-	
+
 	/**
-	 * Extracts response code from {@link Response}. See: 
-	 * {@link ResponseExceptionFactory#throwOnError(ResponseCode)} 
-	 * @param response
-	 * @throws RuntimeException
+	 * Extracts response code from {@link Response}. See:
+	 * {@link ResponseExceptionFactory#throwOnError(ResponseCode)}
+	 * @param response TODO : document this
+	 * @throws RuntimeException TODO : document this
 	 */
 	public void throwOnError(Response response) throws RuntimeException {
 		throwOnError(response.getResponseCode());

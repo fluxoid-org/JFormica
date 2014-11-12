@@ -39,7 +39,7 @@ public interface Messageable {
   /**
    * returns the raw bytes to be written to the ant chip,
    * excluding checksum and sync byte
-   * @return
+   * @return TODO: document this
    */
   public abstract byte[] encode();
 
@@ -58,23 +58,25 @@ public interface Messageable {
 
   /**
    * Sets the payload in the standard (non extended) form.
-   * @param the payload in standard form 
+   * @param payload the payload in standard form
    * @throws ValidationException if payload is malformed
    */
   public abstract void setStandardPayload(ArrayList<Byte> payload)
       throws ValidationException;
 
   /**
-   * see @{code Message.decode(byte[], boolean)}
+   * see  TODO : fix this code Message.decode(byte[], boolean)
+   * @param buffer message to debug
+   * @throws MessageException when error occurs
    */
   public abstract void decode(byte[] buffer) throws MessageException;
-  
+
   /**
    * Returns all data held in form suitable for calling decode with.
    * In comparison with encode, this should not lose data.
    * @return the data
    */
   public byte [] toArray();
-  
+
 
 }

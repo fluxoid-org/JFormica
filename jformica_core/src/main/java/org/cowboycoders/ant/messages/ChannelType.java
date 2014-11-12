@@ -26,7 +26,7 @@ package org.cowboycoders.ant.messages;
  *
  */
 public abstract class ChannelType {
-  
+
   /**
    * true if shared channel
    */
@@ -36,7 +36,7 @@ public abstract class ChannelType {
    * true if oneway transmit/receive
    */
   private boolean oneway = false;
-  
+
   public enum Types {
     SLAVE            (0x00),
     MASTER           (0x10),
@@ -45,23 +45,23 @@ public abstract class ChannelType {
     ONEWAY_RECEIVE   (0x40),
     ONEWAY_TRANSMIT  (0x50),
     ;
-    
+
     public int code;
-    
+
     Types (int code) {
       this.code =  code;
     }
   }
-  
+
   private int channelTypeCode = 0;
-  
+
   public int getChannelTypeCode() {
     return channelTypeCode;
   }
-  
+
   /**
    * build ChannelType with the supplied ChannelTypes.Types
-   * @param channelTypes
+   * @param channelTypes TODO : to document
    */
   protected ChannelType(Types [] channelTypes) {
     for (Types c : channelTypes) {
@@ -74,7 +74,7 @@ public abstract class ChannelType {
       }
     }
   }
-  
+
   /**
    * @return true, if shared Channel
    */

@@ -17,7 +17,7 @@
  *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * 
+ *
  */
 package org.cowboycoders.ant;
 
@@ -29,13 +29,13 @@ import org.cowboycoders.ant.messages.responses.ResponseCode;
  *
  */
 public class TransferException extends ChannelError {
- 
+
 
   private static final long serialVersionUID = 1L;
   private MessageId messageId;
   private ResponseCode responseCode;
-  
-  
+
+
  /**
    * @return the messageId
    */
@@ -70,14 +70,14 @@ public class TransferException extends ChannelError {
 
 /**
   * Ant msg id and response code of event that caused this eception to be thrown
-  * @param id
-  * @param response
+  * @param id TODO : document this
+  * @param response TODO : document this
   */
   public TransferException(MessageId id, ResponseCode response) {
     this.messageId = id;
     this.responseCode = response;
   }
-  
+
   public TransferException(MessageId id, ResponseCode response, String detail) {
     super(detail);
     this.messageId = id;
