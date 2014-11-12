@@ -32,11 +32,11 @@ import org.cowboycoders.ant.messages.responses.ResponseCode;
  *
  */
 public class MessageConditionFactory {
-  
+
   public final static Logger LOGGER = Logger.getLogger(MessageConditionFactory.class .getName());
-  
+
   private static MessageCondition GENERIC_RESPONSE_CONDITION = new ResponseCondition();
-  
+
   private static MessageCondition RESPONSE_FILTER_CONDITION = new MessageCondition() {
 
 	@Override
@@ -46,9 +46,9 @@ public class MessageConditionFactory {
 		if (response.getMessageId().equals(MessageId.EVENT)) return false;
 		return true;
 	}
-	  
+
   };
-  
+
   private static MessageCondition EVENT_FILTER_CONDITION = new MessageCondition() {
 
 	@Override
@@ -58,14 +58,14 @@ public class MessageConditionFactory {
 		if (!response.getMessageId().equals(MessageId.EVENT)) return false;
 		return true;
 	}
-	  
+
   };
-  
+
   /**
    * wait for a message with class equal clazz
-   * 
-   * @param clazz
-
+   * @param <V> TODO: document this
+   * @param clazz condition
+   * @return TODO: document this
    */
   public static <V extends StandardMessage> MessageCondition newEqualsClassCondition(final Class<V> clazz)
   {
@@ -77,17 +77,17 @@ public class MessageConditionFactory {
         if (msg.getClass().equals(clazz)) return true;
         return false;
       }
-      
+
     };
-    
+
     return condition;
   }
-  
+
   /**
    * wait for a message that is an instance of clazz
-   * 
-   * @param clazz
-
+   * @param <V> TODO: document this
+   * @param clazz condition
+   * @return TODO: document this
    */
   public static <V extends StandardMessage> MessageCondition newInstanceOfCondition(final Class<V> clazz)
   {
@@ -99,14 +99,14 @@ public class MessageConditionFactory {
         if (clazz.isInstance(msg)) return true;
         return false;
       }
-      
+
     };
     return condition;
   }
-  
-  
+
+
   private static class ResponseCondition implements MessageCondition {
-    
+
     private ResponseCode responseCode;
     private MessageId id;
 
@@ -114,7 +114,7 @@ public class MessageConditionFactory {
       this.id = id;
       this.responseCode = responseCode;
     }
-    
+
     /**
      * Matches any {@link Response}
      */
@@ -129,59 +129,59 @@ public class MessageConditionFactory {
       if (id != null) {
         if (!response.getMessageId().equals(id)) return false;
       }
-      
+
       if (responseCode != null) {
         if (!(response.getResponseCode().getCode() == responseCode.getCode())) return false;
       }
-      
+
       return true;
     }
-    
+
   }
-  
+
 
   /**
-   * 
-   * @param message
-   * @param responseCode
+   * @param <V> TODO : document this
+   * @param id TODO : document this
+   * @param responseCode TODO : document this
    * @param id overrides message.getID()
-   * @return
+   * @return TODO : document this
    */
-  public static <V extends StandardMessage> MessageCondition newResponseCondition(MessageId id, 
+  public static <V extends StandardMessage> MessageCondition newResponseCondition(MessageId id,
       ResponseCode responseCode)
   {
-    
+
     MessageCondition condition = new ResponseCondition(id, responseCode);
-  
+
     return condition;
   }
-  
+
   /**
    * Matches a generic response, see {@link Response}
-   * @return
+   * @return TODO : document this
    */
   public static MessageCondition newResponseCondition()
   {
     return RESPONSE_FILTER_CONDITION;
   }
-  
+
   /**
    * Matches a generic event i.e something that is sent from the ant chip
    * that isn't in reply to a message you have sent, see {@link Response}
-   * @return
+   * @return TODO : document this
    */
   public static MessageCondition newEventCondition()
   {
     return EVENT_FILTER_CONDITION;
   }
-  
-  
+
+
   /**
    * Checks for {@code ResponseCode.EVENT_TRANSFER_TX_COMPLETED}, throws a
-   * {@link TransferException} on {@code ResponseCode.EVENT_TRANSFER_TX_FAILED}.
-   * 
-   * Used for sending {@link AcknowledgedDataMessage}s
-   * 
+   * TODO : fix this link TransferException on  code ResponseCode.EVENT_TRANSFER_TX_FAILED.
+   *
+   * Used for sending TODO : fix this link AcknowledgedDataMessage
+   *
    * @return the condition satisfying the above
    */
   public static MessageCondition newAcknowledgedCondition()
@@ -199,28 +199,28 @@ public class MessageConditionFactory {
 				}
 				return false;
 			}
-			
+
 		};
-		
+
 		return condition;
   }
-  
-  
+
+
   /**
-   * Chains conditions together - you should only use this once. All conditions must be 
+   * Chains conditions together - you should only use this once. All conditions must be
    * satisfied (think and!)
    * @param conditions to chain
    * @return chained condition
    */
   public static MessageCondition newChainedCondition(final MessageCondition ... conditions) {
-    
+
     MessageCondition condition = new MessageCondition () {
       private int currentIndex = 0;
       private boolean success = false;
-      
+
       @Override
       public boolean test(StandardMessage msg) {
-    	// if we are re-testing after all conditions have returned true  
+    	// if we are re-testing after all conditions have returned true
     	if (!(currentIndex < conditions.length)) {
     		return success;
     	}
@@ -233,12 +233,12 @@ public class MessageConditionFactory {
         }
         return false;
       }
-      
+
     };
-    
+
     return condition;
   }
-  
-  
+
+
 
 }

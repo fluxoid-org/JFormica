@@ -28,64 +28,64 @@ import java.util.Arrays;
  *
  */
 public class BigIntUtils {
-  
+
   private BigIntUtils() {}
-  
+
   public static int NUMBER_OF_BYTES_BYTE = 1;
   public static int NUMBER_OF_BYTES_SHORT= Short.SIZE / Byte.SIZE;
   public static int NUMBER_OF_BYTES_INT= Integer.SIZE / Byte.SIZE;
   public static int NUMBER_OF_BYTES_LONG = Long.SIZE / Byte.SIZE;
-  
+
   public static BigInteger convertUnsignedByte(byte value) {
     if (value >= 0) {
       return convertByte(value);
     }
     return new BigInteger(ByteBuffer.allocate(NUMBER_OF_BYTES_BYTE + 1).put(1,value).array());
   }
-  
+
   public static BigInteger convertByte(byte value) {
     return new BigInteger(ByteBuffer.allocate(NUMBER_OF_BYTES_BYTE).put(value).array());
   }
-  
+
   public static BigInteger convertShort(short value) {
     return new BigInteger(ByteBuffer.allocate(NUMBER_OF_BYTES_SHORT).putShort(value).array());
   }
-  
+
   public static BigInteger convertUnsignedShort(short value) {
     if (value >= 0) {
       return convertShort(value);
     }
     return new BigInteger(ByteBuffer.allocate(NUMBER_OF_BYTES_SHORT + 1).putShort(1,value).array());
   }
-  
+
   public static BigInteger convertInt(int value) {
     return new BigInteger(ByteBuffer.allocate(NUMBER_OF_BYTES_INT).putInt(value).array());
   }
-  
+
   public static BigInteger convertUnsignedInt(int value) {
     if (value >= 0) {
       return convertInt(value);
     }
     return new BigInteger(ByteBuffer.allocate(NUMBER_OF_BYTES_INT + 1).putInt(1,value).array());
   }
-  
+
   public static BigInteger convertLong(long value) {
     return new BigInteger(ByteBuffer.allocate(NUMBER_OF_BYTES_LONG).putLong(value).array());
   }
-  
+
   public static BigInteger convertUnsignedLong(long value) {
     if (value >= 0) {
       return convertLong(value);
     }
     return new BigInteger(ByteBuffer.allocate(NUMBER_OF_BYTES_LONG + 1).putLong(1,value).array());
   }
-  
+
   public static byte [] toByteArrayLittleEndian(BigInteger bi) {
     byte [] extractedBytes = bi.toByteArray();
     byte [] reversed = ByteUtils.reverseArray(extractedBytes);
     return reversed;
   }
-  
+
   public static byte [] toByteArrayUnsigned(BigInteger bi) {
     byte [] extractedBytes = bi.toByteArray();
     int skipped = 0;
@@ -102,28 +102,28 @@ public class BigIntUtils {
     extractedBytes = Arrays.copyOfRange(extractedBytes, skipped, extractedBytes.length);
     return extractedBytes;
   }
-  
+
   public static byte [] toByteArrayLittleEndianUnsigned(BigInteger bi) {
     byte [] extractedBytes = toByteArrayUnsigned(bi);
     byte [] reversed = ByteUtils.reverseArray(extractedBytes);
     return reversed;
   }
-  
+
   public static BigInteger newLittleEndian(byte [] bytes) {
     byte [] constructionBytes = ByteUtils.reverseArray(bytes);
     return new BigInteger(constructionBytes);
   }
-  
+
   /**
    * Used on BigIntegers known to fit into x number of bytes.
-   * 
-   * Discards more significant bytes. 
-   * 
+   *
+   * Discards more significant bytes.
+   *
    * {@link BigIntUtils#NUMBER_OF_BYTES_BYTE}
    * {@link BigIntUtils#NUMBER_OF_BYTES_SHORT}
    * {@link BigIntUtils#NUMBER_OF_BYTES_INT}
    * {@link BigIntUtils#NUMBER_OF_BYTES_LONG}
-   * 
+   *
    * @param bi the @{code BigInteger} to clip
    * @param numberOfBytes number of bytes to clip to
    * @return a new BigInteger
@@ -135,11 +135,11 @@ public class BigIntUtils {
       //unclipped = ByteUtils.reverseArray(reversed);
       return bi;
     }
-    byte [] constructionBytes = Arrays.copyOfRange(unclipped, 
+    byte [] constructionBytes = Arrays.copyOfRange(unclipped,
         unclipped.length  -numberOfBytes , unclipped.length);
     return new BigInteger(constructionBytes);
   }
-//  
+//
 //  /**
 //   * Somewhat useless
 //   * Discards less significant bytes
@@ -152,15 +152,16 @@ public class BigIntUtils {
 //    if (unclipped.length <= numberOfBytes) {
 //      return bi;
 //    }
-//    byte [] constructionBytes = Arrays.copyOfRange(unclipped, 
+//    byte [] constructionBytes = Arrays.copyOfRange(unclipped,
 //        0 , numberOfBytes);
 //    return new BigInteger(constructionBytes);
 //  }
-//  
+//
   /**
    * Big endian
-   * @param bi
-   * @param numberOfBytes
+   * @param bi to document
+   * @param numberOfBytes to document
+   * @return to document
    */
   public static byte [] clipToByteArray(BigInteger bi, int numberOfBytes) {
     BigInteger clipped = clip(bi,numberOfBytes);
@@ -171,11 +172,12 @@ public class BigIntUtils {
     rtn = Arrays.copyOf(rtn, numberOfBytes);
     return ByteUtils.reverseArray(rtn);
   }
-  
+
   /**
    * Little endian
-   * @param bi
-   * @param numberOfBytes
+   * @param bi to document
+   * @param numberOfBytes  to document
+   * @return to document
    */
   public static byte [] clipToByteArrayLittleEndian(BigInteger bi, int numberOfBytes) {
     BigInteger clipped = clip(bi,numberOfBytes);
@@ -186,6 +188,6 @@ public class BigIntUtils {
     rtn = Arrays.copyOf(rtn, numberOfBytes);
     return rtn;
   }
-  
+
 
 }

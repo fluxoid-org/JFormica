@@ -17,7 +17,7 @@
  *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * 
+ *
  */
 package org.cowboycoders.ant.messages;
 
@@ -33,40 +33,40 @@ import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
  * Standard Decorator with no added functionality
- * 
+ *
  * @author will
  *
  */
 public abstract class StandardMessage
     implements MessageDecorator, Messageable {
-    
+
   /**
    * The message being decorated
    */
   private Message message;
-  
+
   /**
    * original mesasgeId - used to check this doesn't change during a decode
    */
   private final MessageId id;
-  
-  
+
+
   /**
    * If true, will validate that the message length is at least as long as
-   * {@code messageElements#size()} 
+   * {@code messageElements#size()}
    */
   private boolean allElementsMustBePresent = false;
-  
+
   /**
-   * holds the total length (in bytes) of all elements in {@code messageElements} 
+   * holds the total length (in bytes) of all elements in {@code messageElements}
    */
   private int totalElementLength = 0;
-  
+
   /**
    *  Stores the message elements in the order they appear in the message
    */
   private DataElement [] messageElements;
-  
+
   /**
    * @return the messageElements
    */
@@ -81,46 +81,50 @@ public abstract class StandardMessage
     this.messageElements = messageElements;
   }
 
-  protected StandardMessage(MessageId id, 
+  protected StandardMessage(MessageId id,
       DataElement[] messageElements) {
     this(null, id, messageElements);
   }
-  
+
   /**
-   * Decorates a copy of the message 
+   * Decorates a copy of the message
    * @param message the <code>Message</code> to decorate
+   * @param id the <code>MessageId</code> id to use
+   * @param messageElements list of elements
    * @throws FatalMessageException if there is an error building message
    */
-  protected StandardMessage(Message message, MessageId id, 
+  protected StandardMessage(Message message, MessageId id,
       ArrayList<DataElement> messageElements) {
     this(message,id,messageElements.toArray(new DataElement[0]));
   }
-  
+
   /**
-   * Decorates a copy of the message 
+   * Decorates a copy of the message
    * @param message the <code>Message</code> to decorate
+   * @param id the <code>MessageId</code> id to use
+   * @param messageElements list of elements
    * @throws FatalMessageException if there is an error building message
    */
-  protected StandardMessage(Message message, MessageId id, 
+  protected StandardMessage(Message message, MessageId id,
       DataElement [] messageElements) {
-    
+
     this.id = id;
-    
+
     ArrayList<Byte> payload = new ArrayList<Byte>();
 
     if (message == null) {
       message = new Message();
     }
-    
+
     if (messageElements == null) {
       throw new FatalMessageException("StandardMessage: messageElements cannot be null");
     }
-    
+
     this.message = message.clone();
     this.message.reset();
     this.message.setId(id);
     this.messageElements = messageElements;
-    
+
     for (DataElement element : messageElements) {
       int elementLength = element.getLength();
       totalElementLength += elementLength;
@@ -128,59 +132,59 @@ public abstract class StandardMessage
         payload.add((byte) 0);
       }
     }
-    
+
     try {
       this.message.setStandardPayload(payload);
     } catch (ValidationException e) {
       throw new FatalMessageException("Error setting payload", e);
     }
-    
+
   }
-  
+
   /**
-   * {@inheritDoc} 
+   * {@inheritDoc}
    */
   @Override
   public final MessageId getId() {
     return message.getId();
   }
-  
+
   /**
-   * {@inheritDoc} 
+   * {@inheritDoc}
    */
   protected
   final void setId(MessageId id) {
     message.setId(id);
   }
-  
+
   /**
-   * {@inheritDoc} 
+   * {@inheritDoc}
    */
   @Override
   public final byte getPayloadSize() {
     return message.getPayloadSize();
   }
-  
+
   /**
-   * {@inheritDoc} 
+   * {@inheritDoc}
    */
   @Override
   public final byte[] encode() {
     return message.encode();
   }
-  
+
   /**
-   * {@inheritDoc} 
+   * {@inheritDoc}
    */
   @Override
   public final List<Byte> getPayloadToSend() {
     return message.getPayloadToSend();
   }
-  
+
   /**
-   * {@inheritDoc} 
+   * {@inheritDoc}
    */
-  
+
   protected
   final void decode(byte[] buffer, boolean noChecks) throws MessageException {
     message.decode(buffer, noChecks);
@@ -196,35 +200,37 @@ public abstract class StandardMessage
       validate();
     }
   }
-  
+
   /**
-   * {@inheritDoc} 
+   * {@inheritDoc}
    */
   @Override
   public
   final void decode(byte[] buffer) throws MessageException {
     decode(buffer,false);
   }
-  
+
   /**
    * This method should validate the payload,
    * so that calls to the getters will not
    * throw exceptions. Throws a {@code MessagException} if invalid.
-   * 
+   *
    * Checking the messageId is equal to be that passed into
    * the constructor is already taken care of.
-   * 
+   *
    * setAllElementsMustBePresent() can be used to add additional
    * message length validation. If set, the message length must
-   * be equal to the length of the messageElements passed into 
+   * be equal to the length of the messageElements passed into
    * constructor.
-   * 
+   *
    * Called after decode.
+   *
+   * @throws MessageException when not valide
    */
   public abstract void validate() throws MessageException;
 
   /**
-   * {@inheritDoc} 
+   * {@inheritDoc}
    */
   @Override
   public final Message getBackendMessage() {
@@ -241,9 +247,9 @@ public abstract class StandardMessage
   public final void setStandardPayload(ArrayList<Byte> payload)
       throws ValidationException {
     message.setStandardPayload(payload);
-    
+
   }
-  
+
   /**
    * Sets the value of a DataElement in a given payload
    * @param element to set
@@ -261,15 +267,15 @@ public abstract class StandardMessage
       } catch (ValidationException e) {
         throw new FatalMessageException("Cannot set payload");
       }
-      
+
     }
     return completed;
   }
-  
+
   protected boolean setDataElement(DataElement element, Integer value) {
     return setDataElement(element,value,0);
   }
-  
+
   /**
    * Gets the value of a DataElement in a given payload
    * @param element to get data for
@@ -279,18 +285,20 @@ public abstract class StandardMessage
   protected Integer getDataElement(DataElement element,int skip) {
     Integer rtn = null;
     ArrayList<Byte> payload = getStandardPayload();
-    int offset = 0; 
+    int offset = 0;
     rtn = DataElementUtils.getDataElement(payload, messageElements, element, offset,skip);
     return rtn;
   }
-  
+
   /**
+   * @param element to get
+   * @return the data element
    * See {@code getDataElement(element,skip)}
    */
   protected Integer getDataElement(DataElement element) {
     return getDataElement(element,0);
   }
-  
+
   /**
    * Appends  A DataElement to messageElements, the field that represents
    * the current message structure
@@ -298,7 +306,7 @@ public abstract class StandardMessage
    */
   protected void addOptionalDataElement(DataElement element) {
     messageElements = getMessageElements();
-    DataElement[] newElements = Arrays.copyOf(messageElements, 
+    DataElement[] newElements = Arrays.copyOf(messageElements,
         messageElements.length + 1);
     newElements[messageElements.length] = element;
     setMessageElements(newElements);
@@ -312,17 +320,17 @@ public abstract class StandardMessage
       throw new FatalMessageException("Error setting payload", e);
     }
   }
-  
+
   /**
    * Sets individual bits of given {@code DataElement} specified
    * using a mask and value. The value's left most bit is aligned
    * with the left most bit of the mask. Values must be positive,
    * with a value no greater that the maximum number that can be
    * represented by within the masked bits.
-   * 
+   *
    * The mask's bits must be contiguous, or the behaviour
    * is undefined.
-   * 
+   *
    * @param element the whole element to apply the mask to
    * @param value the value to set in the mask bits
    * @param mask only bits marked in mask are changed
@@ -337,15 +345,15 @@ public abstract class StandardMessage
     setDataElement(element, wholeElement);
   }
 
-  
+
   /**
    * Convenience method to perform a max-min validation before setting
-   * @param element
-   * @param value
+   * @param element TODO: document this
+   * @param value TODO: document this
    * @param skip the number of identical elements to skip
-   * @throws ValidationException
+   * @throws ValidationException TODO : document this
    */
-  protected void setAndValidateDataElement(DataElement element, int value, int skip) 
+  protected void setAndValidateDataElement(DataElement element, int value, int skip)
       throws ValidationException {
     Integer maxValue = element.getMaxValue();
     Integer minValue = element.getMinValue();
@@ -355,29 +363,29 @@ public abstract class StandardMessage
     if (minValue == null) {
       minValue = 0;
     }
-    ValidationUtils.maxMinValidator(minValue, maxValue, value, 
+    ValidationUtils.maxMinValidator(minValue, maxValue, value,
         MessageExceptionFactory.createMaxMinExceptionProducable(element.toString())
         );
     setDataElement(element,value,skip);
   }
-  
+
   /**
    * Convenience method to perform a max-min validation before setting
-   * @param element
-   * @param value
-   * @throws ValidationException
+   * @param element TODO: document this
+   * @param value TODO: document this
+   * @throws ValidationException TODO: document this
    */
   protected void setAndValidateDataElement(DataElement element, int value) throws ValidationException {
     setAndValidateDataElement(element,value,0);
   }
-  
+
   /**
    * {@inheritDoc}
    */
   public byte [] toArray() {
     return message.toArray();
   }
-  
+
   /**
    * @param flag true to set, false to clear
    */
@@ -385,8 +393,8 @@ public abstract class StandardMessage
     this.allElementsMustBePresent = flag;
   }
 
-  
 
 
-  
+
+
 }

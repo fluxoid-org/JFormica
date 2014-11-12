@@ -37,9 +37,9 @@ import org.cowboycoders.ant.utils.ByteUtils;
  *
  */
 public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, TimestampInfoQueryable {
-	
+
 	public static Logger LOGGER = Logger.getLogger(CombinedBurst.class.getSimpleName());
-	
+
 	/**
 	 * Diagnostic flags
 	 * @author will
@@ -49,20 +49,20 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 		ERROR_SEQUENCE_INVALID,
 		ERROR_TIMEOUT,
 	}
-	
+
 	private final Byte [] data;
-	
+
 	private final List<StatusFlag> statusFlags = new ArrayList<StatusFlag>();
 
 	private final boolean complete;
-	
+
 	private DeviceInfoQueryable deviceInfo;
-	
+
 	private RssiInfoQueryable rssiInfo;
-	
+
 	private TimestampInfoQueryable timestampInfo;
 
-	private CombinedBurst(Byte [] data, boolean complete, 
+	private CombinedBurst(Byte [] data, boolean complete,
 			DeviceInfoQueryable deviceInfo,
 			RssiInfoQueryable rssiInfo,
 			TimestampInfoQueryable timestampInfo,
@@ -76,15 +76,16 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 			this.statusFlags.add(flag);
 		}
 	}
-	
+
 	/**
-	 * Get the partial/ complete burst data packet depending on {@link Combinded#isComplete()}
-	 * @return
+	 * Get the partial/ complete burst data packet depending on
+	 * TODO : Fix this link {link Combinded#isComplete()}
+	 * @return the data
 	 */
 	public Byte[] getData() {
 		return data;
 	}
-	
+
 	/**
 	 * Convert all bytes to integer representation. Assumes bytes are unsigned.
 	 * @return data
@@ -92,15 +93,15 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 	public int [] getUnsignedData() {
 		return ByteUtils.unsignedBytesToInts(getData());
 	}
-	
+
 	/**
-	 * Status/Error flags 
+	 * Status/Error flags
 	 * @return list of diagnostic flags
 	 */
 	public List<StatusFlag> getStatusFlags() {
 		return statusFlags;
 	}
-	
+
 	/**
 	 * Status of combination
 	 * @return true if combination complete, false otherwise/
@@ -108,7 +109,7 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 	public boolean isComplete() {
 		return complete;
 	}
-	
+
 	@Override
 	public Integer getRxTimeStamp() {
 		if (timestampInfo == null) {
@@ -164,7 +165,7 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 		}
 		return deviceInfo.getTransmissionType();
 	}
-	
+
 	/**
 	 * Indicates whether or not extended information is available
 	 * @return true if available
@@ -172,9 +173,9 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 	public boolean isExtended() {
 		return (deviceInfo != null || rssiInfo != null || timestampInfo != null);
 	}
-	
+
 	public static class Builder {
-		
+
 		private List<Byte> combinedData;
 		private List<StatusFlag> statusFlags;
 		private BurstMessageSequenceGenerator sequenceGenerator;
@@ -184,17 +185,18 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 		private DeviceInfoQueryable deviceInfo;
 		private RssiInfoQueryable rssiInfo;
 		private TimestampInfoQueryable timestampInfo;
-		
+
 		public Builder() {
 			reset();
 		}
-		
+
 		/**
 		 * Combines the individual messages
+		 * @param message the message to add
 		 * @return the finished combination or null if still being generated
 		 */
 		public CombinedBurst addMessage(BurstDataMessage message) {
-			
+
 			// case: finished
 			if ((message.getSequenceNumber() & BurstMessageSequenceGenerator.FINISH_MASK) != 0) {
 				expectedSequenceNumber = sequenceGenerator.finish();
@@ -208,11 +210,11 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 			} else {
 				expectedSequenceNumber = sequenceGenerator.next();
 			}
-			
+
 			// we now consider the message under construction
 			building = true;
 			combinedData.addAll(Arrays.asList(message.getData()));
-			
+
 			if (message instanceof TimestampInfoQueryable) {
 				timestampInfo = (TimestampInfoQueryable) message;
 			}
@@ -222,13 +224,13 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 			if (message instanceof DeviceInfoQueryable) {
 				deviceInfo = (DeviceInfoQueryable) message;
 			}
-			
+
 			// only return upon completion
 			if(!complete) return null;
 
 			return generateCombinedBurst();
 		}
-		
+
 		private CombinedBurst generateCombinedBurst() {
 			CombinedBurst rtn = null;
 			// if building return what we have, else null
@@ -245,7 +247,7 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 			reset();
 			return rtn;
 		}
-		
+
 		/**
 		 * Returns combination of what we have received so far and sets timeout status flag
 		 * @return the combination
@@ -254,7 +256,7 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 			statusFlags.add(StatusFlag.ERROR_TIMEOUT);
 			return generateCombinedBurst();
 		}
-		
+
 		/**
 		 * Discards all stored data
 		 */
@@ -266,17 +268,17 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 			complete = false;
 			building = false;
 		}
-		
+
 		/**
 		 * Returns whether or not a {@link CombinedBurst} is under construction
-		 * @return
+		 * @return is builind or not
 		 */
 		public boolean isBuilding() {
 			return building;
 		}
-	
-		
-		
+
+
+
 	}
 
 	@Override
@@ -300,8 +302,8 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 
 
 
-	
-	
-	
+
+
+
 
 }

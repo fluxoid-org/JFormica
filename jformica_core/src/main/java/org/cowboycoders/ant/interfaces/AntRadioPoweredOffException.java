@@ -17,7 +17,7 @@
  *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * 
+ *
  */
 package org.cowboycoders.ant.interfaces;
 
@@ -30,19 +30,19 @@ package org.cowboycoders.ant.interfaces;
 public class AntRadioPoweredOffException extends AntCommunicationException {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 
   /**
-   * 
+   *
    */
   public AntRadioPoweredOffException() {
     // TODO Auto-generated constructor stub
   }
 
   /**
-   * @param detailMessage
+   * @param detailMessage to document
    */
   public AntRadioPoweredOffException(String detailMessage) {
     super(detailMessage);
@@ -50,7 +50,7 @@ public class AntRadioPoweredOffException extends AntCommunicationException {
   }
 
   /**
-   * @param throwable
+   * @param throwable to document
    */
   public AntRadioPoweredOffException(Throwable throwable) {
     super(throwable);
@@ -58,8 +58,8 @@ public class AntRadioPoweredOffException extends AntCommunicationException {
   }
 
   /**
-   * @param detailMessage
-   * @param throwable
+   * @param detailMessage to document
+   * @param throwable to document
    */
   public AntRadioPoweredOffException(String detailMessage, Throwable throwable) {
     super(detailMessage, throwable);

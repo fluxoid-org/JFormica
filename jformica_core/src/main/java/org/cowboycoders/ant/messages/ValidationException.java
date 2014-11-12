@@ -17,46 +17,46 @@
  *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * 
+ *
  */
 package org.cowboycoders.ant.messages;
 
 /**
  * Runtime exception, thrown if there was attempt to set a value
- * and the validation checks failed. 
+ * and the validation checks failed.
  * @author will
  *
  */
 public class ValidationException extends FatalMessageException {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = -6928449140060446544L;
 
   /**
-   * 
+   *
    */
   public ValidationException() {
   }
 
   /**
-   * @param detailMessage
+   * @param detailMessage to document
    */
   public ValidationException(String detailMessage) {
     super(detailMessage);
   }
 
   /**
-   * @param throwable
+   * @param throwable to document
    */
   public ValidationException(Throwable throwable) {
     super(throwable);
   }
 
   /**
-   * @param detailMessage
-   * @param throwable
+   * @param detailMessage to document
+   * @param throwable to document
    */
   public ValidationException(String detailMessage, Throwable throwable) {
     super(detailMessage, throwable);

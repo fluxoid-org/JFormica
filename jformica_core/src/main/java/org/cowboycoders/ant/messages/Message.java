@@ -17,7 +17,7 @@
  *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * 
+ *
  */
 package org.cowboycoders.ant.messages;
 
@@ -31,25 +31,25 @@ import org.cowboycoders.ant.defines.AntMesg;
 /**
  * Encapsulation of an ANT message. Contains common functionality
  * for standard and extended messages.
- * 
+ *
  * @author will
  *
  */
 public class Message implements Messageable {
-  
+
   /** Holds the ant message type **/
   private MessageId id;
-  
+
   /**
-   * The variable component of an Ant message with a given message ID. 
+   * The variable component of an Ant message with a given message ID.
    * Excludes: the sync byte, length, message ID and checksum
    */
   private ArrayList<Byte> payload;
-  
+
   public Message() {
     this(MessageId.INVALID,null);
   }
-   
+
   private Message(MessageId id, ArrayList<Byte> payload){
     if (id == null) {
       id = MessageId.INVALID;
@@ -59,9 +59,9 @@ public class Message implements Messageable {
     }
     this.payload = payload;
     this.id = id;
-    
+
   }
-  
+
   /**
    * Used to create a message with an empty payload.
    * Useful when constructing messages by adding data to
@@ -71,17 +71,17 @@ public class Message implements Messageable {
   protected Message(MessageId id) {
     this(id,null);
   }
-  
+
   /*
   public Message(Byte id, ArrayList<Byte> payload){
     this(MessageId.lookUp(id),payload);
   }
-  
+
   public Message(Message message) {
     this(message.getId(),message.getPayload());
   }
   */
-  
+
   /**
    * Gets a copy of the current {@code Message.payload}
    * @return {@code payload} as {@code Arraylist<Byte>}
@@ -94,7 +94,7 @@ public class Message implements Messageable {
   /**
    * Sets the {@code Message.payload}
    * @param payload replaces the current <code>payload</code> with
-   *            a copy of the <code>ArrayList<code> passed in
+   *            a copy of the <code>ArrayList</code> passed in
    */
   @SuppressWarnings("unchecked")
   protected void setPayload(ArrayList<Byte> payload) {
@@ -116,7 +116,7 @@ public class Message implements Messageable {
   protected void setId(MessageId id){
     this.id = id;
   }
-  
+
   /**
    * Clears all data from message and sets the
    * id to {@code MessageId.Invalid}
@@ -125,7 +125,7 @@ public class Message implements Messageable {
     setPayload(new ArrayList<Byte>());
     setId(MessageId.INVALID);
   }
-  
+
   /* (non-Javadoc)
    * @see org.cowboycoders.ant.messages.MessageInterface#getPayloadSize()
    */
@@ -133,7 +133,7 @@ public class Message implements Messageable {
   public byte getPayloadSize() {
     return (byte) payload.size();
   }
-  
+
   /* (non-Javadoc)
    * @see org.cowboycoders.ant.messages.MessageInterface#encode()
    */
@@ -157,7 +157,7 @@ public List<Byte> getPayloadToSend() {
 @Override
 public ArrayList<Byte> getStandardPayload() {
   return getPayload();
-  
+
 }
 
 /* (non-Javadoc)
@@ -166,48 +166,46 @@ public ArrayList<Byte> getStandardPayload() {
 @Override
 public void setStandardPayload(ArrayList<Byte> payload) throws ValidationException {
   setPayload(payload);
-  
+
 }
 
-/**
- * @{inheritDoc}
+/*
+ * TODO : Manage inherit doc
  */
   protected void decode(byte[] buffer, boolean noChecks) throws MessageException {
-    
+
     if ( !noChecks && buffer.length <= AntMesg.MESG_DATA_OFFSET ) {
       throw new MessageException("too few bytes to process (message incomplete)");
     }
-    
+
     id = MessageId.lookUp(buffer[AntMesg.MESG_ID_OFFSET]);
     byte[] payload = Arrays.copyOfRange(buffer, AntMesg.MESG_DATA_OFFSET, buffer.length);
-    
+
     ArrayList<Byte> payLoadList = new ArrayList<Byte>();
     for (Byte b : payload) {
       payLoadList.add(b);
     }
-    
+
     setPayload(payLoadList);
   }
-  
+
 /**
  * Populates the {@code Message} with data. Should only
  * perform validation if {@code noChecks} is false
- * 
+ *
  * @param buffer the ant message as an array of raw bytes
- * @param nochecks skips the sanity check
  * @throws MessageException on decoding error
  */
     @Override
     public
     final void decode(byte[] buffer) throws MessageException {
-      decode(buffer,false);      
+      decode(buffer,false);
     }
-  
+
     /**
      * Returns a copy of the {@code Message}. This should be overridden
-     * in any child classes. 
-     * @return a clone 
-     * @throws CloneNotSupportException if an error occured whilst cloning
+     * in any child classes.
+     * @return a clone
      */
   @Override
   public Message clone() {
@@ -218,10 +216,10 @@ public void setStandardPayload(ArrayList<Byte> payload) throws ValidationExcepti
         // toArray / decode is by design reversible
         throw new RuntimeException("Should never reach here");
     }
-    return msg;   
+    return msg;
   }
-  
-  
+
+
   /**
    * Helper for encode / toArray
    * @param payload to convert to array
@@ -230,16 +228,16 @@ public void setStandardPayload(ArrayList<Byte> payload) throws ValidationExcepti
   private byte [] getArrayFromPayload(List<Byte> payload) {
     byte payloadSize = (byte) payload.size();
     byte [] rtn = new byte[payloadSize + AntMesg.MESG_HEADER_SIZE];
-    
+
     rtn[AntMesg.MESG_SIZE_OFFSET] = payloadSize;
     rtn[AntMesg.MESG_ID_OFFSET] = id.getMessageID();
     for (byte i = AntMesg.MESG_DATA_OFFSET ; i < rtn.length ; i++) {
       rtn[i] = payload.get(i - AntMesg.MESG_DATA_OFFSET);
     }
-    
+
     return rtn;
   }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -247,8 +245,7 @@ public void setStandardPayload(ArrayList<Byte> payload) throws ValidationExcepti
     List<Byte >payload = getPayload();
     return getArrayFromPayload(payload);
   }
-  
-  
+
+
 
 }
-

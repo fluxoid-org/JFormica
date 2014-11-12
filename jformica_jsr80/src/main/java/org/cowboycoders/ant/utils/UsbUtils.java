@@ -26,7 +26,7 @@ import javax.usb.UsbHub;
 
 
 public class UsbUtils {
-  
+
   /**
    * This forms an inclusive list of all UsbDevices connected to this UsbDevice.
    * <p>
@@ -51,13 +51,13 @@ public class UsbUtils {
 
       return list;
   }
-  
+
   /**
    * Get a List of all devices that match the specified vendor and product id.
    * @param usbDevice The UsbDevice to check.
    * @param vendorId The vendor id to match.
    * @param productId The product id to match.
-   * @param A List of any matching UsbDevice(s).
+   * @return A List of any matching UsbDevice(s).
    */
   public static List<UsbDevice> getUsbDevicesWithId(UsbDevice usbDevice, short vendorId, short productId)
   {
@@ -65,7 +65,7 @@ public class UsbUtils {
 
       /* A device's descriptor is always available.  All descriptor
        * field names and types match exactly what is in the USB specification.
-       * Note that Java does not have unsigned numbers, so if you are 
+       * Note that Java does not have unsigned numbers, so if you are
        * comparing 'magic' numbers to the fields, you need to handle it correctly.
        * For example if you were checking for Intel (vendor id 0x8086) devices,
        *   if (0x8086 == descriptor.idVendor())

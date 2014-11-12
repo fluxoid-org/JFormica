@@ -30,11 +30,11 @@ import org.cowboycoders.ant.utils.IntUtils;
 import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
- * 
+ *
  * Represents an extended (legacy) ant message
- * 
+ *
  * @author will
- * 
+ *
  */
 public class LegacyMessage extends Message implements
 		ExtendedInformationQueryable, DeviceInfoQueryable, DeviceInfoSettable {
@@ -49,7 +49,7 @@ public class LegacyMessage extends Message implements
 	/*
 	 * public LegacyMessage(Byte id, ArrayList<Byte> payload) { super(id,
 	 * payload); }
-	 * 
+	 *
 	 * public LegacyMessage(MessageId id, ArrayList<Byte> payload) { super(id,
 	 * payload); }
 	 */
@@ -113,7 +113,7 @@ public class LegacyMessage extends Message implements
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @throws ValidationException
 	 *             if payload malformed
 	 */
@@ -155,7 +155,7 @@ public class LegacyMessage extends Message implements
 
 	/**
 	 * verifies message is in extended format
-	 * 
+	 *
 	 * @throws MessageException
 	 *             if not in expected format
 	 */
@@ -224,7 +224,7 @@ public class LegacyMessage extends Message implements
 
 	/**
 	 * Calculates max settable value for a given {@code DataElements}
-	 * 
+	 *
 	 * @param element
 	 *            to check
 	 * @return the maximum permitted value
@@ -236,7 +236,7 @@ public class LegacyMessage extends Message implements
 	/**
 	 * validates a value which has been requested to be set is within sensible
 	 * limits
-	 * 
+	 *
 	 * @param element
 	 *            the {@code DataElements} member to check
 	 * @param value
@@ -255,7 +255,7 @@ public class LegacyMessage extends Message implements
 
 	/**
 	 * inserts extended element bytes into the payload
-	 * 
+	 *
 	 * @param element
 	 *            corresponding {@code DataElements}
 	 * @param bytesToInsert
@@ -290,7 +290,7 @@ public class LegacyMessage extends Message implements
 	/**
 	 * Helper method to set extended data info for a given {@code DataElements}
 	 * member
-	 * 
+	 *
 	 * @param element
 	 *            the corresponding {@code DataElements} to insert data for
 	 * @param value
@@ -321,7 +321,7 @@ public class LegacyMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.cowboycoders.ant.messages.DeviceInfoSettable#setDeviceNumber(int)
 	 */
@@ -333,7 +333,7 @@ public class LegacyMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.cowboycoders.ant.messages.DeviceInfoSettable#setDeviceType(int)
 	 */
 	@Override
@@ -351,7 +351,7 @@ public class LegacyMessage extends Message implements
 	}
 
 	/**
-	 * @{inheritDoc
+	 * TODO : inherit doc
 	 */
 	@Override
 	public void setTransmissionType(int transmissionType)
@@ -362,7 +362,7 @@ public class LegacyMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.cowboycoders.ant.messages.DeviceInfoQueryable#getDeviceNumber()
 	 */
 	@Override
@@ -372,7 +372,7 @@ public class LegacyMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.cowboycoders.ant.messages.DeviceInfoQueryable#getDeviceType()
 	 */
 	@Override
@@ -387,7 +387,7 @@ public class LegacyMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.cowboycoders.ant.messages.DeviceInfoQueryable#getTransmissionType()
 	 */
@@ -398,7 +398,7 @@ public class LegacyMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.cowboycoders.ant.messages.Message#reset()
 	 */
 	@Override
@@ -433,7 +433,7 @@ public class LegacyMessage extends Message implements
 			   wholeElement = 0;
 		   }
 		value = IntUtils.setMaskedBits(wholeElement, ChannelId.PAIRING_FLAG_MASK, value);
-		setDataElement(DataElement.DEVICE_TYPE, value); 
+		setDataElement(DataElement.DEVICE_TYPE, value);
 	}
 
 	@Override

@@ -65,9 +65,9 @@ import org.cowboycoders.ant.messages.responses.ResponseCode;
 import org.cowboycoders.ant.messages.responses.ResponseExceptionFactory;
 
 public class Node {
-  
+
   class ThreadedWait implements Callable<MessageMetaWrapper<? extends StandardMessage>> {
-    
+
     private WaitAdapter waitAdapter;
 
     public ThreadedWait(WaitAdapter waitAdapter) {
@@ -79,18 +79,18 @@ public class Node {
     public MessageMetaWrapper<? extends StandardMessage> call() throws InterruptedException, TimeoutException {
         return waitAdapter.execute();
     }
-    
-    
+
+
   }
-  
-  
-  public final static Logger LOGGER = Logger.getLogger(EventMachine.class .getName()); 
+
+
+  public final static Logger LOGGER = Logger.getLogger(EventMachine.class .getName());
   private Set<AntLogger> antLoggers = Collections.newSetFromMap(new WeakHashMap<AntLogger,Boolean>());
-  
+
   private static class TransmissionErrorCondition implements MessageCondition {
-	  
+
 	private StandardMessage transmittedMessage;
-	
+
 	/**
 	 * Throws an {@link RumtimeException} if an error is raised trying to send message
 	 * @param msg message that is being sent
@@ -103,7 +103,7 @@ public class Node {
 	public boolean test(StandardMessage msg) {
 		// for message senders we look at all message ids
 		MessageId id =  null;
-		
+
 		// else we look for particular id
 		if (transmittedMessage != null) {
 			id = transmittedMessage.getId();
@@ -112,19 +112,19 @@ public class Node {
 		// make sure it a response/event
 		if (!MessageConditionFactory.newResponseCondition(id,null).test(msg)) return false;
 		Response response = (Response)msg;
-		
+
 		// throw an exception if response is a known error condition (this will be re-thrown on waiting thread)
 		ResponseExceptionFactory.getFactory().throwOnError(response.getResponseCode());
-		
+
 		// this condition only throw exceptions on errors (always return false)
 		return false;
 	}
-	  
+
   };
-  
+
   private boolean running = false;
   private EventMachine evm;
-  
+
   /**
    * @return the evm
    */
@@ -138,7 +138,7 @@ public class Node {
   private AntChipInterface antChipInterface;
   private BroadcastMessenger<AntStatusUpdate> mStatusMessenger =
       new BroadcastMessenger<AntStatusUpdate>();
-  
+
   private class StatusListener implements BroadcastListener<AntStatusUpdate> {
 
     @Override
@@ -147,16 +147,16 @@ public class Node {
         if (!weReset) {
 //          // we don't actually get a reset intent if we send a raw message
 //          // NOTE: should we use the reset ANtInterface method?
-//          
+//
 //          LOGGER.warning("Node: external reset");
         }
 //        weReset = false;
       }
-      
+
     }
-    
+
   }
-  
+
   private class MessageListener implements BroadcastListener<StandardMessage> {
 
     @Override
@@ -170,42 +170,42 @@ public class Node {
       }
         weReset = false;
       }
-      
+
     }
-    
+
   }
-  
+
   /**
    * flags that we did the reset, as oppose to someone else (externally)
    */
   private boolean weReset;
-  
+
   public Node(AntChipInterface antchip) {
     antChipInterface = antchip;
     evm = new EventMachine(antchip);
     mStatusMessenger.addBroadcastListener(new StatusListener());
   }
-  
+
   /**
    * Returns the antchip. Note: you should never bypass the node and send messages
-   * using its send function. 
-   * @return
+   * using its send function.
+   * @return TODO : to document
    */
   public AntChipInterface getAntChip() {
     return antChipInterface;
   }
-  
+
   /**
    * Listener for status updates from the ant chip
-   * @param listener
+   * @param listener TODO : to document
    */
   public synchronized void registerStatusListener(BroadcastListener<AntStatusUpdate> listener) {
     mStatusMessenger.addBroadcastListener(listener);
   }
-  
+
   /**
    * Remove listener for status updates from the ant chip
-   * @param listener
+   * @param listener TODO : to document
    */
   public synchronized void removeStatusListener(BroadcastListener<AntStatusUpdate> listener) {
     mStatusMessenger.removeBroadcastListener(listener);
@@ -225,7 +225,7 @@ public class Node {
     rtn.addAll(capabilities.getCapabilitiesList(CapabilityCategory.ADVANCED3));
     return rtn;
   }
-  
+
   public synchronized void start() throws AntError {
     if (running) return ;//throw new AntError("already started");
     evm.start();
@@ -236,15 +236,15 @@ public class Node {
 
     running=true;
   }
-  
+
 //  private void registerChannels(boolean add) {
 //    for (Channel channel : channels) {
 //      if (add) evm.registerBufferedNodeComponent(channel);
 //      else evm.unregisterBufferedNodeComponent(channel);
 //    }
-//    
+//
 //  }
-  
+
 //  private void registerSelf(boolean add) {
 //    if (add) evm.registerBufferedNodeComponent(this);
 //    else evm.unregisterBufferedNodeComponent(this);
@@ -259,9 +259,9 @@ public class Node {
       MessageCondition condition = MessageConditionFactory.newInstanceOfCondition(CapabilityResponse.class);
       try {
         capabilitiesResponse = sendAndWaitForMessage(
-            capabilitiesMessage, 
+            capabilitiesMessage,
             condition,
-            10L,TimeUnit.SECONDS, 
+            10L,TimeUnit.SECONDS,
             null,
             null
             );
@@ -274,10 +274,10 @@ public class Node {
         }
       }
     }
-      
+
     return (CapabilityResponse) capabilitiesResponse;
   }
-  
+
   private void init() {
     LOGGER.finer("entering init");
     //reset();
@@ -285,55 +285,55 @@ public class Node {
       // android interface automatically requests ant version response.
       // Can't wait for it here, as it may have already been fired.
       // so we use retries until we get a response (which was not the case
-      // if sent before version was requested) 
+      // if sent before version was requested)
       capabilities = getCapabilityResponse(5);
     } catch (InterruptedException e) {
       throw new AntError(e);
     } catch (TimeoutException e) {
       throw new AntError(e);
     }
-    
-    
+
+
     networks = new NetworkKey [capabilities.getMaxNetworks()];
     for (int i = 0 ; i< networks.length ; i++) {
       setNetworkKey(i,new NetworkKey(0,0,0,0,0,0,0,0),false);
     }
-    
+
     channels = new Channel[getMaxChannels()];
     for (int i = 0 ; i< channels.length ; i++) {
       channels[i] = new Channel(this,i);
     }
-    
-    
-    
+
+
+
     LOGGER.finer("exiting init");
   }
-  
+
   public synchronized Channel getFreeChannel() {
-    
+
     for (Channel c : channels) {
       if (c.isFree()) {
     	  c.setFree(false);
     	  return c;
       }
     }
-    
+
     return null;
   }
-  
+
   /**
    * should be called to free and return channel to pool. Channel should
    * then be nulled or reassigned
-   * @param channel
+   * @param channel TODO : to document
    */
   public synchronized void freeChannel(Channel channel) {
     // need to hold synchronisation in case someone is
     // calling getFreeChannel)
     channel.setFree(true);
   }
-  
+
   /**
-   * 
+   *
    * @param network to assign this key to
    * @param key to assign
    * @param send if true, send to ant chip
@@ -353,7 +353,7 @@ public class Node {
       }
     }
   }
-  
+
   /**
    * Do not set key until after node started
    * @param network must be below that given by getMaxNetworks()
@@ -362,21 +362,21 @@ public class Node {
   public synchronized void setNetworkKey(int network, NetworkKey key) {
     this.setNetworkKey(network, key, true);
   }
-  
+
   /**
    * @return max number of networks this node supports
    */
   public synchronized int getMaxNetworks() {
     return capabilities.getMaxNetworks();
   }
-  
+
   /**
    * @return max number of channels this node supports
    */
   public synchronized int getMaxChannels() {
     return capabilities.getMaxChannels();
   }
-  
+
   public NetworkKey getNetworkKey(String id) {
     NetworkKey [] networks = Arrays.copyOf(this.networks, this.networks.length);
     Arrays.sort(networks);
@@ -388,7 +388,7 @@ public class Node {
     }
     return null;
   }
-  
+
   private final MessageSender nodeSender = new MessageSender() {
 
     @Override
@@ -398,27 +398,27 @@ public class Node {
     	rtn.add(sentMeta);
     	return rtn;
     }
-    
+
   };
-  
+
   public StandardMessage sendAndWaitWithAdapter(WaitAdapter waitAdapter, StandardMessage msg,
       LockExchangeContainer lockContainer) throws InterruptedException, TimeoutException {
     return sendAndWaitWithAdapter(waitAdapter, msg,
         lockContainer,nodeSender, null);
   }
-  
-  
-  
+
+
+
   public StandardMessage sendAndWaitWithAdapter(WaitAdapter waitAdapter, StandardMessage msg,
-      LockExchangeContainer lockContainer, MessageSender sender, Receipt receipt) 
+      LockExchangeContainer lockContainer, MessageSender sender, Receipt receipt)
           throws InterruptedException, TimeoutException {
     Callable<MessageMetaWrapper<? extends StandardMessage>> waitTask= new ThreadedWait(waitAdapter);
     Future<MessageMetaWrapper<? extends StandardMessage>> future = SharedThreadPool.getThreadPool().submit(waitTask);
     MessageMetaWrapper<? extends StandardMessage> receivedMeta = null;
     List<MessageMetaWrapper<? extends StandardMessage>> sentMeta = null;
-    
+
     sender = sender == null ? nodeSender : sender;
-    
+
     //Thread.sleep(100);
     // now we are waiting for a response send message
     if(lockContainer != null) {
@@ -434,8 +434,8 @@ public class Node {
           } finally {
             lock.unlock();
           }
-          
-          } 
+
+          }
         catch (ExecutionException e ) {
           Throwable cause = e.getCause();
           if (cause instanceof InterruptedException) {
@@ -449,7 +449,7 @@ public class Node {
     } else {
       sentMeta = sender.send(msg);
     }
-        
+
     try {
       receivedMeta = future.get();
     } catch (ExecutionException e ) {
@@ -465,16 +465,16 @@ public class Node {
       }
       throw new RuntimeException(cause);
     }
-    
+
     // message is in charge of updating sent messages
     if (receipt != null) {
       receipt.addReceived(receivedMeta);
       receipt.addSent(sentMeta);
     }
-    
+
     return receivedMeta.unwrap();
   }
-  
+
   /**
    * We wrap listeners to look for message of specific class - this is a map from the
    * original to the new one
@@ -484,7 +484,7 @@ public class Node {
 
   public synchronized <V extends StandardMessage> void registerRxListener(
       final BroadcastListener<V> listener, final Class<V> clazz) {
-    
+
       BroadcastListener<StandardMessage> adapter = new BroadcastListener<StandardMessage>() {
 
         @Override
@@ -492,43 +492,43 @@ public class Node {
           if (clazz.isInstance(message)) {
             listener.receiveMessage(clazz.cast(message));
           }
-          
+
         }
-        
+
       };
-      
+
       mAdapterListenerMap.put(listener, adapter);
       evm.registerRxListener(adapter);
-    
-    
+
+
   }
-  
+
   public synchronized <V extends StandardMessage> void removeRxListener(
       final BroadcastListener<V> listener) {
-   
+
     BroadcastListener<StandardMessage> adapter = mAdapterListenerMap.get(listener);
     if (adapter != null) {
       evm.removeRxListener(adapter);
     } else {
       LOGGER.warning("removeRxListener: ignoring unknown listener");
     }
-    
+
   }
-  
-  
+
+
   public StandardMessage sendAndWaitForMessage(
-	      final StandardMessage msg, 
+	      final StandardMessage msg,
 	      final MessageCondition condition,
 	      final Long timeout, final TimeUnit timeoutUnit,
 	      final MessageSender sender,
-	      final Receipt receipt) 
+	      final Receipt receipt)
 	          throws InterruptedException, TimeoutException {
 	  	return this.sendAndWaitForMessage(msg, condition, timeout, timeoutUnit, sender, receipt, null);
 
 	}
-  
+
   /**
-   * 
+   *
    * @param msg the message to send or null if sent from a {@link MessageSender}
    * @param condition indicates that a receive message is the one you were waiting for
    * @param timeout combined with {@code timeoutUnit} to determine maximum period of time to wait for a response
@@ -536,24 +536,24 @@ public class Node {
    * @param timeoutUnit unit of time used for timeouts
    * @param sender used to customise the send method or send multiple messages. Can be null.
    * @param receipt stamped with meta information
-   * @param errorCheckCondition {@link MessageCondition#test(StandardMessage)} should return true if 
+   * @param errorCheckCondition {@link MessageCondition#test(StandardMessage)} should return true if
    * message should checked for against list of error codes. A null value will match all messages.
-   * 							
+   *
    * @return message satisfying {@code condition}
-   * @throws InterruptedException
-   * @throws TimeoutException
+   * @throws InterruptedException TODO : to document
+   * @throws TimeoutException TODO : to document
    */
   public StandardMessage sendAndWaitForMessage(
-      final StandardMessage msg, 
+      final StandardMessage msg,
       final MessageCondition condition,
       final Long timeout, final TimeUnit timeoutUnit,
       final MessageSender sender,
       final Receipt receipt,
-      final MessageCondition errorCheckCondition) 
+      final MessageCondition errorCheckCondition)
           throws InterruptedException, TimeoutException {
     final LockExchangeContainer lockContainer = new LockExchangeContainer();
     final TransmissionErrorCondition errorCondition = new TransmissionErrorCondition(msg);
-    
+
     final MessageCondition conditionWithChecks = new MessageCondition() {
 
 		@Override
@@ -565,37 +565,37 @@ public class Node {
 			if (condition.test(msg)) {
 				return true;
 			}
-			
+
 			// this allows addition check to made e.g channel number matches
 			if (errorCheckCondition == null || errorCheckCondition.test(msg)) {
 				// throws an exception on failure
 				errorCondition.test(msg);
 			}
-			
+
 			return false;
 		}
-    	
+
     };
-    
+
     WaitAdapter responseAdapter = new WaitAdapter() {
 
       @Override
       public MessageMetaWrapper<StandardMessage> execute() throws InterruptedException, TimeoutException {
-    	  MessageMetaWrapper<StandardMessage> response =  
+    	  MessageMetaWrapper<StandardMessage> response =
     			  evm.waitForCondition(conditionWithChecks, timeout, timeoutUnit, lockContainer);
     	  return response;
       }
-      
+
     };
-    
+
     return sendAndWaitWithAdapter(responseAdapter,msg,lockContainer,sender, receipt);
 
   }
-  
-  
+
+
   public synchronized void reset(boolean wait) {
     weReset = true;
-    
+
     StandardMessage resetMsg = new ResetMessage();
     if (wait) {
       try {
@@ -609,14 +609,14 @@ public class Node {
     } else {
       send(resetMsg);
     }
-    
+
   }
-  
-  
+
+
   public void reset() {
     reset(true);
   }
-  
+
   private void logMessage(AntLogger.Direction direction, StandardMessage msg) {
     synchronized (antLoggers) {
       for (AntLogger logger : antLoggers) {
@@ -630,7 +630,7 @@ public class Node {
       }
     }
   }
-  
+
   public synchronized MessageMetaWrapper<StandardMessage> send(StandardMessage msg) {
     LOGGER.finer("sent: " + msg.toString() + " to chip" );
     antChipInterface.send(msg.encode());
@@ -645,7 +645,7 @@ public class Node {
     antChipInterface.stop();
     running = false;
   }
-  
+
   public synchronized boolean isRunning() {
     //sync with ant chip
     if(!this.antChipInterface.isRunning()); {
@@ -653,12 +653,12 @@ public class Node {
     }
     return running;
   }
-  
+
   public void registerAntLogger(AntLogger logger) {
     synchronized(antLoggers) {
       antLoggers.add(logger);
     }
-    
+
   }
 
   public void unregisterAntLogger(AntLogger logger) {
@@ -666,15 +666,15 @@ public class Node {
       antLoggers.remove(logger);
     }
   }
-  
+
   /**
-   * Registers an event listener. To remove user {@link Node#removeRxListener(BroadcastListener));
+   * Registers an event listener. To remove user { TODO : fix this link Node#removeRxListener(BroadcastListener))};
    * @param handler event handler
    */
   public void registerEventHandler(NodeEventHandler handler) {
 	  this.registerRxListener(handler, Response.class);
   }
-  
+
 	 /**
 	  * Waits for response NO_ERROR for a maximum of 1 second
 	  * @param msg to send
@@ -706,41 +706,41 @@ public class Node {
 					"Timeout whilst waiting for message / reply", e);
 		}
 	}
-	
+
 	/**
 	 * Sets chip wide transmit power
 	 * See table 9.4.3 in ANT protocol as this is chip dependent.
 	 * Maximum powerLevel 4, minimum 0. Some chips only support up to level 3.
-	 * @param powerLevel newPowerLevel 
+	 * @param powerLevel newPowerLevel
 	 */
 	public void setTransmitPower(int powerLevel) {
 		StandardMessage msg = new TxPowerMessage(powerLevel);
 		sendAndWaitForResponseNoError(msg);
 	}
-	
+
 	/**
 	 * Request extra info in extended message bytes. Not all chips support
 	 * all of the options (especially rssi) if any.
-	 * @param enableChannelId
-	 * @param enableRssi
-	 * @param enableTimestamps
+	 * @param enableChannelId TODO : to document
+	 * @param enableRssi TODO : to document
+	 * @param enableTimestamps TODO : to document
 	 */
 	public void setLibConfig(boolean enableChannelId, boolean enableRssi,
 		      boolean enableTimestamps) {
 		StandardMessage msg = new LibConfigMessage(enableChannelId,enableRssi,enableTimestamps);
 		sendAndWaitForResponseNoError(msg);
-		
+
 	}
-	
+
 	/**
 	 * Include channelId with data messages (legacy) na duspport chip dependent.
-	 * @param enable
+	 * @param enable extanded message
 	 */
 	public void enableExtendedMessages(boolean enable) {
 		StandardMessage msg = new EnableExtendedMessagesMessage(enable);
 		sendAndWaitForResponseNoError(msg);
 	}
-	
-  
+
+
 
 }

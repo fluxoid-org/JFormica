@@ -32,20 +32,20 @@ import org.cowboycoders.ant.utils.ValidationUtils;
  *
  */
 public class ConfigListIdMessage extends ChannelMessage {
-  
+
   private static final int MAX_LIST_SIZE = 4;
-  
+
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElement [] additionalElements = 
+  private static DataElement [] additionalElements =
       new DataElement [] {
     DataElement.LIST_SIZE,
     DataElement.INCLUDE_EXCLUDE_FLAG,
   };
-  
+
   /**
-   * 
+   *
    * @param channelNo of channel to affect
    * @param listSize size of list to use (max 4)
    * @param exclude true for exclusion, false for include
@@ -59,11 +59,11 @@ public class ConfigListIdMessage extends ChannelMessage {
       throw new FatalMessageException("Error setting values", e);
     }
   }
-  
+
   /**
    * Channel number set to zero.
-   * @param listSize
-   * @param exclude
+   * @param listSize to document
+   * @param exclude to document
    */
   public ConfigListIdMessage(int listSize, boolean exclude) {
 	  this(0,listSize,exclude);
@@ -72,15 +72,15 @@ public class ConfigListIdMessage extends ChannelMessage {
   private void setExcludeInclude(boolean exclude) {
     int flag = exclude ? 1 : 0;
     setDataElement(DataElement.INCLUDE_EXCLUDE_FLAG,flag);
-    
+
   }
-  
+
   /**
    * @param listSize size of list
    * @throws ValidationException if out of bounds
    */
   private void setListSize(int listSize) throws ValidationException {
-    ValidationUtils.maxMinValidator(0, MAX_LIST_SIZE, listSize, 
+    ValidationUtils.maxMinValidator(0, MAX_LIST_SIZE, listSize,
         MessageExceptionFactory.createMaxMinExceptionProducable("Transmit power")
         );
     setDataElement(DataElement.LIST_SIZE,listSize);

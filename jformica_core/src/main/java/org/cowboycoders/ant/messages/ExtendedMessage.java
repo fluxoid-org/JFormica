@@ -32,11 +32,11 @@ import org.cowboycoders.ant.utils.IntUtils;
 import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
- * 
+ *
  * Represents an extended ant message
- * 
+ *
  * @author will
- * 
+ *
  */
 public class ExtendedMessage extends Message implements
 		ExtendedInformationQueryable, DeviceInfoQueryable, DeviceInfoSettable, RssiInfoQueryable,
@@ -46,14 +46,14 @@ public class ExtendedMessage extends Message implements
 	public static final byte MIN_LENGTH = 10;
 
 	public enum ExtendedFlag {
-		DISABLE((byte) 0x00), 
+		DISABLE((byte) 0x00),
 		ENABLE_RX_TIMESTAMP(
 				(byte) 0x20,
 				DataElement.RX_TIMESTAMP), ENABLE_RSSI_OUTPUT((byte) 0x40,
 				DataElement.RSSI_MEASUREMENT_TYPE,
-				DataElement.RSSI_THRESHOLD_CONFIG, DataElement.RSSI_VALUE), 
+				DataElement.RSSI_THRESHOLD_CONFIG, DataElement.RSSI_VALUE),
 		ENABLE_CHANNEL_ID(
-				(byte) 0x80, 
+				(byte) 0x80,
 				DataElement.DEVICE_NUMBER,
 				DataElement.DEVICE_TYPE,
 				DataElement.TRANSMISSION_TYPE);
@@ -64,7 +64,7 @@ public class ExtendedMessage extends Message implements
 
 		/**
 		 * Creates an extended message flag with corresponding mask
-		 * 
+		 *
 		 * @param mask
 		 *            the mask
 		 */
@@ -85,9 +85,8 @@ public class ExtendedMessage extends Message implements
 
 		/**
 		 * Sets the associated mask for the extended message flag
-		 * 
-		 * @param mask
-		 *            the mask
+		 *
+		 * @param mask the mask
 		 */
 		private void setMask(byte flag) {
 			this.mask = flag;
@@ -95,9 +94,8 @@ public class ExtendedMessage extends Message implements
 
 		/**
 		 * Gets the associated mask for the extended message flag
-		 * 
-		 * @param mask
-		 *            the mask
+		 *
+		 * @return the mask
 		 */
 		public byte getMask() {
 			return mask;
@@ -106,8 +104,8 @@ public class ExtendedMessage extends Message implements
 		/**
 		 * gets the total length (number of bytes) of extra payload expected
 		 * with this extended flag
-		 * 
-		 * @return
+		 *
+		 * @return the length
 		 */
 		public byte getLength() {
 			return length;
@@ -119,8 +117,8 @@ public class ExtendedMessage extends Message implements
 
 		/**
 		 * Returns an array of elements associated with this flag
-		 * 
-		 * @return
+		 *
+		 * @return the elements
 		 */
 		public DataElement[] getElements() {
 			return elements;
@@ -131,7 +129,7 @@ public class ExtendedMessage extends Message implements
 	/*
 	 * public ExtendedMessage(Byte id, ArrayList<Byte> payload) { super(id,
 	 * payload); }
-	 * 
+	 *
 	 * public ExtendedMessage(MessageId id, ArrayList<Byte> payload) { super(id,
 	 * payload); }
 	 */
@@ -143,7 +141,7 @@ public class ExtendedMessage extends Message implements
 	/**
 	 * Converts a generic message holding a payload in extended format to an
 	 * extended message
-	 * 
+	 *
 	 * @param message
 	 *            must have a payload in extended format
 	 * @throws MessageException
@@ -156,7 +154,7 @@ public class ExtendedMessage extends Message implements
 
 	/**
 	 * verifies message is in extended format
-	 * 
+	 *
 	 * @throws MessageException
 	 *             if not in expected format
 	 */
@@ -206,7 +204,7 @@ public class ExtendedMessage extends Message implements
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @throws ValidationException
 	 *             if payload malformed
 	 */
@@ -254,7 +252,7 @@ public class ExtendedMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.cowboycoders.ant.messages.Extendedable#getExtendedData(org.cowboycoders
 	 * .ant.messages.Constants.DataElements)
@@ -299,7 +297,7 @@ public class ExtendedMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.cowboycoders.ant.messages.DeviceInfoQueryable#getDeviceNumber()
 	 */
 	@Override
@@ -309,7 +307,7 @@ public class ExtendedMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.cowboycoders.ant.messages.DeviceInfoQueryable#getDeviceType()
 	 */
 	@Override
@@ -324,7 +322,7 @@ public class ExtendedMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.cowboycoders.ant.messages.DeviceInfoQueryable#getTransmissionType()
 	 */
@@ -339,7 +337,7 @@ public class ExtendedMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.cowboycoders.ant.messages.TimestampInfoQueryable#getRxTimeStamp()
 	 */
@@ -350,7 +348,7 @@ public class ExtendedMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.cowboycoders.ant.messages.RssiInfoQueryable#getRssiMeasurementType()
 	 */
@@ -365,7 +363,7 @@ public class ExtendedMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.cowboycoders.ant.messages.RssiInfoQueryable#getRssiThresholdConfig()
 	 */
@@ -380,7 +378,7 @@ public class ExtendedMessage extends Message implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.cowboycoders.ant.messages.RssiInfoQueryable#getRssiValue()
 	 */
 	@Override
@@ -391,7 +389,7 @@ public class ExtendedMessage extends Message implements
 		}
 		return rtn.byteValue();
 	}
-	
+
 	/**
 	 * Sets channel id contained in extended bytes
 	 * @param id the id to set. A null value will remove the extended bytes and update flag.
@@ -407,7 +405,7 @@ public class ExtendedMessage extends Message implements
 		setTransmissionType(id.getTransmissonType());
 		setPairingFlag(id.isPairingFlagSet());
 	}
-	
+
 	/**
 	 * Sets a DataElement contained in extended data bytes
 	 * @param element the element to set
@@ -416,26 +414,26 @@ public class ExtendedMessage extends Message implements
 	public void setDataElement(DataElement element, Integer value) {
 		ArrayList<Byte> payload = getPayload();
 		Map<DataElement,Integer> oldValues = new HashMap<DataElement,Integer>();
-		
+
 		final int oldSize = payload.size();
-		
+
 		//System.out.println("oldSize: " + oldSize);
 
 		// add an extended flag if it doesn't exist
 		for (int i = 0; i <= EXTENDED_FLAG_OFFSET - oldSize; i++) {
 			payload.add(Byte.valueOf((byte) 0));
 		}
-		
+
 		//System.out.println("newSize: " + payload.size());
 
 		byte flagValue = payload.get(EXTENDED_FLAG_OFFSET);
 		ExtendedFlag flag = getFlagFromDataElement(element);
-		
+
 		// backup old values
 		for (ExtendedFlag f : ExtendedFlag.values()) {
 			// a null value signifies we want to clear so don't backup
 			if (f.equals(flag) && value == null) continue;
-			
+
 			List<DataElement> elements = Arrays.asList(f.getElements());
 			if ((f.getMask() & flagValue) != 0) {
 				for (DataElement e : elements) {
@@ -443,30 +441,30 @@ public class ExtendedMessage extends Message implements
 				}
 			}
 		}
-		
+
 		flagValue = doSetElement(element, value, payload, flagValue);
-		
-		
+
+
 		for (DataElement e : oldValues.keySet()) {
 			// don't restore what we just replaced
 			if (e.equals(element)) continue;
 			flagValue = doSetElement(e, oldValues.get(e), payload,flagValue);
 		}
-		
+
 		payload.set(EXTENDED_FLAG_OFFSET, flagValue);
-		
+
 		setPayload(payload);
-		
+
 
 	}
 
 	private byte doSetElement(DataElement element, Integer value,
 			ArrayList<Byte> payload,
 			byte flagValue) {
-		
+
 		List<DataElement> extendedElements = new ArrayList<DataElement>();
 		ExtendedFlag flag = getFlagFromDataElement(element);
-		
+
 		// toggle element mask
 		// case channelId set
 		if ((flag.getMask() & flagValue) != 0) {
@@ -480,28 +478,28 @@ public class ExtendedMessage extends Message implements
 				flagValue |= flag.getMask();
 			}
 		}
-		
-		// get expected list of data elements after flag toggle 
+
+		// get expected list of data elements after flag toggle
 		for (ExtendedFlag f : ExtendedFlag.values()) {
 			List<DataElement> elements = Arrays.asList(f.getElements());
 			if ((f.getMask() & flagValue) != 0) {
-				
+
 				extendedElements.addAll(elements);
 			}
 		}
-		
+
 		// correct payload length for flag toggle
 		final int expectedExtendedSize = payload.size() -1 - EXTENDED_FLAG_OFFSET;
 		int actualExtendedSize = 0;
 		for (DataElement e : extendedElements) {
 			actualExtendedSize += e.getLength();
 		}
-		
+
 		//System.out.println("expected: " +expectedExtendedSize);
 		//System.out.println("actual: " +actualExtendedSize);
-		
+
 		int delta = actualExtendedSize - expectedExtendedSize;
-		
+
 		//System.out.println("delta: " + delta);
 
 		for (int i = 0; i < Math.abs(delta); i++) {
@@ -511,16 +509,16 @@ public class ExtendedMessage extends Message implements
 			} else {
 				payload.add((byte)0);
 			}
-			
+
 		}
-		
+
 		// after resize clear extended bytes bytes
 		if (delta != 0) {
 			for (int i =  EXTENDED_FLAG_OFFSET + 1 ; i < payload.size() ; i++) {
 				payload.set(i,(byte) 0);
 			}
 		}
-		
+
 		// insert the bytes
 		int index = EXTENDED_FLAG_OFFSET + 1;
 		for (DataElement e : extendedElements) {
@@ -532,13 +530,13 @@ public class ExtendedMessage extends Message implements
 			}
 			index += e.getLength();
 		}
-		
+
 		return flagValue;
 	}
 
 	private ExtendedFlag getFlagFromDataElement(DataElement element) {
 		ExtendedFlag flag = null;
-		
+
 		// discover flag associated with element
 		for (ExtendedFlag f : ExtendedFlag.values()) {
 			List<DataElement> elements = Arrays.asList(f.getElements());
@@ -551,15 +549,15 @@ public class ExtendedMessage extends Message implements
 	}
 
 	public void setTransmissionType(int transmissionType) {
-		   ValidationUtils.maxMinValidator(0, ChannelId.MAX_TRANSMISSION_TYPE, transmissionType, 
+		   ValidationUtils.maxMinValidator(0, ChannelId.MAX_TRANSMISSION_TYPE, transmissionType,
 			       MessageExceptionFactory.createMaxMinExceptionProducable("transmissionType")
 			       );
 		   setDataElement(DataElement.TRANSMISSION_TYPE, transmissionType);
-		
+
 	}
 
 	public void setDeviceType(int deviceType) {
-		   ValidationUtils.maxMinValidator(0, ChannelId.MAX_DEVICE_TYPE, deviceType, 
+		   ValidationUtils.maxMinValidator(0, ChannelId.MAX_DEVICE_TYPE, deviceType,
 			       MessageExceptionFactory.createMaxMinExceptionProducable("deviceType")
 			       );
 		   Integer wholeElement = getExtendedData(DataElement.DEVICE_TYPE);
@@ -567,14 +565,14 @@ public class ExtendedMessage extends Message implements
 			   wholeElement = 0;
 		   }
 		   wholeElement = IntUtils.setMaskedBits(wholeElement, ChannelId.DEVICE_TYPE_MASK, deviceType);
-		   setDataElement(DataElement.DEVICE_TYPE, wholeElement); 
+		   setDataElement(DataElement.DEVICE_TYPE, wholeElement);
 	}
 
 	public void setDeviceNumber(int deviceId) {
-		   ValidationUtils.maxMinValidator(0, ChannelId.MAX_DEVICE_NUMBER, deviceId, 
+		   ValidationUtils.maxMinValidator(0, ChannelId.MAX_DEVICE_NUMBER, deviceId,
 			       MessageExceptionFactory.createMaxMinExceptionProducable("deviceNumber")
 			       );
-		   setDataElement(DataElement.DEVICE_NUMBER, deviceId); 
+		   setDataElement(DataElement.DEVICE_NUMBER, deviceId);
 	}
 
 	@Override
@@ -605,7 +603,7 @@ public class ExtendedMessage extends Message implements
 			   wholeElement = 0;
 		   }
 		value = IntUtils.setMaskedBits(wholeElement, ChannelId.PAIRING_FLAG_MASK, value);
-		setDataElement(DataElement.DEVICE_TYPE, value); 
+		setDataElement(DataElement.DEVICE_TYPE, value);
 	}
 
 
