@@ -1,13 +1,13 @@
-apply plugin: 'android-library'
+apply plugin: 'android'
 
 android {
-    compileSdkVersion 15
-    buildToolsVersion "17"
+    compileSdkVersion 21
+    buildToolsVersion "21.0.2"
 
-    defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 15
-    }
+//    defaultConfig {
+//        minSdkVersion 23
+//        targetSdkVersion 23
+//    }
 }
 
 android {
@@ -43,14 +43,3 @@ android {
 dependencies {
     compile project(':jformica_core'), fileTree(dir: 'libs', include: '**/*.jar')
 }
-
-//apply plugin : 'java'
-
-//task javadocJar(type: Jar, dependsOn:javadoc) {
-// classifier = 'javadoc'
-// from javadoc.destinationDir
-//}
-
-//artifacts {
-//     archives javadocJar
-//}

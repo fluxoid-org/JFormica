@@ -17,7 +17,7 @@
  *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * 
+ *
  */
 package org.cowboycoders.ant.messages.config;
 
@@ -35,21 +35,21 @@ import org.cowboycoders.ant.utils.ValidationUtils;
  *
  */
 public class ChannelTxPowerMessage extends ChannelMessage {
-  
+
   private static final int MAX_TX_POWER = 4;
-  
+
   /**
    * The additional elements we are adding to channelmessage
    */
-  private static DataElement [] additionalElements = 
+  private static DataElement [] additionalElements =
       new DataElement [] {
     DataElement.CHANNEL_TX_POWER,
   };
-  
+
   /**
    * Transmit power - see output power table (9.4.3)
    * @param channelNo target channel number
-   * @param power (max : 4)
+   * @param txPower power (max : 4)
    */
   public ChannelTxPowerMessage(Integer channelNo, int txPower) {
     super(MessageId.CHANNEL_RADIO_TX_POWER, channelNo,additionalElements);
@@ -59,22 +59,22 @@ public class ChannelTxPowerMessage extends ChannelMessage {
       throw new FatalMessageException("Error setting values", e);
     }
   }
-  
+
   public ChannelTxPowerMessage(int txPower) {
 	  this(0,txPower);
   }
-  
+
   /**
    * Sets transmit power
    * @param power to set
    * @throws ValidationException if out of limits
    */
   private void setTxPower(int power) throws ValidationException {
-    ValidationUtils.maxMinValidator(0, MAX_TX_POWER, power, 
+    ValidationUtils.maxMinValidator(0, MAX_TX_POWER, power,
         MessageExceptionFactory.createMaxMinExceptionProducable("Transmit power")
         );
     setDataElement(DataElement.CHANNEL_TX_POWER,power);
-    
+
   }
 
 }

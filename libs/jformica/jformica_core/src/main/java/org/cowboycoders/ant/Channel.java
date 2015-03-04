@@ -443,9 +443,9 @@ public class Channel {
 
 	/**
 	 * With internal locking
-	 * 
-	 * @param msg
-	 * @return
+	 *
+	 * @param msg TODO : document this
+	 * @return TODO : document this
 	 */
 	public MessageMetaWrapper<StandardMessage> send(ChannelMessage msg) {
 		try {
@@ -480,13 +480,11 @@ public class Channel {
 
 	/**
 	 * Sets network of channel and assigns it
-	 * 
-	 * @see org.cowboycoders.ant.messages.ChannelAssignMessage
-	 * @param key
-	 * @param type
-	 *            channel type
-	 * @param extended
-	 *            extended assignment parameters
+	 *
+	 * TODO : Fix see org.cowboycoders.ant.messages.ChannelAssignMessage
+	 * @param netKeyName TODO : document this
+	 * @param type channel type
+	 * @param extended extended assignment parameters
 	 */
 	public void assign(NetworkKey key, ChannelType type,
 			ExtendedAssignment... extended) {
@@ -501,11 +499,11 @@ public class Channel {
 
 	/**
 	 * Sets channel id @see org.cowboycoders.ant.messages.ChannelIdMessage
-	 * 
-	 * @param deviceNumber
-	 * @param deviceType
-	 * @param transmissionType
-	 * @param setPairingFlag
+	 *
+	 * @param deviceNumber TODO : document this
+	 * @param deviceType TODO : document this
+	 * @param transmissionType TODO : document this
+	 * @param setPairingFlag TODO : document this
 	 */
 	public void setId(int deviceNumber, int deviceType, int transmissionType,
 			boolean setPairingFlag) {
@@ -555,8 +553,8 @@ public class Channel {
 	}
 
 	/**
-	 * @see org.cowboycoders.ant.messages.ChannelPeriodMessage
-	 * @param period
+	 * TODO : fix this see org.cowboycoders.ant.messages.ChannelPeriodMessage
+	 * @param period TODO : document this
 	 */
 	public void setPeriod(int period) {
 		ChannelPeriodMessage periodMsg = new ChannelPeriodMessage(0, period);
@@ -576,11 +574,11 @@ public class Channel {
 	}
 
 	/**
-	 * @see org.cowboycoders.ant.messages.ChannelSearchTimeoutMessage 255 - no
+	 *  TODO : fix this see org.cowboycoders.ant.messages.ChannelSearchTimeoutMessage 255 - no
 	 *      timeout
-	 * @param timeout
-	 * 
-	 * 
+	 * @param timeout TODO : document this
+	 *
+	 *
 	 */
 	public void setSearchTimeout(int timeout) {
 		ChannelSearchTimeoutMessage msg = new ChannelSearchTimeoutMessage(0,
@@ -599,15 +597,15 @@ public class Channel {
 
 	/**
 	 * Not thread safe
-	 * 
-	 * @param msg
-	 * @param condition
-	 * @param timeout
-	 * @param timeoutUnit
-	 * @param receipt
-	 * @return
-	 * @throws InterruptedException
-	 * @throws TimeoutException
+	 *
+	 * @param msg TODO : to document
+	 * @param condition TODO : to document
+	 * @param timeout TODO : to document
+	 * @param timeoutUnit TODO : to document
+	 * @param receipt TODO : to document
+	 * @return TODO : to document
+	 * @throws InterruptedException TODO : to document
+	 * @throws TimeoutException TODO : to document
 	 */
 	public StandardMessage sendAndWaitForMessage(final ChannelMessage msg,
 			final MessageCondition condition, final Long timeout,
@@ -780,7 +778,7 @@ public class Channel {
 
 	/**
 	 * Sends a byte array as a burst message. Will split into
-	 * {@link AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE} long chunks, so if you
+	 * {TODO : fix this link AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE} long chunks, so if you
 	 * want complete control, make sure the total length is a multiple of this
 	 * number.
 	 * 
@@ -1011,7 +1009,7 @@ public class Channel {
 	
 	/**
 	 * Utility method to request channel status. Default timeout of 1 second.
-	 * @return {@link ChannelStatusResponse) encompassing response
+	 * @return {TODO : fix this link ChannelStatusResponse)} encompassing response
 	 * @throws ChannelError on timeout, if interrupted whilst waiting or status not received;
 	 */
 	public synchronized ChannelStatusResponse requestStatus() throws ChannelError {
@@ -1037,7 +1035,7 @@ public class Channel {
 	}
 	
 	  /**
-	   * Registers an event listener. To remove user {@link Channel#removeRxListener(BroadcastListener));
+	   * Registers an event listener. To remove user {TODO Fix this link Channel#removeRxListener(BroadcastListener));
 	   * @param handler event handler
 	   */
 	  public void registerEventHandler(ChannelEventHandler handler) {
@@ -1046,7 +1044,7 @@ public class Channel {
 	  
 	  /**
 	   * Adds an item to the exclusion/inclusion list. This is a per channel list with a maximum
-	   * of four entries (0 ... 3). Must call {@link Channel#configureExclusionInclusionList(int, boolean)
+	   * of four entries (0 ... 3). Must call { TODO: fix this link Channel#configureExclusionInclusionList(int, boolean)}
 	   * to activate.
 	   * @param index the index to change
 	   * @param id {@link ChannelId} to filter
@@ -1128,10 +1126,10 @@ public class Channel {
 	 }
 	 
 	 /**
-	  * Whitelist an array of ChannelIds. 
-	  * 
-	  * For more details see {@link Channel#blacklist(ChannelId[]))
-	  * 
+	  * Whitelist an array of ChannelIds.
+	  *
+	  * For more details see {TODO : fix this link Channel#blacklist(ChannelId[]))}
+	  *
 	  * @param ids array containing ids to blacklist (max length: 4) or a zero length array to disable.
 	  */
 	 public void whitelist(ChannelId [] ids) {

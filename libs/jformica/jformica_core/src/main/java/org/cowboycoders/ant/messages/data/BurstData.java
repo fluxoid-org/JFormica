@@ -29,7 +29,7 @@ import org.cowboycoders.ant.messages.Constants.DataElement;
  *
  */
 public abstract class BurstData extends DataMessage {
-  
+
   public static final int CHANNEL_MASK = 0x1F;
   public static final int BURST_MAX_CHANNEL_NO = 0x1f;
   public static final int SEQUENCE_MASK =  0xe0;
@@ -58,12 +58,12 @@ public abstract class BurstData extends DataMessage {
   public int getChannelNumber() {
     return getDataElement(DataElement.CHANNEL_ID).byteValue() & CHANNEL_MASK;
   }
-  
+
   /**
    * Each burst element corresponds to a value in the burst
    * sequence.
-   * @param sequence current value 
-   * @throws ValidationException if sequence is < 0 or > 7
+   * @param sequence current value
+   * @throws ValidationException if sequence is &lt; 0 or &gt; 7
    */
   public void setSequenceNumber(int sequence) throws ValidationException {
     if (sequence > SEQUENCE_MAX || sequence < 0) {
@@ -72,7 +72,7 @@ public abstract class BurstData extends DataMessage {
     }
     setPartialDataElement(DataElement.CHANNEL_ID,sequence,SEQUENCE_MASK);
   }
-  
+
   /**
    * Gets this burst packets sequence number
    * @return sequence number of this burst packet
@@ -80,7 +80,7 @@ public abstract class BurstData extends DataMessage {
   public int getSequenceNumber() {
     return (getDataElement(DataElement.CHANNEL_ID) & SEQUENCE_MASK) >>> 5 ;
   }
-  
-  
+
+
 
 }

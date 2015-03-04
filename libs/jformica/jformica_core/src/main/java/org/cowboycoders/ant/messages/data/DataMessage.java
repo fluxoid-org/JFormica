@@ -35,29 +35,29 @@ import org.cowboycoders.ant.utils.ByteUtils;
  *
  */
 public abstract class DataMessage extends ChannelMessage {
-  
+
   /**
    * The additional elements we are adding to channelmessage
    */
   private static DataElement [] additionalElements;
-  
+
   private static final byte DATA_LENGTH = 8;
-  
+
   static {
     additionalElements = new DataElement[DATA_LENGTH];
     for (int i = 0 ; i< additionalElements.length; i++) {
       additionalElements[i] = DataElement.DATA_BYTE;
     }
   }
-  
+
   protected DataMessage(Message backend, MessageId id,
       Integer channelNo) {
     super(backend,id, channelNo,additionalElements);
   }
 
   /**
-   * {@see setData(Byte[])}
-   * @param data
+   * {TODO : fix this - see setData(Byte[])}
+   * @param data TODO: document this
    */
   public void setData(byte[] data) {
     Byte [] boxed = new Byte[data.length];
@@ -66,9 +66,9 @@ public abstract class DataMessage extends ChannelMessage {
     }
     setData(boxed);
   }
-  
+
   /**
-   * 
+   *
    * @param data to set as 'data' section in payload (must be exactly 8 bytes)
    * @throws FatalMessageException on error setting payload
    */
@@ -87,10 +87,11 @@ public abstract class DataMessage extends ChannelMessage {
         throw new FatalMessageException("Error setting data",e);
     }
   }
-   
-  
+
+
   /**
-   * {@see getData()}
+   * {TODO : fix this see getData()}
+   * @return the primitive data
    */
   public byte [] getPrimitiveData() {
     Byte [] boxedData = getData();
@@ -100,7 +101,7 @@ public abstract class DataMessage extends ChannelMessage {
     }
     return rtn;
   }
-  
+
   /**
    * returns 'data' section of payload
    * @return data contained in payload (8 bytes)
@@ -110,7 +111,7 @@ public abstract class DataMessage extends ChannelMessage {
     payload = payload.subList(1, payload.size());
     return payload.toArray(new Byte[0]);
   }
-  
+
   /**
    * Returns 'data' section of payload converted to ints.
    * Takes into account that the bytes should be unsigned and
@@ -120,6 +121,6 @@ public abstract class DataMessage extends ChannelMessage {
   public int[] getUnsignedData() {
     return ByteUtils.unsignedBytesToInts(getData());
   }
-  
+
 
 }

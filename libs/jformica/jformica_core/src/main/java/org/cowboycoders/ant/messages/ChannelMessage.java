@@ -28,54 +28,60 @@ public abstract class ChannelMessage extends StandardMessage {
 
   public static final byte MAX_CHANNEL_NO = 127;
   public static final byte CHANNEL_NO_OFFSET = 0;
-  
+
   /**
    * Creates a ChannelMessage using the a {@code Message}
    * as the backend. See @{code ChannelMessage(message, id, payload)}
    * for param explanations.
-   * @throws ValidationException 
+   * @param id id of the message
+   * @param channelNo channel to use
+   * @param messageElements elements of the message
+   * @throws ValidationException  TODO : to document
    */
-  protected ChannelMessage(MessageId id, Integer channelNo,
+  public ChannelMessage(MessageId id, Integer channelNo,
       ArrayList<DataElement> messageElements) {
     this(null,id, channelNo,messageElements);
   }
-  
-  protected ChannelMessage(MessageId id, Integer channelNo,
+
+  public ChannelMessage(MessageId id, Integer channelNo,
       DataElement [] messageElements) {
     this(null,id, channelNo,
         messageElements);
   }
-  
-  protected ChannelMessage(Message backend,MessageId id, Integer channelNo,
+
+  public ChannelMessage(Message backend,MessageId id, Integer channelNo,
       DataElement [] messageElements) {
     this(backend,id, channelNo,
         new ArrayList<DataElement>(Arrays.asList(messageElements)));
   }
-  
+
   /**
    * Creates a ChannelMessage using the a {@code Message}
-   * as the backend without any additional data elements. 
+   * as the backend without any additional data elements.
    * See @{code ChannelMessage(message, id, payload)}
    * for param explanations.
-   * @throws ValidationException 
+   * @param id Message ID
+   * @param channelNo channel
+   * @throws ValidationException TODO : to document
    */
-  protected ChannelMessage(MessageId id, Integer channelNo) {
+  public ChannelMessage(MessageId id, Integer channelNo) {
     this(null,id, channelNo,new DataElement[0]);
   }
-  
+
   /**
    * Creates a ChannelMessage using {@code message} as its
    * backend
    * @param message the message to use as the backend
    * @param id the id of the message
+   * @param channelNo Channel number
    * @param messageElements additional message elements - this is appended
    *        to the the standard channel message list of elements
    * @throws FatalMessageException on error creating the message
    */
-  protected ChannelMessage(Message message, MessageId id, Integer channelNo,
+  public ChannelMessage(Message message, MessageId id, Integer channelNo,
       ArrayList<DataElement> messageElements) {
     super(message, id, ListUtils.prefixList(
-        messageElements, 
+        messageElements,
         new DataElement [] {DataElement.CHANNEL_ID})
         );
         try {
@@ -84,11 +90,11 @@ public abstract class ChannelMessage extends StandardMessage {
           throw new FatalMessageException("invalid channel no",e);
         }
   }
-  
-   
+
+
   /**
    * Sets the channel to transmit on
-   * 
+   *
    * @param channelNumber channel number (id)
    * @throws ValidationException if cahnnelNumber out of range
    */
@@ -102,7 +108,7 @@ public abstract class ChannelMessage extends StandardMessage {
    //setStandardPayload(payload);
     setDataElement(DataElement.CHANNEL_ID, channelNumber);
   }
-  
+
   /**
    * Gets the channel number
    * @return the channel number
@@ -112,7 +118,7 @@ public abstract class ChannelMessage extends StandardMessage {
     //return payload.get(CHANNEL_NO_OFFSET);
     return getDataElement(DataElement.CHANNEL_ID);
   }
-  
+
   // TODO: validate that message id is a suitable value
   @Override
   public void validate() throws MessageException {
@@ -121,10 +127,10 @@ public abstract class ChannelMessage extends StandardMessage {
     } catch (IndexOutOfBoundsException e) {
       throw new MessageException("Payload too small", e);
     }
-    
-    
+
+
   }
-  
-  
- 
+
+
+
 }

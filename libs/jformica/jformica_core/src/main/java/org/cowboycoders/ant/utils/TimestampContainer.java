@@ -22,18 +22,18 @@ package org.cowboycoders.ant.utils;
  * Stores an object with a timestamp of creation
  * @author will
  *
- * @param <V>
+ * @param <V> to document
  */
 public class TimestampContainer<V> implements TimestampQueryable<V> {
-  
+
   V object;
   long timestamp;
-  
+
   public TimestampContainer(V object) {
     this.object = object;
     this.timestamp = System.nanoTime();
   }
-  
+
   /**
    * Compare this with object timestamp
    * @return the current timestamp
@@ -57,6 +57,6 @@ public class TimestampContainer<V> implements TimestampQueryable<V> {
   public long getTimestamp() {
     return timestamp;
   }
-  
+
 
 }
