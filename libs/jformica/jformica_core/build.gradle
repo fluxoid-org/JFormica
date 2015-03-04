@@ -6,11 +6,20 @@ task "create-dirs" << {
    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
 }
 
+configurations {
+   localiseLibs
+}
+
+configurations.localiseLibs {
+    description = 'in-tree dependencies'
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: '**/*.jar')
     testCompile "junit:junit:4.8.2"
     testCompile 'org.mockito:mockito-all:1.9.5'
     testCompile 'net.vidageek:mirror:1.6.1'
+    localiseLibs fileTree(dir: '$buildDir/output/lib', include: '**/*.jar')
 }
 
 task copyJarToAndroid(type: Copy, dependsOn: 'deleteAndroidJar') {
@@ -56,7 +65,13 @@ task javadocJar(type: Jar, dependsOn:javadoc) {
 artifacts {
     archives sourcesJar
     archives javadocJar
-}  
+}
+
+task copyToLib(type: Copy) {
+    into "$buildDir/lib"
+    from configurations.testCompile
+}
+build.dependsOn(copyToLib)  
 
 eclipse {
   project {
