@@ -109,7 +109,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
 	 */
 	private ReentrantLock interfaceLock = new ReentrantLock();
 
-	private boolean readEndpoint = true;
+	private volatile boolean readEndpoint = true;
 
 	private UsbEndpoint endpointIn;
 
