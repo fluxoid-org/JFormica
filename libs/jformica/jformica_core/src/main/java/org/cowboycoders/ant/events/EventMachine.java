@@ -95,6 +95,8 @@ public class EventMachine  {
     @Override
     public void receiveMessage(StandardMessage message) {
     	
+    	//FIXME: unregister this after first success, so we don't process subsequent messages
+    	
     	try {
     		if(!condition.test(message)) return;
     	} catch (Exception e) {
@@ -106,6 +108,7 @@ public class EventMachine  {
 	    
 	    try {
 	    	messageUpdateLock.lock();
+	    	//FIXME: check flag to make sure we have sent message to node
 	    	this.wrappedMessage = wrappedMessage;
 	    	replyRecieved.signalAll();
 	    } finally {

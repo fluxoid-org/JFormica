@@ -187,7 +187,7 @@ public class Node {
 	/**
 	 * flags that we did the reset, as oppose to someone else (externally)
 	 */
-	private boolean weReset;
+	private volatile boolean weReset;
 
 	public Node(AntChipInterface antchip) {
 		antChipInterface = antchip;

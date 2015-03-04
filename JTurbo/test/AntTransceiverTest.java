@@ -64,23 +64,14 @@ public class AntTransceiverTest {
   public static void beforeClass() {
     AntTransceiver.LOGGER.setLevel(Level.ALL);
     ConsoleHandler handler = new ConsoleHandler();
-    // PUBLISH this level
     handler.setLevel(Level.ALL);
     AntTransceiver.LOGGER.addHandler(handler);
-    //Node.LOGGER.setLevel(Level.ALL);
-    //Node.LOGGER.addHandler(handler);
-    StandardMessage msg = new ResetMessage();
-    //StandardMessage msg = new BroadcastDataMessage();
-    //antchip.start();
-    //antchip.send(msg.encode());
-    //antchip.send(msg.encode());
-    //antchip.stop();
+
   }
   
   @AfterClass
   public static void afterClass() {
     antchip.stop();
-    //antchip.stop();
   }
   
   @Before

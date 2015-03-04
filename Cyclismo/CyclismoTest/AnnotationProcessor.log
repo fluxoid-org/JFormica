@@ -3602,3 +3602,179 @@
 15-Sep-2013 20:19:42 - NOTE : Found 0 classes to mock
 15-Sep-2013 20:19:42 - NOTE : Found 0 mocked classes to save
 15-Sep-2013 20:19:42 - NOTE : Finished Processing Mocks
+09-Dec-2013 19:36:25 - NOTE : Start Processing Annotations
+09-Dec-2013 19:36:25 - NOTE : Processing [public void testCreateTrackPoint() , public void testUploadWaypoints_nullCursor() , public void testUploadAllTrackPoints_prepareAndUploadPointsFailed() , public void testCreateTrackPoint() , public void testCreateWaypoint() , public void testCreateWaypoint() , protected void setUp() throws java.lang.Exception, public void testUploadAllTrackPoints_success() , protected void setUp() throws java.lang.Exception, public void testStopRecording() , private void setupChooseMapActivityMock() , public void testCreateTrackPoint() , public void testUploadWaypoints() throws org.xmlpull.v1.XmlPullParserException, protected void setUp() throws java.lang.Exception, public void testCreateTrack() , protected void setUp() throws java.lang.Exception, public void testCreateTrack() , public void testUploadWaypoints_onePoint() , public void testUploadAllTrackPoints_uploadLastMarkerFailed() , public void testCreateUser() , public void testUploadAllTrackPoints_uploadFirstMarkerFailed() , public void testCreateTrack() , public void testCreateWaypoint() , protected void setUp() throws java.lang.Exception, public void testStartRecording() ]
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.services.tasks.AnnouncementPeriodicTask
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.util.StringUtils
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.io.maps.SendMapsActivity
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.content.MyTracksProviderUtils
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.services.ITrackRecordingService
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.io.maps.ChooseMapActivity
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: java.io.File
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.content.MyTracksProviderUtils
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.content.DataSource
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.content.TrackDataListener
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.content.MyTracksProviderUtils
+09-Dec-2013 19:36:25 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.services.ITrackRecordingService
+09-Dec-2013 19:36:25 - NOTE : Found 29 classes to mock
+09-Dec-2013 19:36:25 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Mocking class org.cowboycoders.cyclisimo.services.tasks.AnnouncementPeriodicTask
+09-Dec-2013 19:36:25 - NOTE : Mocking class org.cowboycoders.cyclisimo.util.StringUtils
+09-Dec-2013 19:36:25 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:25 - NOTE : Mocking class org.cowboycoders.cyclisimo.io.maps.SendMapsActivity
+09-Dec-2013 19:36:25 - NOTE : Mocking interface org.cowboycoders.cyclisimo.content.MyTracksProviderUtils
+09-Dec-2013 19:36:25 - NOTE : Mocking interface org.cowboycoders.cyclisimo.services.ITrackRecordingService
+09-Dec-2013 19:36:25 - NOTE : Mocking class org.cowboycoders.cyclisimo.io.maps.ChooseMapActivity
+09-Dec-2013 19:36:26 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:26 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:26 - NOTE : Mocking class java.io.File
+09-Dec-2013 19:36:26 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:26 - NOTE : Mocking interface org.cowboycoders.cyclisimo.content.MyTracksProviderUtils
+09-Dec-2013 19:36:26 - NOTE : Mocking class org.cowboycoders.cyclisimo.content.DataSource
+09-Dec-2013 19:36:26 - NOTE : Mocking interface org.cowboycoders.cyclisimo.content.TrackDataListener
+09-Dec-2013 19:36:26 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:26 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:26 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:26 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:26 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:26 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:26 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:36:26 - NOTE : Mocking interface org.cowboycoders.cyclisimo.content.MyTracksProviderUtils
+09-Dec-2013 19:36:26 - NOTE : Mocking interface org.cowboycoders.cyclisimo.services.ITrackRecordingService
+09-Dec-2013 19:36:26 - NOTE : Found 10 mocked classes to save
+09-Dec-2013 19:36:26 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.io.maps.SendMapsActivityDelegateSubclass
+09-Dec-2013 19:36:26 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.io.maps.SendMapsActivityDelegateSubclass
+09-Dec-2013 19:36:26 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.services.tasks.AnnouncementPeriodicTaskDelegateInterface
+09-Dec-2013 19:36:26 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.services.tasks.AnnouncementPeriodicTaskDelegateInterface
+09-Dec-2013 19:36:26 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.content.DataSourceDelegateSubclass
+09-Dec-2013 19:36:26 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.content.DataSourceDelegateSubclass
+09-Dec-2013 19:36:26 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.services.tasks.AnnouncementPeriodicTaskDelegateSubclass
+09-Dec-2013 19:36:26 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.services.tasks.AnnouncementPeriodicTaskDelegateSubclass
+09-Dec-2013 19:36:26 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.io.maps.ChooseMapActivityDelegateSubclass
+09-Dec-2013 19:36:26 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.io.maps.ChooseMapActivityDelegateSubclass
+09-Dec-2013 19:36:26 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.content.DataSourceDelegateInterface
+09-Dec-2013 19:36:26 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.content.DataSourceDelegateInterface
+09-Dec-2013 19:36:26 - NOTE : Saving genmocks.java.io.FileDelegateInterface
+09-Dec-2013 19:36:26 - NOTE : Saving via Eclipse genmocks.java.io.FileDelegateInterface
+09-Dec-2013 19:36:26 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.io.maps.ChooseMapActivityDelegateInterface
+09-Dec-2013 19:36:26 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.io.maps.ChooseMapActivityDelegateInterface
+09-Dec-2013 19:36:26 - NOTE : Saving genmocks.java.io.FileDelegateSubclass
+09-Dec-2013 19:36:26 - NOTE : Saving via Eclipse genmocks.java.io.FileDelegateSubclass
+09-Dec-2013 19:36:26 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.io.maps.SendMapsActivityDelegateInterface
+09-Dec-2013 19:36:26 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.io.maps.SendMapsActivityDelegateInterface
+09-Dec-2013 19:36:26 - NOTE : Finished Processing Mocks
+09-Dec-2013 19:36:26 - NOTE : Start Processing Annotations
+09-Dec-2013 19:36:26 - NOTE : Processing []
+09-Dec-2013 19:36:26 - NOTE : Found 0 classes to mock
+09-Dec-2013 19:36:26 - NOTE : Found 0 mocked classes to save
+09-Dec-2013 19:36:26 - NOTE : Finished Processing Mocks
+09-Dec-2013 19:47:43 - NOTE : Start Processing Annotations
+09-Dec-2013 19:47:43 - NOTE : Processing [protected void setUp() throws java.lang.Exception, protected void setUp() throws java.lang.Exception, protected void setUp() throws java.lang.Exception, public void testUploadWaypoints_nullCursor() , public void testCreateWaypoint() , public void testUploadAllTrackPoints_success() , public void testUploadWaypoints_onePoint() , public void testStartRecording() , public void testStopRecording() , public void testCreateWaypoint() , public void testCreateTrackPoint() , protected void setUp() throws java.lang.Exception, public void testCreateTrack() , public void testCreateTrackPoint() , public void testCreateTrack() , public void testUploadWaypoints() throws org.xmlpull.v1.XmlPullParserException, private void setupChooseMapActivityMock() , public void testCreateUser() , public void testCreateWaypoint() , public void testUploadAllTrackPoints_uploadLastMarkerFailed() , public void testUploadAllTrackPoints_uploadFirstMarkerFailed() , public void testCreateTrack() , public void testUploadAllTrackPoints_prepareAndUploadPointsFailed() , protected void setUp() throws java.lang.Exception, public void testCreateTrackPoint() ]
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.io.maps.SendMapsActivity
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.content.MyTracksProviderUtils
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: java.io.File
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.content.MyTracksProviderUtils
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.content.DataSource
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.content.TrackDataListener
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.services.ITrackRecordingService
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.services.ITrackRecordingService
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.content.MyTracksProviderUtils
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.io.maps.ChooseMapActivity
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.services.tasks.AnnouncementPeriodicTask
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: org.cowboycoders.cyclisimo.util.StringUtils
+09-Dec-2013 19:47:43 - NOTE : Adding Class to Mocking List: android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Found 29 classes to mock
+09-Dec-2013 19:47:43 - NOTE : Mocking class org.cowboycoders.cyclisimo.io.maps.SendMapsActivity
+09-Dec-2013 19:47:43 - NOTE : Mocking interface org.cowboycoders.cyclisimo.content.MyTracksProviderUtils
+09-Dec-2013 19:47:43 - NOTE : Mocking class java.io.File
+09-Dec-2013 19:47:43 - NOTE : Mocking interface org.cowboycoders.cyclisimo.content.MyTracksProviderUtils
+09-Dec-2013 19:47:43 - NOTE : Mocking class org.cowboycoders.cyclisimo.content.DataSource
+09-Dec-2013 19:47:43 - NOTE : Mocking interface org.cowboycoders.cyclisimo.content.TrackDataListener
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface org.cowboycoders.cyclisimo.services.ITrackRecordingService
+09-Dec-2013 19:47:43 - NOTE : Mocking interface org.cowboycoders.cyclisimo.services.ITrackRecordingService
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface org.cowboycoders.cyclisimo.content.MyTracksProviderUtils
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking class org.cowboycoders.cyclisimo.io.maps.ChooseMapActivity
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Mocking class org.cowboycoders.cyclisimo.services.tasks.AnnouncementPeriodicTask
+09-Dec-2013 19:47:43 - NOTE : Mocking class org.cowboycoders.cyclisimo.util.StringUtils
+09-Dec-2013 19:47:43 - NOTE : Mocking interface android.database.Cursor
+09-Dec-2013 19:47:43 - NOTE : Found 10 mocked classes to save
+09-Dec-2013 19:47:43 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.services.tasks.AnnouncementPeriodicTaskDelegateInterface
+09-Dec-2013 19:47:43 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.services.tasks.AnnouncementPeriodicTaskDelegateInterface
+09-Dec-2013 19:47:43 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.io.maps.SendMapsActivityDelegateSubclass
+09-Dec-2013 19:47:43 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.io.maps.SendMapsActivityDelegateSubclass
+09-Dec-2013 19:47:43 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.services.tasks.AnnouncementPeriodicTaskDelegateSubclass
+09-Dec-2013 19:47:43 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.services.tasks.AnnouncementPeriodicTaskDelegateSubclass
+09-Dec-2013 19:47:43 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.content.DataSourceDelegateSubclass
+09-Dec-2013 19:47:43 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.content.DataSourceDelegateSubclass
+09-Dec-2013 19:47:43 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.io.maps.ChooseMapActivityDelegateSubclass
+09-Dec-2013 19:47:43 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.io.maps.ChooseMapActivityDelegateSubclass
+09-Dec-2013 19:47:43 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.content.DataSourceDelegateInterface
+09-Dec-2013 19:47:43 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.content.DataSourceDelegateInterface
+09-Dec-2013 19:47:43 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.io.maps.ChooseMapActivityDelegateInterface
+09-Dec-2013 19:47:43 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.io.maps.ChooseMapActivityDelegateInterface
+09-Dec-2013 19:47:43 - NOTE : Saving genmocks.java.io.FileDelegateInterface
+09-Dec-2013 19:47:43 - NOTE : Saving via Eclipse genmocks.java.io.FileDelegateInterface
+09-Dec-2013 19:47:43 - NOTE : Saving genmocks.java.io.FileDelegateSubclass
+09-Dec-2013 19:47:43 - NOTE : Saving via Eclipse genmocks.java.io.FileDelegateSubclass
+09-Dec-2013 19:47:43 - NOTE : Saving genmocks.org.cowboycoders.cyclisimo.io.maps.SendMapsActivityDelegateInterface
+09-Dec-2013 19:47:43 - NOTE : Saving via Eclipse genmocks.org.cowboycoders.cyclisimo.io.maps.SendMapsActivityDelegateInterface
+09-Dec-2013 19:47:43 - NOTE : Finished Processing Mocks
+09-Dec-2013 19:47:43 - NOTE : Start Processing Annotations
+09-Dec-2013 19:47:43 - NOTE : Processing []
+09-Dec-2013 19:47:43 - NOTE : Found 0 classes to mock
+09-Dec-2013 19:47:43 - NOTE : Found 0 mocked classes to save
+09-Dec-2013 19:47:43 - NOTE : Finished Processing Mocks
