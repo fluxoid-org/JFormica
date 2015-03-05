@@ -69,33 +69,33 @@ public class ChannelAssignMessage extends ChannelMessage {
 
 /**
    * Assignment message - multiple extended assignment options
-   * @param channelNo of channel we are assigning
+   * @param networkNo network we are assigning
    * @param type type of channel required
    * @param extended extended assignment options
    * @throws ValidationException on error constructing this message
    */
-  public ChannelAssignMessage(Integer channelNo, ChannelType type,
+  public ChannelAssignMessage(Integer networkNo, ChannelType type,
       Set<ExtendedAssignment> extended) {
-    super(MessageId.ASSIGN_CHANNEL, channelNo,additionalElements);
+    super(MessageId.ASSIGN_CHANNEL, 0,additionalElements);
     this.type = type;
     setChannelType(type);
     setExtendedAssignment(extended);
-    setNetworkNumber(0);
+    setNetworkNumber(networkNo);
     
   }
   
   
-  public ChannelAssignMessage(Integer channelNo, ChannelType type) {
-    this(channelNo,type, generateExtendedSet(new ExtendedAssignment[0]));
+  public ChannelAssignMessage(Integer networkNo, ChannelType type) {
+    this(networkNo,type, generateExtendedSet(new ExtendedAssignment[0]));
   }
   
   public ChannelAssignMessage(ChannelType type) {
     this(0,type, generateExtendedSet(new ExtendedAssignment[0]));
   }
   
-  public ChannelAssignMessage(Integer channelNo, ChannelType type,
+  public ChannelAssignMessage(Integer networkNo, ChannelType type,
       ExtendedAssignment ... extended) {
-    this(channelNo,type, generateExtendedSet(extended));
+    this(networkNo,type, generateExtendedSet(extended));
   }
   
   private static Set<ExtendedAssignment> generateExtendedSet(
