@@ -59,50 +59,50 @@ com.google.android.common.SwipeySwitcher: SwipeySwitcher(android.content.Context
 com.google.android.common.SwipeySwitcher: void setOnTouchCallback(com.google.android.common.SwipeySwitcher$ObserverCallbacks)
 com.google.android.common.SwipeySwitcher: void setAdapter(com.google.android.common.SwipeySwitcher$Adapter)
 com.google.android.common.SwipeySwitcher: void setSelection(int)
-com.google.android.gms.R$attr: int cameraTargetLng
-com.google.android.gms.R$attr: int uiScrollGestures
-com.google.android.gms.R$attr: int zOrderOnTop
 com.google.android.gms.R$attr: int cameraBearing
 com.google.android.gms.R$attr: int cameraTargetLat
-com.google.android.gms.R$attr: int uiRotateGestures
-com.google.android.gms.R$attr: int uiZoomGestures
-com.google.android.gms.R$attr: int uiCompass
-com.google.android.gms.R$attr: int uiZoomControls
+com.google.android.gms.R$attr: int cameraTargetLng
 com.google.android.gms.R$attr: int cameraTilt
 com.google.android.gms.R$attr: int cameraZoom
-com.google.android.gms.R$attr: int uiTiltGestures
-com.google.android.gms.R$attr: int useViewLifecycle
 com.google.android.gms.R$attr: int mapType
-com.google.android.gms.R$id: int terrain
+com.google.android.gms.R$attr: int uiCompass
+com.google.android.gms.R$attr: int uiRotateGestures
+com.google.android.gms.R$attr: int uiScrollGestures
+com.google.android.gms.R$attr: int uiTiltGestures
+com.google.android.gms.R$attr: int uiZoomControls
+com.google.android.gms.R$attr: int uiZoomGestures
+com.google.android.gms.R$attr: int useViewLifecycle
+com.google.android.gms.R$attr: int zOrderOnTop
 com.google.android.gms.R$id: int none
-com.google.android.gms.R$id: int satellite
 com.google.android.gms.R$id: int normal
-com.google.android.gms.R$string: int common_google_play_services_update_text
-com.google.android.gms.R$string: int common_google_play_services_install_button
-com.google.android.gms.R$string: int common_google_play_services_install_title
-com.google.android.gms.R$string: int common_google_play_services_install_text_phone
-com.google.android.gms.R$string: int common_google_play_services_update_button
-com.google.android.gms.R$string: int common_google_play_services_enable_title
-com.google.android.gms.R$string: int common_google_play_services_install_text_tablet
-com.google.android.gms.R$string: int common_google_play_services_unknown_issue
+com.google.android.gms.R$id: int satellite
+com.google.android.gms.R$id: int terrain
 com.google.android.gms.R$string: int common_google_play_services_enable_button
-com.google.android.gms.R$string: int common_google_play_services_update_title
 com.google.android.gms.R$string: int common_google_play_services_enable_text
-com.google.android.gms.R$styleable: int MapAttrs_uiCompass
-com.google.android.gms.R$styleable: int MapAttrs_uiScrollGestures
-com.google.android.gms.R$styleable: int MapAttrs_mapType
-com.google.android.gms.R$styleable: int MapAttrs_cameraZoom
-com.google.android.gms.R$styleable: int MapAttrs_cameraBearing
-com.google.android.gms.R$styleable: int MapAttrs_uiZoomControls
-com.google.android.gms.R$styleable: int MapAttrs_zOrderOnTop
+com.google.android.gms.R$string: int common_google_play_services_enable_title
+com.google.android.gms.R$string: int common_google_play_services_install_button
+com.google.android.gms.R$string: int common_google_play_services_install_text_phone
+com.google.android.gms.R$string: int common_google_play_services_install_text_tablet
+com.google.android.gms.R$string: int common_google_play_services_install_title
+com.google.android.gms.R$string: int common_google_play_services_unknown_issue
+com.google.android.gms.R$string: int common_google_play_services_update_button
+com.google.android.gms.R$string: int common_google_play_services_update_text
+com.google.android.gms.R$string: int common_google_play_services_update_title
 com.google.android.gms.R$styleable: int[] MapAttrs
+com.google.android.gms.R$styleable: int MapAttrs_cameraBearing
 com.google.android.gms.R$styleable: int MapAttrs_cameraTargetLat
 com.google.android.gms.R$styleable: int MapAttrs_cameraTargetLng
-com.google.android.gms.R$styleable: int MapAttrs_uiTiltGestures
 com.google.android.gms.R$styleable: int MapAttrs_cameraTilt
+com.google.android.gms.R$styleable: int MapAttrs_cameraZoom
+com.google.android.gms.R$styleable: int MapAttrs_mapType
+com.google.android.gms.R$styleable: int MapAttrs_uiCompass
 com.google.android.gms.R$styleable: int MapAttrs_uiRotateGestures
+com.google.android.gms.R$styleable: int MapAttrs_uiScrollGestures
+com.google.android.gms.R$styleable: int MapAttrs_uiTiltGestures
+com.google.android.gms.R$styleable: int MapAttrs_uiZoomControls
 com.google.android.gms.R$styleable: int MapAttrs_uiZoomGestures
 com.google.android.gms.R$styleable: int MapAttrs_useViewLifecycle
+com.google.android.gms.R$styleable: int MapAttrs_zOrderOnTop
 com.google.android.gms.internal.ac
 com.google.android.gms.internal.aj
 com.google.android.gms.internal.aj: aj(android.content.Context,android.util.AttributeSet,int)
@@ -582,18 +582,18 @@ com.ipaulpro.afilechooser.FileChooserActivity: FileChooserActivity()
 com.ipaulpro.afilechooser.FileListFragment
 com.ipaulpro.afilechooser.R$dimen: int list_item_padding
 com.ipaulpro.afilechooser.R$dimen: int list_padding
-com.ipaulpro.afilechooser.R$drawable: int ic_folder
 com.ipaulpro.afilechooser.R$drawable: int ic_chooser
 com.ipaulpro.afilechooser.R$drawable: int ic_file
-com.ipaulpro.afilechooser.R$id: int file_name
+com.ipaulpro.afilechooser.R$drawable: int ic_folder
 com.ipaulpro.afilechooser.R$id: int explorer_fragment
 com.ipaulpro.afilechooser.R$id: int file_icon
+com.ipaulpro.afilechooser.R$id: int file_name
 com.ipaulpro.afilechooser.R$layout: int chooser
 com.ipaulpro.afilechooser.R$layout: int file
+com.ipaulpro.afilechooser.R$string: int choose_file
 com.ipaulpro.afilechooser.R$string: int empty_directory
 com.ipaulpro.afilechooser.R$string: int error_selecting_file
 com.ipaulpro.afilechooser.R$string: int storage_removed
-com.ipaulpro.afilechooser.R$string: int choose_file
 com.ipaulpro.afilechooser.R$style: int fileChooserIcon
 com.ipaulpro.afilechooser.R$style: int fileChooserName
 com.ipaulpro.afilechooser.R$xml: int mimetypes
@@ -603,6 +603,8 @@ org.cowboycoders.ant.AntError: long serialVersionUID
 org.cowboycoders.ant.AntLogger$Direction: org.cowboycoders.ant.AntLogger$Direction[] values()
 org.cowboycoders.ant.AntLogger$Direction: org.cowboycoders.ant.AntLogger$Direction valueOf(java.lang.String)
 org.cowboycoders.ant.ChannelError: long serialVersionUID
+org.cowboycoders.ant.NetworkAllocationException: long serialVersionUID
+org.cowboycoders.ant.NetworkTest$ListenerCalledException: long serialVersionUID
 org.cowboycoders.ant.TransferException: long serialVersionUID
 org.cowboycoders.ant.interfaces.AntCommunicationException: long serialVersionUID
 org.cowboycoders.ant.interfaces.AntRadioPoweredOffException: long serialVersionUID
@@ -614,8 +616,8 @@ org.cowboycoders.ant.interfaces.DisableReason: org.cowboycoders.ant.interfaces.D
 org.cowboycoders.ant.interfaces.ServiceAlreadyClaimedException: long serialVersionUID
 org.cowboycoders.ant.messages.ChannelType$Types: org.cowboycoders.ant.messages.ChannelType$Types[] values()
 org.cowboycoders.ant.messages.ChannelType$Types: org.cowboycoders.ant.messages.ChannelType$Types valueOf(java.lang.String)
-org.cowboycoders.ant.messages.Constants$DataElements: org.cowboycoders.ant.messages.Constants$DataElements[] values()
-org.cowboycoders.ant.messages.Constants$DataElements: org.cowboycoders.ant.messages.Constants$DataElements valueOf(java.lang.String)
+org.cowboycoders.ant.messages.Constants$DataElement: org.cowboycoders.ant.messages.Constants$DataElement[] values()
+org.cowboycoders.ant.messages.Constants$DataElement: org.cowboycoders.ant.messages.Constants$DataElement valueOf(java.lang.String)
 org.cowboycoders.ant.messages.ExtendedMessage$ExtendedFlag: org.cowboycoders.ant.messages.ExtendedMessage$ExtendedFlag[] values()
 org.cowboycoders.ant.messages.ExtendedMessage$ExtendedFlag: org.cowboycoders.ant.messages.ExtendedMessage$ExtendedFlag valueOf(java.lang.String)
 org.cowboycoders.ant.messages.FatalMessageException: long serialVersionUID
@@ -627,6 +629,8 @@ org.cowboycoders.ant.messages.commands.ChannelRequestMessage$Request: org.cowboy
 org.cowboycoders.ant.messages.commands.ChannelRequestMessage$Request: org.cowboycoders.ant.messages.commands.ChannelRequestMessage$Request valueOf(java.lang.String)
 org.cowboycoders.ant.messages.config.ChannelAssignMessage$ExtendedAssignment: org.cowboycoders.ant.messages.config.ChannelAssignMessage$ExtendedAssignment[] values()
 org.cowboycoders.ant.messages.config.ChannelAssignMessage$ExtendedAssignment: org.cowboycoders.ant.messages.config.ChannelAssignMessage$ExtendedAssignment valueOf(java.lang.String)
+org.cowboycoders.ant.messages.nonstandard.CombinedBurst$StatusFlag: org.cowboycoders.ant.messages.nonstandard.CombinedBurst$StatusFlag[] values()
+org.cowboycoders.ant.messages.nonstandard.CombinedBurst$StatusFlag: org.cowboycoders.ant.messages.nonstandard.CombinedBurst$StatusFlag valueOf(java.lang.String)
 org.cowboycoders.ant.messages.responses.Capability: org.cowboycoders.ant.messages.responses.Capability[] values()
 org.cowboycoders.ant.messages.responses.Capability: org.cowboycoders.ant.messages.responses.Capability valueOf(java.lang.String)
 org.cowboycoders.ant.messages.responses.CapabilityCategory: org.cowboycoders.ant.messages.responses.CapabilityCategory[] values()
@@ -635,14 +639,30 @@ org.cowboycoders.ant.messages.responses.ChannelStatusResponse$State: org.cowboyc
 org.cowboycoders.ant.messages.responses.ChannelStatusResponse$State: org.cowboycoders.ant.messages.responses.ChannelStatusResponse$State valueOf(java.lang.String)
 org.cowboycoders.ant.messages.responses.ResponseCode: org.cowboycoders.ant.messages.responses.ResponseCode[] values()
 org.cowboycoders.ant.messages.responses.ResponseCode: org.cowboycoders.ant.messages.responses.ResponseCode valueOf(java.lang.String)
-org.cowboycoders.ant.temp.BushidoBrakeModel$CalibrationState: org.cowboycoders.ant.temp.BushidoBrakeModel$CalibrationState[] values()
-org.cowboycoders.ant.temp.BushidoBrakeModel$CalibrationState: org.cowboycoders.ant.temp.BushidoBrakeModel$CalibrationState valueOf(java.lang.String)
+org.cowboycoders.ant.messages.responses.exceptions.ChannelClosedException: long serialVersionUID
+org.cowboycoders.ant.messages.responses.exceptions.ChannelIdNotSetException: long serialVersionUID
+org.cowboycoders.ant.messages.responses.exceptions.ChannelStateException: long serialVersionUID
+org.cowboycoders.ant.messages.responses.exceptions.ChannelsStillOpenException: long serialVersionUID
+org.cowboycoders.ant.messages.responses.exceptions.InvalidListIdException: long serialVersionUID
+org.cowboycoders.ant.messages.responses.exceptions.InvalidMessageException: long serialVersionUID
+org.cowboycoders.ant.messages.responses.exceptions.InvalidNetworkException: long serialVersionUID
+org.cowboycoders.ant.messages.responses.exceptions.InvalidParameterException: long serialVersionUID
+org.cowboycoders.ant.messages.responses.exceptions.MessageLengthException: long serialVersionUID
+org.cowboycoders.ant.messages.responses.exceptions.TransmissionInScanModeException: long serialVersionUID
 org.cowboycoders.cyclisimo.AbstractMyTracksActivity
 org.cowboycoders.cyclisimo.AbstractMyTracksActivity: AbstractMyTracksActivity()
 org.cowboycoders.cyclisimo.AggregatedStatsActivity
 org.cowboycoders.cyclisimo.AggregatedStatsActivity: AggregatedStatsActivity()
 org.cowboycoders.cyclisimo.AutoCompleteTextPreference
 org.cowboycoders.cyclisimo.AutoCompleteTextPreference: AutoCompleteTextPreference(android.content.Context,android.util.AttributeSet)
+org.cowboycoders.cyclisimo.BikeEditActivity
+org.cowboycoders.cyclisimo.BikeEditActivity: BikeEditActivity()
+org.cowboycoders.cyclisimo.BikeListActivity
+org.cowboycoders.cyclisimo.BikeListActivity: BikeListActivity()
+org.cowboycoders.cyclisimo.BikeListActivity$DeleteAllBikesCallback
+org.cowboycoders.cyclisimo.BikeListActivity$DeleteAllBikesCallback: android.os.Parcelable$Creator CREATOR
+org.cowboycoders.cyclisimo.BikeListActivity$DeleteBikeCallback
+org.cowboycoders.cyclisimo.BikeListActivity$DeleteBikeCallback: android.os.Parcelable$Creator CREATOR
 org.cowboycoders.cyclisimo.BootReceiver
 org.cowboycoders.cyclisimo.BootReceiver: BootReceiver()
 org.cowboycoders.cyclisimo.ChartView
@@ -657,7 +677,6 @@ org.cowboycoders.cyclisimo.CourseListActivity
 org.cowboycoders.cyclisimo.CourseListActivity: CourseListActivity()
 org.cowboycoders.cyclisimo.CourseSetupActivity
 org.cowboycoders.cyclisimo.CourseSetupActivity: CourseSetupActivity()
-org.cowboycoders.cyclisimo.CourseSetupActivity: CourseSetupActivity(java.lang.String)
 org.cowboycoders.cyclisimo.HelpActivity
 org.cowboycoders.cyclisimo.HelpActivity: HelpActivity()
 org.cowboycoders.cyclisimo.ImportActivity
@@ -691,6 +710,8 @@ org.cowboycoders.cyclisimo.R$array: int track_color_mode_options
 org.cowboycoders.cyclisimo.R$array: int track_color_mode_values
 org.cowboycoders.cyclisimo.R$array: int track_name_options
 org.cowboycoders.cyclisimo.R$array: int track_name_values
+org.cowboycoders.cyclisimo.R$array: int turbotrainer_opions
+org.cowboycoders.cyclisimo.R$array: int turbotrainer_values
 org.cowboycoders.cyclisimo.R$array: int waypoint_types
 org.cowboycoders.cyclisimo.R$attr: int cameraBearing
 org.cowboycoders.cyclisimo.R$attr: int cameraTargetLat
@@ -740,6 +761,7 @@ org.cowboycoders.cyclisimo.R$drawable: int btn_record
 org.cowboycoders.cyclisimo.R$drawable: int btn_stop_0
 org.cowboycoders.cyclisimo.R$drawable: int btn_stop_1
 org.cowboycoders.cyclisimo.R$drawable: int failure
+org.cowboycoders.cyclisimo.R$drawable: int generic_select_title_bar_border
 org.cowboycoders.cyclisimo.R$drawable: int google_docs_icon
 org.cowboycoders.cyclisimo.R$drawable: int google_fusion_tables_icon
 org.cowboycoders.cyclisimo.R$drawable: int google_maps_icon
@@ -790,8 +812,16 @@ org.cowboycoders.cyclisimo.R$drawable: int track_widget_background
 org.cowboycoders.cyclisimo.R$drawable: int warning
 org.cowboycoders.cyclisimo.R$drawable: int yellow_pushpin
 org.cowboycoders.cyclisimo.R$id: int about_version
+org.cowboycoders.cyclisimo.R$id: int bike_edit_name
+org.cowboycoders.cyclisimo.R$id: int bike_edit_title
+org.cowboycoders.cyclisimo.R$id: int bike_edit_weight
+org.cowboycoders.cyclisimo.R$id: int bike_edit_weight_label
+org.cowboycoders.cyclisimo.R$id: int bike_shared_check_box
 org.cowboycoders.cyclisimo.R$id: int bottom_buttons_add
 org.cowboycoders.cyclisimo.R$id: int bottom_buttons_cancel
+org.cowboycoders.cyclisimo.R$id: int bushido_brake_calibrate_speed_label
+org.cowboycoders.cyclisimo.R$id: int bushido_brake_calibrate_speed_title
+org.cowboycoders.cyclisimo.R$id: int bushido_brake_calibration_current_speed
 org.cowboycoders.cyclisimo.R$id: int chart_view_layout
 org.cowboycoders.cyclisimo.R$id: int chart_zoom_controls
 org.cowboycoders.cyclisimo.R$id: int choose_activity_list_item_icon
@@ -818,9 +848,18 @@ org.cowboycoders.cyclisimo.R$id: int course_list_empty_view
 org.cowboycoders.cyclisimo.R$id: int course_select_cancel
 org.cowboycoders.cyclisimo.R$id: int course_select_go
 org.cowboycoders.cyclisimo.R$id: int course_select_preferences
+org.cowboycoders.cyclisimo.R$id: int editText1
 org.cowboycoders.cyclisimo.R$id: int explorer_fragment
 org.cowboycoders.cyclisimo.R$id: int file_icon
 org.cowboycoders.cyclisimo.R$id: int file_name
+org.cowboycoders.cyclisimo.R$id: int generic_edit_cancel
+org.cowboycoders.cyclisimo.R$id: int generic_edit_save
+org.cowboycoders.cyclisimo.R$id: int generic_list
+org.cowboycoders.cyclisimo.R$id: int generic_list_buttons_container
+org.cowboycoders.cyclisimo.R$id: int generic_list_empty_view
+org.cowboycoders.cyclisimo.R$id: int generic_list_left_button
+org.cowboycoders.cyclisimo.R$id: int generic_list_right_button
+org.cowboycoders.cyclisimo.R$id: int generic_list_title
 org.cowboycoders.cyclisimo.R$id: int gpx_upload_container
 org.cowboycoders.cyclisimo.R$id: int help_about
 org.cowboycoders.cyclisimo.R$id: int help_maps_public_unlisted_answer
@@ -907,7 +946,12 @@ org.cowboycoders.cyclisimo.R$id: int stats_moving_time_value
 org.cowboycoders.cyclisimo.R$id: int stats_speed_label
 org.cowboycoders.cyclisimo.R$id: int stats_speed_value
 org.cowboycoders.cyclisimo.R$id: int stats_total_time_value
+org.cowboycoders.cyclisimo.R$id: int tableRow1
+org.cowboycoders.cyclisimo.R$id: int tableRow2
+org.cowboycoders.cyclisimo.R$id: int tableRow3
+org.cowboycoders.cyclisimo.R$id: int tableRow4
 org.cowboycoders.cyclisimo.R$id: int terrain
+org.cowboycoders.cyclisimo.R$id: int textView1
 org.cowboycoders.cyclisimo.R$id: int track_controler_container
 org.cowboycoders.cyclisimo.R$id: int track_controller_record
 org.cowboycoders.cyclisimo.R$id: int track_controller_status
@@ -982,9 +1026,17 @@ org.cowboycoders.cyclisimo.R$id: int upload_result_fusion_tables_result_icon
 org.cowboycoders.cyclisimo.R$id: int upload_result_maps_result
 org.cowboycoders.cyclisimo.R$id: int upload_result_maps_result_icon
 org.cowboycoders.cyclisimo.R$id: int upload_result_success_footer
+org.cowboycoders.cyclisimo.R$id: int user_edit_name
+org.cowboycoders.cyclisimo.R$id: int user_edit_title
+org.cowboycoders.cyclisimo.R$id: int user_edit_units
+org.cowboycoders.cyclisimo.R$id: int user_edit_weight
+org.cowboycoders.cyclisimo.R$id: int user_edit_weight_label
+org.cowboycoders.cyclisimo.R$id: int user_list_delete_all
 org.cowboycoders.cyclisimo.R$layout: int about
 org.cowboycoders.cyclisimo.R$layout: int aggregated_stats
+org.cowboycoders.cyclisimo.R$layout: int bike_edit
 org.cowboycoders.cyclisimo.R$layout: int bottom_buttons
+org.cowboycoders.cyclisimo.R$layout: int bushido_brake_calibrate
 org.cowboycoders.cyclisimo.R$layout: int chart
 org.cowboycoders.cyclisimo.R$layout: int choose_activity_list_item
 org.cowboycoders.cyclisimo.R$layout: int choose_map
@@ -997,6 +1049,10 @@ org.cowboycoders.cyclisimo.R$layout: int course_select
 org.cowboycoders.cyclisimo.R$layout: int course_select_buttons
 org.cowboycoders.cyclisimo.R$layout: int course_upload_buttons
 org.cowboycoders.cyclisimo.R$layout: int file
+org.cowboycoders.cyclisimo.R$layout: int generic_edit_buttons
+org.cowboycoders.cyclisimo.R$layout: int generic_list_select
+org.cowboycoders.cyclisimo.R$layout: int generic_list_title_bar
+org.cowboycoders.cyclisimo.R$layout: int generic_two_button_bottom_bar
 org.cowboycoders.cyclisimo.R$layout: int help
 org.cowboycoders.cyclisimo.R$layout: int help_buttons
 org.cowboycoders.cyclisimo.R$layout: int list_item
@@ -1009,6 +1065,7 @@ org.cowboycoders.cyclisimo.R$layout: int search_list
 org.cowboycoders.cyclisimo.R$layout: int sensor_state
 org.cowboycoders.cyclisimo.R$layout: int stats
 org.cowboycoders.cyclisimo.R$layout: int stats_core
+org.cowboycoders.cyclisimo.R$layout: int test
 org.cowboycoders.cyclisimo.R$layout: int track_controller
 org.cowboycoders.cyclisimo.R$layout: int track_detail
 org.cowboycoders.cyclisimo.R$layout: int track_edit
@@ -1020,6 +1077,8 @@ org.cowboycoders.cyclisimo.R$layout: int track_widget_4x3
 org.cowboycoders.cyclisimo.R$layout: int track_widget_4x4
 org.cowboycoders.cyclisimo.R$layout: int track_widget_config
 org.cowboycoders.cyclisimo.R$layout: int upload_result
+org.cowboycoders.cyclisimo.R$layout: int user_edit
+org.cowboycoders.cyclisimo.R$layout: int user_list_item
 org.cowboycoders.cyclisimo.R$menu: int course_list
 org.cowboycoders.cyclisimo.R$menu: int list_context_menu
 org.cowboycoders.cyclisimo.R$menu: int map
@@ -1028,6 +1087,9 @@ org.cowboycoders.cyclisimo.R$menu: int marker_list
 org.cowboycoders.cyclisimo.R$menu: int search_list
 org.cowboycoders.cyclisimo.R$menu: int track_detail
 org.cowboycoders.cyclisimo.R$menu: int track_list
+org.cowboycoders.cyclisimo.R$menu: int user_edit_list
+org.cowboycoders.cyclisimo.R$menu: int user_list
+org.cowboycoders.cyclisimo.R$menu: int user_list_context_menu
 org.cowboycoders.cyclisimo.R$plurals: int importGpxFiles
 org.cowboycoders.cyclisimo.R$plurals: int voiceHours
 org.cowboycoders.cyclisimo.R$plurals: int voiceMinutes
@@ -1117,8 +1179,28 @@ org.cowboycoders.cyclisimo.R$string: int anthub_action_shutdown
 org.cowboycoders.cyclisimo.R$string: int app_name
 org.cowboycoders.cyclisimo.R$string: int auto_resume_track_current_retry_key
 org.cowboycoders.cyclisimo.R$string: int auto_resume_track_timeout_key
+org.cowboycoders.cyclisimo.R$string: int bike_create
+org.cowboycoders.cyclisimo.R$string: int bike_edit
+org.cowboycoders.cyclisimo.R$string: int bike_edit_name_error
+org.cowboycoders.cyclisimo.R$string: int bike_edit_weight_error
+org.cowboycoders.cyclisimo.R$string: int bike_list_delete_all_confirmation_message
+org.cowboycoders.cyclisimo.R$string: int bike_list_delete_single_confirmation_message
+org.cowboycoders.cyclisimo.R$string: int bike_list_empty_message
+org.cowboycoders.cyclisimo.R$string: int bike_list_new_user_selected
+org.cowboycoders.cyclisimo.R$string: int bike_list_right_button
+org.cowboycoders.cyclisimo.R$string: int bike_list_title
+org.cowboycoders.cyclisimo.R$string: int bike_list_unable_to_peform_operation
+org.cowboycoders.cyclisimo.R$string: int bike_select_request_code
+org.cowboycoders.cyclisimo.R$string: int bike_shared_checkbox_text
 org.cowboycoders.cyclisimo.R$string: int bluetooth_sensor_key
 org.cowboycoders.cyclisimo.R$string: int broadcast_notifications_permission
+org.cowboycoders.cyclisimo.R$string: int bushido_brake_calibrate_calibration_value
+org.cowboycoders.cyclisimo.R$string: int bushido_brake_calibrate_resume
+org.cowboycoders.cyclisimo.R$string: int bushido_brake_calibrate_speed_label
+org.cowboycoders.cyclisimo.R$string: int bushido_brake_calibrate_speed_unknown
+org.cowboycoders.cyclisimo.R$string: int bushido_brake_calibrate_start
+org.cowboycoders.cyclisimo.R$string: int bushido_brake_calibrate_status_message
+org.cowboycoders.cyclisimo.R$string: int bushido_brake_calibrate_stop
 org.cowboycoders.cyclisimo.R$string: int cancel
 org.cowboycoders.cyclisimo.R$string: int chart_by_distance_key
 org.cowboycoders.cyclisimo.R$string: int chart_show_cadence_key
@@ -1138,6 +1220,7 @@ org.cowboycoders.cyclisimo.R$string: int common_google_play_services_unknown_iss
 org.cowboycoders.cyclisimo.R$string: int common_google_play_services_update_button
 org.cowboycoders.cyclisimo.R$string: int common_google_play_services_update_text
 org.cowboycoders.cyclisimo.R$string: int common_google_play_services_update_title
+org.cowboycoders.cyclisimo.R$string: int course_bike_id
 org.cowboycoders.cyclisimo.R$string: int course_file_chooser_title
 org.cowboycoders.cyclisimo.R$string: int course_list_empty_message
 org.cowboycoders.cyclisimo.R$string: int course_mode
@@ -1210,6 +1293,10 @@ org.cowboycoders.cyclisimo.R$string: int generic_description_line
 org.cowboycoders.cyclisimo.R$string: int generic_do_not_show_again
 org.cowboycoders.cyclisimo.R$string: int generic_error_title
 org.cowboycoders.cyclisimo.R$string: int generic_go
+org.cowboycoders.cyclisimo.R$string: int generic_list_empty_message
+org.cowboycoders.cyclisimo.R$string: int generic_list_left_button_placeholder
+org.cowboycoders.cyclisimo.R$string: int generic_list_right_button_placeholder
+org.cowboycoders.cyclisimo.R$string: int generic_list_title_placeholder
 org.cowboycoders.cyclisimo.R$string: int generic_name
 org.cowboycoders.cyclisimo.R$string: int generic_name_line
 org.cowboycoders.cyclisimo.R$string: int generic_ok
@@ -1218,6 +1305,9 @@ org.cowboycoders.cyclisimo.R$string: int generic_progress_title
 org.cowboycoders.cyclisimo.R$string: int generic_recording
 org.cowboycoders.cyclisimo.R$string: int generic_save
 org.cowboycoders.cyclisimo.R$string: int generic_success_title
+org.cowboycoders.cyclisimo.R$string: int generic_weight
+org.cowboycoders.cyclisimo.R$string: int generic_weight_kg
+org.cowboycoders.cyclisimo.R$string: int generic_weight_lbs
 org.cowboycoders.cyclisimo.R$string: int google_account_key
 org.cowboycoders.cyclisimo.R$string: int gps_disabled
 org.cowboycoders.cyclisimo.R$string: int gps_google_location_settings
@@ -1432,6 +1522,8 @@ org.cowboycoders.cyclisimo.R$string: int settings_chart_by_distance
 org.cowboycoders.cyclisimo.R$string: int settings_chart_by_time
 org.cowboycoders.cyclisimo.R$string: int settings_chart_key
 org.cowboycoders.cyclisimo.R$string: int settings_chart_x_axis
+org.cowboycoders.cyclisimo.R$string: int settings_courses_bike_select_summary
+org.cowboycoders.cyclisimo.R$string: int settings_courses_bike_select_title
 org.cowboycoders.cyclisimo.R$string: int settings_courses_mode_simulation
 org.cowboycoders.cyclisimo.R$string: int settings_courses_mode_simulation_value
 org.cowboycoders.cyclisimo.R$string: int settings_courses_mode_summary
@@ -1439,6 +1531,7 @@ org.cowboycoders.cyclisimo.R$string: int settings_courses_mode_title
 org.cowboycoders.cyclisimo.R$string: int settings_courses_route_section_title
 org.cowboycoders.cyclisimo.R$string: int settings_courses_route_summary
 org.cowboycoders.cyclisimo.R$string: int settings_courses_route_title
+org.cowboycoders.cyclisimo.R$string: int settings_generic_turbo_key
 org.cowboycoders.cyclisimo.R$string: int settings_map_key
 org.cowboycoders.cyclisimo.R$string: int settings_map_medium
 org.cowboycoders.cyclisimo.R$string: int settings_map_medium_display_key
@@ -1487,6 +1580,12 @@ org.cowboycoders.cyclisimo.R$string: int settings_reset_confirm_message
 org.cowboycoders.cyclisimo.R$string: int settings_reset_done
 org.cowboycoders.cyclisimo.R$string: int settings_reset_key
 org.cowboycoders.cyclisimo.R$string: int settings_reset_summary
+org.cowboycoders.cyclisimo.R$string: int settings_select_bike_current_selection_key
+org.cowboycoders.cyclisimo.R$string: int settings_select_bike_title
+org.cowboycoders.cyclisimo.R$string: int settings_select_user_current_selection_key
+org.cowboycoders.cyclisimo.R$string: int settings_select_user_key
+org.cowboycoders.cyclisimo.R$string: int settings_select_user_title
+org.cowboycoders.cyclisimo.R$string: int settings_select_user_user_id_tag
 org.cowboycoders.cyclisimo.R$string: int settings_sensor
 org.cowboycoders.cyclisimo.R$string: int settings_sensor_ant_key
 org.cowboycoders.cyclisimo.R$string: int settings_sensor_ant_options
@@ -1534,6 +1633,14 @@ org.cowboycoders.cyclisimo.R$string: int settings_stats_units_imperial
 org.cowboycoders.cyclisimo.R$string: int settings_stats_units_metric
 org.cowboycoders.cyclisimo.R$string: int settings_stats_units_title
 org.cowboycoders.cyclisimo.R$string: int settings_switch_account
+org.cowboycoders.cyclisimo.R$string: int settings_turbo_scale_factor_help
+org.cowboycoders.cyclisimo.R$string: int settings_turbo_scale_factor_invalid
+org.cowboycoders.cyclisimo.R$string: int settings_turbotrainer_generic
+org.cowboycoders.cyclisimo.R$string: int settings_turbotrainer_generic_root_key
+org.cowboycoders.cyclisimo.R$string: int settings_turbotrainer_generic_scale_factor_key
+org.cowboycoders.cyclisimo.R$string: int settings_turbotrainer_generic_scale_factor_name
+org.cowboycoders.cyclisimo.R$string: int settings_turbotrainer_generic_scale_factor_summary
+org.cowboycoders.cyclisimo.R$string: int settings_turbotrainer_generic_scale_factor_title
 org.cowboycoders.cyclisimo.R$string: int share_track_confirm_message
 org.cowboycoders.cyclisimo.R$string: int share_track_picker_title
 org.cowboycoders.cyclisimo.R$string: int share_track_share_file
@@ -1609,6 +1716,15 @@ org.cowboycoders.cyclisimo.R$string: int turbo_mode_service_running_notification
 org.cowboycoders.cyclisimo.R$string: int turbo_mode_service_running_notification_title
 org.cowboycoders.cyclisimo.R$string: int turbo_service_action_course_start
 org.cowboycoders.cyclisimo.R$string: int turbo_service_action_exception_thrown
+org.cowboycoders.cyclisimo.R$string: int turbotrainer_select_summary
+org.cowboycoders.cyclisimo.R$string: int turbotrainer_select_title
+org.cowboycoders.cyclisimo.R$string: int turbotrainer_selected
+org.cowboycoders.cyclisimo.R$string: int turbotrainer_tacx_bushido_brake_headunit_simulation_option
+org.cowboycoders.cyclisimo.R$string: int turbotrainer_tacx_bushido_brake_headunit_simulation_value
+org.cowboycoders.cyclisimo.R$string: int turbotrainer_tacx_bushido_brake_pid_control_option
+org.cowboycoders.cyclisimo.R$string: int turbotrainer_tacx_bushido_brake_pid_control_value
+org.cowboycoders.cyclisimo.R$string: int turbotrainer_tacx_bushido_headunit_option
+org.cowboycoders.cyclisimo.R$string: int turbotrainer_tacx_bushido_headunit_value
 org.cowboycoders.cyclisimo.R$string: int unit_feet
 org.cowboycoders.cyclisimo.R$string: int unit_kilometer
 org.cowboycoders.cyclisimo.R$string: int unit_kilometer_per_hour
@@ -1617,6 +1733,18 @@ org.cowboycoders.cyclisimo.R$string: int unit_mile
 org.cowboycoders.cyclisimo.R$string: int unit_mile_per_hour
 org.cowboycoders.cyclisimo.R$string: int unit_minute_per_kilometer
 org.cowboycoders.cyclisimo.R$string: int unit_minute_per_mile
+org.cowboycoders.cyclisimo.R$string: int user_create
+org.cowboycoders.cyclisimo.R$string: int user_edit
+org.cowboycoders.cyclisimo.R$string: int user_edit_name_error
+org.cowboycoders.cyclisimo.R$string: int user_edit_units
+org.cowboycoders.cyclisimo.R$string: int user_edit_weight_error
+org.cowboycoders.cyclisimo.R$string: int user_list_delete_all_users_confirmation_message
+org.cowboycoders.cyclisimo.R$string: int user_list_delete_user_confirmation_message
+org.cowboycoders.cyclisimo.R$string: int user_list_empty_message
+org.cowboycoders.cyclisimo.R$string: int user_list_new_user_selected
+org.cowboycoders.cyclisimo.R$string: int user_list_right_button
+org.cowboycoders.cyclisimo.R$string: int user_list_title
+org.cowboycoders.cyclisimo.R$string: int user_list_unable_to_peform_operation
 org.cowboycoders.cyclisimo.R$string: int value_adapt_accuracy
 org.cowboycoders.cyclisimo.R$string: int value_adapt_battery_life
 org.cowboycoders.cyclisimo.R$string: int value_always
@@ -1765,6 +1893,8 @@ org.cowboycoders.cyclisimo.R$style: int EditLabel_WithIcon_WithPaddingTop
 org.cowboycoders.cyclisimo.R$style: int EditLabel_WithPaddingTop
 org.cowboycoders.cyclisimo.R$style: int EditNameMarker
 org.cowboycoders.cyclisimo.R$style: int EditNameTrack
+org.cowboycoders.cyclisimo.R$style: int EditNameUser
+org.cowboycoders.cyclisimo.R$style: int EditWeightUser
 org.cowboycoders.cyclisimo.R$style: int HelpAnswer
 org.cowboycoders.cyclisimo.R$style: int HelpQuestion
 org.cowboycoders.cyclisimo.R$style: int ListEmptyTextView
@@ -1846,6 +1976,7 @@ org.cowboycoders.cyclisimo.R$xml: int settings
 org.cowboycoders.cyclisimo.R$xml: int sharing_settings
 org.cowboycoders.cyclisimo.R$xml: int stats_settings
 org.cowboycoders.cyclisimo.R$xml: int track_widget_info
+org.cowboycoders.cyclisimo.R$xml: int turbotrainer_generic_settings
 org.cowboycoders.cyclisimo.SearchListActivity
 org.cowboycoders.cyclisimo.SearchListActivity: SearchListActivity()
 org.cowboycoders.cyclisimo.SensorStateActivity
@@ -1856,6 +1987,17 @@ org.cowboycoders.cyclisimo.TrackEditActivity
 org.cowboycoders.cyclisimo.TrackEditActivity: TrackEditActivity()
 org.cowboycoders.cyclisimo.TrackListActivity
 org.cowboycoders.cyclisimo.TrackListActivity: TrackListActivity()
+org.cowboycoders.cyclisimo.TurboTrainerListActivity
+org.cowboycoders.cyclisimo.UserEditActivity
+org.cowboycoders.cyclisimo.UserEditActivity: UserEditActivity()
+org.cowboycoders.cyclisimo.UserListActivity
+org.cowboycoders.cyclisimo.UserListActivity: UserListActivity()
+org.cowboycoders.cyclisimo.UserListActivity$DeleteAllUsersCallback
+org.cowboycoders.cyclisimo.UserListActivity$DeleteAllUsersCallback: android.os.Parcelable$Creator CREATOR
+org.cowboycoders.cyclisimo.UserListActivity$DeleteUserCallback
+org.cowboycoders.cyclisimo.UserListActivity$DeleteUserCallback: android.os.Parcelable$Creator CREATOR
+org.cowboycoders.cyclisimo.content.Bike
+org.cowboycoders.cyclisimo.content.Bike: android.os.Parcelable$Creator CREATOR
 org.cowboycoders.cyclisimo.content.MyTracksCourseProvider
 org.cowboycoders.cyclisimo.content.MyTracksCourseProvider: MyTracksCourseProvider()
 org.cowboycoders.cyclisimo.content.MyTracksCourseProvider$UrlType: org.cowboycoders.cyclisimo.content.MyTracksCourseProvider$UrlType[] values()
@@ -1875,6 +2017,8 @@ org.cowboycoders.cyclisimo.content.TrackDataListener$LocationState: org.cowboyco
 org.cowboycoders.cyclisimo.content.TrackDataListener$LocationState: org.cowboycoders.cyclisimo.content.TrackDataListener$LocationState valueOf(java.lang.String)
 org.cowboycoders.cyclisimo.content.TrackDataType: org.cowboycoders.cyclisimo.content.TrackDataType[] values()
 org.cowboycoders.cyclisimo.content.TrackDataType: org.cowboycoders.cyclisimo.content.TrackDataType valueOf(java.lang.String)
+org.cowboycoders.cyclisimo.content.User
+org.cowboycoders.cyclisimo.content.User: android.os.Parcelable$Creator CREATOR
 org.cowboycoders.cyclisimo.content.Waypoint
 org.cowboycoders.cyclisimo.content.Waypoint: android.os.Parcelable$Creator CREATOR
 org.cowboycoders.cyclisimo.content.WaypointCreationRequest
@@ -1885,6 +2029,7 @@ org.cowboycoders.cyclisimo.fragments.ChartFragment
 org.cowboycoders.cyclisimo.fragments.ChooseActivityDialogFragment
 org.cowboycoders.cyclisimo.fragments.ChooseUploadServiceDialogFragment
 org.cowboycoders.cyclisimo.fragments.ConfirmPlayDialogFragment
+org.cowboycoders.cyclisimo.fragments.ConfirmationDialogFragment
 org.cowboycoders.cyclisimo.fragments.CourseSetupFragment
 org.cowboycoders.cyclisimo.fragments.DeleteAllTrackDialogFragment
 org.cowboycoders.cyclisimo.fragments.DeleteOneMarkerDialogFragment
@@ -1934,18 +2079,18 @@ org.cowboycoders.cyclisimo.io.sendtogoogle.SendRequest: android.os.Parcelable$Cr
 org.cowboycoders.cyclisimo.io.sendtogoogle.UploadResultActivity
 org.cowboycoders.cyclisimo.io.sendtogoogle.UploadResultActivity: UploadResultActivity()
 org.cowboycoders.cyclisimo.lib.R$drawable: int my_tracks_icon
-org.cowboycoders.cyclisimo.lib.R$string: int track_started_broadcast_action
-org.cowboycoders.cyclisimo.lib.R$string: int mytracks_service_package
 org.cowboycoders.cyclisimo.lib.R$string: int broadcast_notifications_permission
+org.cowboycoders.cyclisimo.lib.R$string: int lib_name
 org.cowboycoders.cyclisimo.lib.R$string: int mytracks_service_class
-org.cowboycoders.cyclisimo.lib.R$string: int write_track_data_permission
-org.cowboycoders.cyclisimo.lib.R$string: int track_update_broadcast_action
+org.cowboycoders.cyclisimo.lib.R$string: int mytracks_service_package
 org.cowboycoders.cyclisimo.lib.R$string: int read_track_data_permission
 org.cowboycoders.cyclisimo.lib.R$string: int track_id_broadcast_extra
-org.cowboycoders.cyclisimo.lib.R$string: int lib_name
-org.cowboycoders.cyclisimo.lib.R$string: int track_stopped_broadcast_action
 org.cowboycoders.cyclisimo.lib.R$string: int track_paused_broadcast_action
 org.cowboycoders.cyclisimo.lib.R$string: int track_resumed_broadcast_action
+org.cowboycoders.cyclisimo.lib.R$string: int track_started_broadcast_action
+org.cowboycoders.cyclisimo.lib.R$string: int track_stopped_broadcast_action
+org.cowboycoders.cyclisimo.lib.R$string: int track_update_broadcast_action
+org.cowboycoders.cyclisimo.lib.R$string: int write_track_data_permission
 org.cowboycoders.cyclisimo.services.ControlRecordingService
 org.cowboycoders.cyclisimo.services.ControlRecordingService: ControlRecordingService()
 org.cowboycoders.cyclisimo.services.RemoveTempFilesService
@@ -1976,11 +2121,15 @@ org.cowboycoders.cyclisimo.settings.SharingSettingsActivity
 org.cowboycoders.cyclisimo.settings.SharingSettingsActivity: SharingSettingsActivity()
 org.cowboycoders.cyclisimo.settings.StatsSettingsActivity
 org.cowboycoders.cyclisimo.settings.StatsSettingsActivity: StatsSettingsActivity()
+org.cowboycoders.cyclisimo.settings.TurboSettingsActivity
+org.cowboycoders.cyclisimo.settings.TurboSettingsActivity: TurboSettingsActivity()
 org.cowboycoders.cyclisimo.stats.TripStatistics
 org.cowboycoders.cyclisimo.turbo.AntHubService
 org.cowboycoders.cyclisimo.turbo.AntHubService: AntHubService()
 org.cowboycoders.cyclisimo.turbo.TurboService
 org.cowboycoders.cyclisimo.turbo.TurboService: TurboService()
+org.cowboycoders.cyclisimo.util.Units: org.cowboycoders.cyclisimo.util.Units[] values()
+org.cowboycoders.cyclisimo.util.Units: org.cowboycoders.cyclisimo.util.Units valueOf(java.lang.String)
 org.cowboycoders.cyclisimo.widgets.TrackWidgetConfigActivity
 org.cowboycoders.cyclisimo.widgets.TrackWidgetConfigActivity: TrackWidgetConfigActivity()
 org.cowboycoders.cyclisimo.widgets.TrackWidgetProvider
@@ -1988,11 +2137,68 @@ org.cowboycoders.cyclisimo.widgets.TrackWidgetProvider: TrackWidgetProvider()
 org.cowboycoders.jformica.R$string: int app_name
 org.cowboycoders.jformica.R$style: int AppTheme
 org.cowboycoders.location.DecodeException: long serialVersionUID
+org.cowboycoders.turbotrainers.AntTurboTrainer
+org.cowboycoders.turbotrainers.CourseTracker
+org.cowboycoders.turbotrainers.DataPacketProvider
+org.cowboycoders.turbotrainers.ExceptionHandler
+org.cowboycoders.turbotrainers.ExceptionWrapper
+org.cowboycoders.turbotrainers.ExceptionWrapper$Context
 org.cowboycoders.turbotrainers.ExceptionWrapper$Context: org.cowboycoders.turbotrainers.ExceptionWrapper$Context[] values()
 org.cowboycoders.turbotrainers.ExceptionWrapper$Context: org.cowboycoders.turbotrainers.ExceptionWrapper$Context valueOf(java.lang.String)
+org.cowboycoders.turbotrainers.GenericTurboTrainer
+org.cowboycoders.turbotrainers.Mode
+org.cowboycoders.turbotrainers.Mode: org.cowboycoders.turbotrainers.Mode[] values()
+org.cowboycoders.turbotrainers.Mode: org.cowboycoders.turbotrainers.Mode valueOf(java.lang.String)
+org.cowboycoders.turbotrainers.Parameters
+org.cowboycoders.turbotrainers.Parameters$Builder
+org.cowboycoders.turbotrainers.Parameters$Common
+org.cowboycoders.turbotrainers.Parameters$CommonDelegate
+org.cowboycoders.turbotrainers.Parameters$CommonParametersInterface
+org.cowboycoders.turbotrainers.Parameters$TargetPower
+org.cowboycoders.turbotrainers.Parameters$TargetSlope
+org.cowboycoders.turbotrainers.PowerModel
+org.cowboycoders.turbotrainers.PowerModelManipulator
+org.cowboycoders.turbotrainers.TooFewAntChannelsAvailableException
 org.cowboycoders.turbotrainers.TooFewAntChannelsAvailableException: long serialVersionUID
+org.cowboycoders.turbotrainers.TurboBaseModel
+org.cowboycoders.turbotrainers.TurboCommunicationException
 org.cowboycoders.turbotrainers.TurboCommunicationException: long serialVersionUID
+org.cowboycoders.turbotrainers.TurboTrainerDataHooks
+org.cowboycoders.turbotrainers.TurboTrainerDataListener
+org.cowboycoders.turbotrainers.TurboTrainerInterface
+org.cowboycoders.turbotrainers.bushido.BushidoUtils
+org.cowboycoders.turbotrainers.bushido.brake.AbstractController
+org.cowboycoders.turbotrainers.bushido.brake.BrakeModel
+org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake
+org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake$BushidoUpdatesListener
+org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake$CalibrationException
+org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake$CalibrationException: long serialVersionUID
+org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake$CallibrationCallback
+org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake$VersionRequestCallback
+org.cowboycoders.turbotrainers.bushido.brake.BushidoBrakeBroadcastDataListener
+org.cowboycoders.turbotrainers.bushido.brake.CalibrationState
+org.cowboycoders.turbotrainers.bushido.brake.CalibrationState: org.cowboycoders.turbotrainers.bushido.brake.CalibrationState[] values()
+org.cowboycoders.turbotrainers.bushido.brake.CalibrationState: org.cowboycoders.turbotrainers.bushido.brake.CalibrationState valueOf(java.lang.String)
+org.cowboycoders.turbotrainers.bushido.brake.ConstantResistanceController
+org.cowboycoders.turbotrainers.bushido.brake.PidBrakeController
+org.cowboycoders.turbotrainers.bushido.brake.SpeedResistanceMapper
+org.cowboycoders.turbotrainers.bushido.brake.SpeedResistanceMapperTest
+org.cowboycoders.turbotrainers.bushido.brake.SpeedResistancePowerMapper
+org.cowboycoders.turbotrainers.bushido.brake.SpeedResistancePowerMapperTest
+org.cowboycoders.turbotrainers.bushido.brake.TargetSlopeModel
+org.cowboycoders.turbotrainers.bushido.headunit.AbstractBushidoModel
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoBroadcastDataListener
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonDescriptorTest
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor$Button
 org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor$Button: org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor$Button[] values()
 org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor$Button: org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor$Button valueOf(java.lang.String)
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor$Duration
 org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor$Duration: org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor$Duration[] values()
 org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor$Duration: org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor$Duration valueOf(java.lang.String)
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDispatcherTest
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressListener
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoHeadunit
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoHeadunit$BushidoUpdatesListener
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoTargetSlopeModel
+org.cowboycoders.turbotrainers.bushido.headunit.ButtonPressDispatcher

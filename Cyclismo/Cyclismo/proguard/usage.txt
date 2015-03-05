@@ -1,12 +1,24 @@
 AntKeys
 AntTransceiverTest
+AntTransceiverTest$1
 AntTransceiverTest$BushidoData
 AntTransceiverTest$Listener
 AntTransceiverTest$Sender
 AntTransceiverTest$Sender$1
+BrakeCalibrationHackingArena
+BrakeCalibrationHackingArena$1
+BrakeCalibrationHackingArena$2
+BrakeControllerTest
+BrakeControllerTest$1
+BrakeControllerTest$2
+BrakeControllerTest$3
+BurstReceiveTest
+BurstReceiveTest$1
+BurstReceiveTest$2
 BushidoTest
 BushidoTest$1
 BushidoTest$2
+SpeedResistancePowerMapperTest
 android.support.v4.accessibilityservice.AccessibilityServiceInfoCompat
 android.support.v4.accessibilityservice.AccessibilityServiceInfoCompat$AccessibilityServiceInfoIcsImpl
 android.support.v4.accessibilityservice.AccessibilityServiceInfoCompat$AccessibilityServiceInfoStubImpl
@@ -1266,9 +1278,9 @@ com.google.android.gms.R:
 com.google.android.gms.R$attr
 com.google.android.gms.R$id
 com.google.android.gms.R$string:
-    16:16:public R$string()
+    32:32:public R$string()
 com.google.android.gms.R$styleable:
-    29:29:public R$styleable()
+    45:45:public R$styleable()
 com.google.android.gms.auth.GoogleAuthException
 com.google.android.gms.auth.GoogleAuthUtil
 com.google.android.gms.auth.GooglePlayServicesAvailabilityException
@@ -3715,13 +3727,13 @@ com.ipaulpro.afilechooser.R:
     9:9:public R()
 com.ipaulpro.afilechooser.R$dimen
 com.ipaulpro.afilechooser.R$drawable:
-    29:29:public R$drawable()
+    14:14:public R$drawable()
 com.ipaulpro.afilechooser.R$id:
-    10:10:public R$id()
+    19:19:public R$id()
 com.ipaulpro.afilechooser.R$layout:
-    25:25:public R$layout()
+    24:24:public R$layout()
 com.ipaulpro.afilechooser.R$string:
-    19:19:public R$string()
+    28:28:public R$string()
 com.ipaulpro.afilechooser.R$style
 com.ipaulpro.afilechooser.R$xml
 com.ipaulpro.afilechooser.utils.FileUtils:
@@ -3838,61 +3850,121 @@ org.apache.commons.logging.impl.WeakHashtable$1
 org.apache.commons.logging.impl.WeakHashtable$Entry
 org.apache.commons.logging.impl.WeakHashtable$Referenced
 org.apache.commons.logging.impl.WeakHashtable$WeakKey
-org.cowboycoders.ant.AntError:
-    34:36:public AntError(java.lang.String,java.lang.Throwable)
-    39:41:public AntError(java.lang.String)
 org.cowboycoders.ant.AntLogger$LogDataContainer:
-    59:59:public org.cowboycoders.ant.messages.StandardMessage getMessage()
-org.cowboycoders.ant.BufferedNodeComponent:
-    private static final int ACK_BUFFER_LENGTH
-    private static final int MSG_BUFFER_LENGTH
+    77:77:public org.cowboycoders.ant.messages.StandardMessage getMessage()
+org.cowboycoders.ant.BufferedNodeComponent
 org.cowboycoders.ant.Channel:
-    72:72:public org.cowboycoders.ant.Node getParent()
-    85:85:public java.util.concurrent.locks.Lock getSendLock()
-    101:101:public synchronized java.lang.String getName()
-    560:643:public void sendBurst(byte[],java.lang.Long,java.util.concurrent.TimeUnit)
-org.cowboycoders.ant.Channel$3
+    public static final int SEARCH_TIMEOUT_NEVER
+    private static final int RAW_CHANNEL_PERIOD_DEFAULT
+    private static final double CHANNEL_PERIOD_SCALE_FACTOR
+    private static final double BURST_TIMEOUT_SCALE_FACTOR
+    107:107:public org.cowboycoders.ant.Node getParent()
+    140:140:public java.util.concurrent.locks.Lock getSendLock()
+    157:157:public synchronized java.lang.String getName()
+    498:500:public varargs void assign(org.cowboycoders.ant.Network,org.cowboycoders.ant.messages.ChannelType,org.cowboycoders.ant.messages.config.ChannelAssignMessage$ExtendedAssignment[])
+    532:536:public void setId(org.cowboycoders.ant.ChannelId)
+    802:903:public void sendBurst(byte[],java.lang.Long,java.util.concurrent.TimeUnit)
+    961:962:public synchronized void registerBurstListener(org.cowboycoders.ant.events.BroadcastListener)
+    972:973:public synchronized void removeBurstListener(org.cowboycoders.ant.events.BroadcastListener)
+    981:981:public double getChannelPeriod()
+    991:991:public long getBurstTimeout()
+    1044:1045:public void registerEventHandler(org.cowboycoders.ant.ChannelEventHandler)
+    1138:1143:public void whitelist(org.cowboycoders.ant.ChannelId[])
+    1153:1163:public void sendAndWaitForResponseNoError(org.cowboycoders.ant.messages.ChannelMessage)
+    1172:1174:public void setTransmitPower(int)
+    1183:1185:public void setProximitySearchThreshold(int)
+    1196:1198:public void configureFrequencyAgility(int,int,int)
+    1206:1208:public void setLowPrioirtySearchTimeout(int)
+    1217:1219:public void setSearchPriority(int)
+    1230:1232:public void openInRxScanMode()
 org.cowboycoders.ant.Channel$4
+org.cowboycoders.ant.Channel$5
+org.cowboycoders.ant.Channel$ChannelResponseCondition
 org.cowboycoders.ant.ChannelError:
     39:41:public ChannelError(java.lang.String)
-    44:46:public ChannelError(java.lang.Throwable)
-org.cowboycoders.ant.NetworkKey:
-    49:49:public java.lang.String getName()
-    70:71:public void setKey(int[])
-    89:90:public NetworkKey(int[])
+org.cowboycoders.ant.ChannelEventHandler
+org.cowboycoders.ant.ChannelId:
+    public static final int WILDCARD
+    public static final int MAX_DEVICE_TYPE
+    public static final int MAX_TRANSMISSION_TYPE
+    public static final int MAX_DEVICE_NUMBER
+    public static final int PAIRING_FLAG_MASK
+    public static final int DEVICE_TYPE_MASK
+    40:46:private ChannelId(int,int,int,boolean)
+    50:50:public boolean isPairingFlagSet()
+    56:57:private void setPairingFlag(boolean)
+    68:69:private void setTransmissonType(int)
+    80:81:private void setDeviceType(int)
+    92:93:private void setDeviceNumber(int)
+    96:100:private void cloneExisting(org.cowboycoders.ant.ChannelId)
+    205:212:public static void main(java.lang.String[])
+    40:40:synthetic ChannelId(int,int,int,boolean,org.cowboycoders.ant.ChannelId)
+    95:95:static synthetic void access$1(org.cowboycoders.ant.ChannelId,org.cowboycoders.ant.ChannelId)
+    55:55:static synthetic void access$2(org.cowboycoders.ant.ChannelId,boolean)
+    36:36:static synthetic void access$3(org.cowboycoders.ant.ChannelId,int)
+    37:37:static synthetic void access$4(org.cowboycoders.ant.ChannelId,int)
+    38:38:static synthetic void access$5(org.cowboycoders.ant.ChannelId,int)
+org.cowboycoders.ant.ChannelId$Builder
+org.cowboycoders.ant.ChannelTest
+org.cowboycoders.ant.ChannelTest$1
+org.cowboycoders.ant.DefaultChannelEventHandler
+org.cowboycoders.ant.DefaultNodeEventHandler
+org.cowboycoders.ant.EventHandler
+org.cowboycoders.ant.MessageBufferContainer
+org.cowboycoders.ant.NetworkAllocationException:
+    21:23:public NetworkAllocationException(java.lang.String,java.lang.Throwable)
+    31:33:public NetworkAllocationException(java.lang.Throwable)
+org.cowboycoders.ant.NetworkHandleTest
+org.cowboycoders.ant.NetworkKeys:
+    3:3:public NetworkKeys()
+org.cowboycoders.ant.NetworkTest
+org.cowboycoders.ant.NetworkTest$1
+org.cowboycoders.ant.NetworkTest$ListenerCalledException
 org.cowboycoders.ant.Node:
-    156:156:public org.cowboycoders.ant.interfaces.AntChipInterface getAntChip()
-    164:165:public synchronized void registerStatusListener(org.cowboycoders.ant.events.BroadcastListener)
-    172:173:public synchronized void removeStatusListener(org.cowboycoders.ant.events.BroadcastListener)
-    180:187:public synchronized java.util.List getCapabiltites()
-    331:331:public synchronized int getMaxNetworks()
-    365:365:public org.cowboycoders.ant.messages.StandardMessage sendAndWaitWithAdapter(org.cowboycoders.ant.WaitAdapter,org.cowboycoders.ant.messages.StandardMessage,org.cowboycoders.ant.events.LockExchangeContainer)
-    524:540:public synchronized void reset(boolean)
-    544:545:public void reset()
-    580:583:public synchronized boolean isRunning()
-    594:597:public void unregisterAntLogger(org.cowboycoders.ant.AntLogger)
+    205:205:public org.cowboycoders.ant.interfaces.AntChipInterface getAntChip()
+    215:216:public synchronized void registerStatusListener(org.cowboycoders.ant.events.BroadcastListener)
+    225:226:public synchronized void removeStatusListener(org.cowboycoders.ant.events.BroadcastListener)
+    234:245:public synchronized java.util.List getCapabiltites()
+    406:407:public synchronized void setNetworkKey(int,org.cowboycoders.ant.NetworkKey)
+    449:449:public synchronized int getMaxNetworks()
+    476:476:public org.cowboycoders.ant.messages.StandardMessage sendAndWaitWithAdapter(org.cowboycoders.ant.WaitAdapter,org.cowboycoders.ant.messages.StandardMessage,org.cowboycoders.ant.events.LockExchangeContainer)
+    682:700:public synchronized void reset(boolean)
+    703:704:public void reset()
+    739:744:public synchronized boolean isRunning()
+    755:758:public void unregisterAntLogger(org.cowboycoders.ant.AntLogger)
+    765:766:public void registerEventHandler(org.cowboycoders.ant.NodeEventHandler)
+    782:792:public void sendAndWaitForResponseNoError(org.cowboycoders.ant.messages.StandardMessage)
+    795:802:private void handleTimeOutException(java.lang.Exception)
+    813:815:public void setTransmitPower(int)
+    827:831:public void setLibConfig(boolean,boolean,boolean)
+    839:841:public void enableExtendedMessages(boolean)
+org.cowboycoders.ant.NodeEventHandler
+org.cowboycoders.ant.NodeTest
 org.cowboycoders.ant.Receipt:
-    34:34:public static long getCurrentTimestamp()
-    43:43:public long getTxTimestamp()
-    61:62:public void stampRx()
-    65:66:public void stampTx()
+    62:62:public org.cowboycoders.ant.messages.MessageMetaWrapper getLastSent()
+    66:66:public org.cowboycoders.ant.messages.MessageMetaWrapper getLastReceived()
+    70:70:protected java.util.LinkedList getSentMessages()
+    74:74:protected java.util.LinkedList getReceivedMessages()
+org.cowboycoders.ant.SharedMetaBuffer
 org.cowboycoders.ant.SharedThreadPool:
     28:28:public SharedThreadPool()
     46:47:public static synchronized void setThreadPool(java.util.concurrent.ExecutorService)
-    58:63:private static void initPool(int,int,int,java.util.concurrent.TimeUnit,java.util.concurrent.BlockingQueue)
+    65:70:private static void initPool(int,int,int,java.util.concurrent.TimeUnit,java.util.concurrent.BlockingQueue)
 org.cowboycoders.ant.TransferException
 org.cowboycoders.ant.defines.AntDefine
 org.cowboycoders.ant.defines.AntMesg
-org.cowboycoders.ant.events.BroadcastMesengerTest
-org.cowboycoders.ant.events.BroadcastMesengerTest$1
 org.cowboycoders.ant.events.BroadcastMessenger:
-    78:84:public BroadcastMessenger(int,int,int,java.util.concurrent.TimeUnit,java.util.concurrent.BlockingQueue)
+    88:92:public BroadcastMessenger(int,int,int,java.util.concurrent.TimeUnit,java.util.concurrent.BlockingQueue)
 org.cowboycoders.ant.events.EventMachine:
-    242:242:public static java.util.logging.Logger getLogger()
-    358:358:public synchronized boolean isRunning()
+    163:163:public static java.util.logging.Logger getLogger()
+    223:223:public synchronized boolean isRunning()
 org.cowboycoders.ant.events.MessageConditionFactory:
-    46:57:public static org.cowboycoders.ant.events.MessageCondition newEqualsClassCondition(java.lang.Class)
-org.cowboycoders.ant.events.MessageConditionFactory$1
+    72:83:public static org.cowboycoders.ant.events.MessageCondition newEqualsClassCondition(java.lang.Class)
+    165:165:public static org.cowboycoders.ant.events.MessageCondition newResponseCondition()
+    175:175:public static org.cowboycoders.ant.events.MessageCondition newEventCondition()
+    189:205:public static org.cowboycoders.ant.events.MessageCondition newAcknowledgedCondition()
+org.cowboycoders.ant.events.MessageConditionFactory$3
+org.cowboycoders.ant.events.MessageConditionFactory$5
 org.cowboycoders.ant.interfaces.AbstractAntTransceiver:
     156:156:public org.cowboycoders.ant.interfaces.AntStatusUpdate getStatus()
 org.cowboycoders.ant.interfaces.AndroidAntTransceiver:
@@ -3907,8 +3979,8 @@ org.cowboycoders.ant.interfaces.AntChipInterface:
     public abstract org.cowboycoders.ant.interfaces.AntStatusUpdate getStatus()
     public abstract boolean isRunning()
 org.cowboycoders.ant.interfaces.AntRadioPoweredOffException:
-    30:32:public AntRadioPoweredOffException(java.lang.String)
-    47:49:public AntRadioPoweredOffException(java.lang.String,java.lang.Throwable)
+    48:50:public AntRadioPoweredOffException(java.lang.String)
+    65:67:public AntRadioPoweredOffException(java.lang.String,java.lang.Throwable)
 org.cowboycoders.ant.interfaces.AntRadioServiceNotInstalledException:
     30:32:public AntRadioServiceNotInstalledException(java.lang.String)
     38:40:public AntRadioServiceNotInstalledException(java.lang.Throwable)
@@ -3918,93 +3990,124 @@ org.cowboycoders.ant.interfaces.ServiceAlreadyClaimedException:
     47:49:public ServiceAlreadyClaimedException(java.lang.String,java.lang.Throwable)
 org.cowboycoders.ant.messages.AntMessageFactory:
     private static final int STANDARD_PACKET_SIZE
-    149:151:private AntMessageFactory()
+    151:153:private AntMessageFactory()
 org.cowboycoders.ant.messages.ChannelIdCompanion:
-    private static final int PAIRING_FLAG_MASK
-    private static final int DEVICE_TYPE_MASK
-    private static final int MAX_DEVICE_TYPE
-    private static final int MAX_TRANSMISSION_TYPE
-    private static final int MAX_DEVICE_NUMBER
+    100:101:public int getDeviceNumber()
+    105:106:public int getTransmissionType()
+    110:112:public boolean isPairingFlagSet()
+    116:118:public int getDeviceType()
 org.cowboycoders.ant.messages.ChannelMessage:
     public static final byte MAX_CHANNEL_NO
     public static final byte CHANNEL_NO_OFFSET
     40:41:public ChannelMessage(org.cowboycoders.ant.messages.MessageId,java.lang.Integer,java.util.ArrayList)
-org.cowboycoders.ant.messages.ChannelSearchPriorityMessageTest
 org.cowboycoders.ant.messages.ChannelType:
     82:82:public boolean isShared()
     89:89:public boolean isOneway()
 org.cowboycoders.ant.messages.Constants:
     158:160:private Constants()
-org.cowboycoders.ant.messages.DeviceInfoQueryable
+org.cowboycoders.ant.messages.DeviceInfoQueryable:
+    public abstract java.lang.Integer getDeviceNumber()
+    public abstract java.lang.Byte getDeviceType()
+    public abstract java.lang.Byte getTransmissionType()
+    public abstract java.lang.Boolean isPairingFlagSet()
+    public abstract org.cowboycoders.ant.ChannelId getChannelId()
 org.cowboycoders.ant.messages.DeviceInfoSettable
 org.cowboycoders.ant.messages.ExtendedInformationQueryable
 org.cowboycoders.ant.messages.ExtendedMessage:
     public static final byte EXTENDED_FLAG_OFFSET
     public static final byte MIN_LENGTH
-    240:271:public java.lang.Integer getExtendedData(org.cowboycoders.ant.messages.Constants$DataElements)
-    280:280:public java.lang.Integer getDeviceNumber()
-    288:292:public java.lang.Byte getDeviceType()
-    300:304:public java.lang.Byte getTransmissionType()
-    312:312:public java.lang.Integer getRxTimeStamp()
-    320:324:public java.lang.Byte getRssiMeasurementType()
-    332:336:public java.lang.Byte getRssiThresholdConfig()
-    344:348:public java.lang.Byte getRssiValue()
+    265:297:public java.lang.Integer getExtendedData(org.cowboycoders.ant.messages.Constants$DataElement)
+    307:307:public java.lang.Integer getDeviceNumber()
+    317:322:public java.lang.Byte getDeviceType()
+    333:337:public java.lang.Byte getTransmissionType()
+    348:348:public java.lang.Integer getRxTimeStamp()
+    359:363:public java.lang.Byte getRssiMeasurementType()
+    374:378:public java.lang.Byte getRssiThresholdConfig()
+    388:392:public java.lang.Byte getRssiValue()
+    401:409:public void setChannelId(org.cowboycoders.ant.ChannelId)
+    417:461:public void setDataElement(org.cowboycoders.ant.messages.Constants$DataElement,java.lang.Integer)
+    467:536:private byte doSetElement(org.cowboycoders.ant.messages.Constants$DataElement,java.lang.Integer,java.util.ArrayList,byte)
+    540:550:private org.cowboycoders.ant.messages.ExtendedMessage$ExtendedFlag getFlagFromDataElement(org.cowboycoders.ant.messages.Constants$DataElement)
+    554:559:public void setTransmissionType(int)
+    562:571:public void setDeviceType(int)
+    574:578:public void setDeviceNumber(int)
+    582:588:public org.cowboycoders.ant.ChannelId getChannelId()
+    593:597:public java.lang.Boolean isPairingFlagSet()
+    602:609:public void setPairingFlag(boolean)
 org.cowboycoders.ant.messages.ExtendedMessage$ExtendedFlag:
-    107:107:public org.cowboycoders.ant.messages.Constants$DataElements[] getElements()
-org.cowboycoders.ant.messages.FatalMessageException:
-    58:60:public FatalMessageException(java.lang.Throwable)
+    126:126:public org.cowboycoders.ant.messages.Constants$DataElement[] getElements()
+org.cowboycoders.ant.messages.ExtendedMessageTest
 org.cowboycoders.ant.messages.LegacyMessage:
     private static final byte DATA_OFFSET
     private static final byte EXTENDED_OFFSET
     private static final byte PAYLOAD_LENGTH
-    208:222:public java.lang.Integer getExtendedData(org.cowboycoders.ant.messages.Constants$DataElements)
-    307:309:public void setDeviceNumber(int)
-    316:318:public void setDeviceType(int)
-    325:327:public void setTransmissionType(int)
-    334:334:public java.lang.Integer getDeviceNumber()
-    342:342:public java.lang.Byte getDeviceType()
-    350:350:public java.lang.Byte getTransmissionType()
-org.cowboycoders.ant.messages.MasterChannelType
+    207:222:public java.lang.Integer getExtendedData(org.cowboycoders.ant.messages.Constants$DataElement)
+    330:332:public void setDeviceNumber(int)
+    341:351:public void setDeviceType(int)
+    359:361:public void setTransmissionType(int)
+    370:370:public java.lang.Integer getDeviceNumber()
+    380:385:public java.lang.Byte getDeviceType()
+    396:396:public java.lang.Byte getTransmissionType()
+    412:416:public void setChannelId(org.cowboycoders.ant.ChannelId)
+    420:425:public org.cowboycoders.ant.ChannelId getChannelId()
+    430:437:public void setPairingFlag(boolean)
+    441:445:public java.lang.Boolean isPairingFlagSet()
+org.cowboycoders.ant.messages.MasterChannelType:
+    39:40:public MasterChannelType(boolean,boolean)
 org.cowboycoders.ant.messages.Message:
     72:73:protected Message(org.cowboycoders.ant.messages.MessageId)
     134:134:public byte getPayloadSize()
     203:204:public final void decode(byte[])
-org.cowboycoders.ant.messages.MessageDecoratorable
+org.cowboycoders.ant.messages.MessageDecorator
 org.cowboycoders.ant.messages.MessageException:
     56:57:public MessageException(java.lang.Throwable)
 org.cowboycoders.ant.messages.MessageExceptionFactory:
     62:62:private MessageExceptionFactory()
+org.cowboycoders.ant.messages.MessageMetaWrapper:
+    49:49:public long getTimestamp()
+    1:1:public bridge synthetic java.lang.Object unwrap()
 org.cowboycoders.ant.messages.Messageable
-org.cowboycoders.ant.messages.ProximitySearchMessageTest
-org.cowboycoders.ant.messages.RssiInfoQueryable
+org.cowboycoders.ant.messages.RssiInfoQueryable:
+    public abstract java.lang.Byte getRssiMeasurementType()
+    public abstract java.lang.Byte getRssiThresholdConfig()
+    public abstract java.lang.Byte getRssiValue()
 org.cowboycoders.ant.messages.SlaveChannelType:
     40:41:public SlaveChannelType(boolean,boolean)
 org.cowboycoders.ant.messages.StandardMessage:
-    152:153:protected final void setId(org.cowboycoders.ant.messages.MessageId)
-    160:160:public final byte getPayloadSize()
-    176:176:public final java.util.List getPayloadToSend()
-    230:231:public final org.cowboycoders.ant.messages.Message getBackendMessage()
-    379:379:public byte[] toArray()
+    153:154:protected final void setId(org.cowboycoders.ant.messages.MessageId)
+    161:161:public final byte getPayloadSize()
+    177:177:public final java.util.List getPayloadToSend()
+    231:232:public final org.cowboycoders.ant.messages.Message getBackendMessage()
+    378:378:public byte[] toArray()
 org.cowboycoders.ant.messages.TestMessageType
-org.cowboycoders.ant.messages.TimestampInfoQueryable
+org.cowboycoders.ant.messages.TimestampInfoQueryable:
+    public abstract java.lang.Integer getRxTimeStamp()
 org.cowboycoders.ant.messages.ValidationException:
     54:55:public ValidationException(java.lang.Throwable)
-org.cowboycoders.ant.messages.commands.ChannelOpenRxScanMode
+org.cowboycoders.ant.messages.commands.ChannelOpenRxScanModeMessage
 org.cowboycoders.ant.messages.commands.ResetMessage
-org.cowboycoders.ant.messages.config.AddChannelIdMessage
+org.cowboycoders.ant.messages.config.AddChannelIdMessage:
+    private static final int MAX_LIST_INDEX
 org.cowboycoders.ant.messages.config.ChannelAssignMessage:
-    86:87:public ChannelAssignMessage(java.lang.Integer,org.cowboycoders.ant.messages.ChannelType)
-    90:91:public ChannelAssignMessage(org.cowboycoders.ant.messages.ChannelType)
+    89:90:public ChannelAssignMessage(java.lang.Integer,org.cowboycoders.ant.messages.ChannelType)
+    93:94:public ChannelAssignMessage(org.cowboycoders.ant.messages.ChannelType)
 org.cowboycoders.ant.messages.config.ChannelFrequencyMessage:
     private static final int MAX_CHANNEL_FREQUENCY
+org.cowboycoders.ant.messages.config.ChannelIdMessage:
+    118:118:public int getDeviceNumber()
+    122:122:public int getTransmissionType()
+    126:126:public boolean isPairingFlagSet()
+    130:130:public int getDeviceType()
+    134:134:public org.cowboycoders.ant.ChannelId getChannelId()
 org.cowboycoders.ant.messages.config.ChannelLowPrioritySearchTimeoutMessage
 org.cowboycoders.ant.messages.config.ChannelPeriodMessage:
     private static final int MAX_PERIOD
 org.cowboycoders.ant.messages.config.ChannelSearchPriorityMessage
 org.cowboycoders.ant.messages.config.ChannelSearchTimeoutMessage:
     private static final int MAX_SEARCH_TIMEOUT
-org.cowboycoders.ant.messages.config.ChannelTXPowerMessage
-org.cowboycoders.ant.messages.config.ConfigListIdMessage
+org.cowboycoders.ant.messages.config.ChannelTxPowerMessage
+org.cowboycoders.ant.messages.config.ConfigListIdMessage:
+    private static final int MAX_LIST_SIZE
 org.cowboycoders.ant.messages.config.EnableExtendedMessagesMessage
 org.cowboycoders.ant.messages.config.FrequencyAgilityMessage
 org.cowboycoders.ant.messages.config.LibConfigMessage
@@ -4022,32 +4125,15 @@ org.cowboycoders.ant.messages.data.BurstData:
     public static final int SEQUENCE_MASK
     public static final int SEQUENCE_MAX
     69:74:public void setSequenceNumber(int)
-    81:81:public int getSequenceNumber()
 org.cowboycoders.ant.messages.data.BurstDataMessage:
     35:36:public BurstDataMessage(java.lang.Integer)
 org.cowboycoders.ant.messages.data.BurstDataMessageTest
+org.cowboycoders.ant.messages.data.CombinedBurstTest
 org.cowboycoders.ant.messages.data.DataMessage:
     private static final byte DATA_LENGTH
     96:101:public byte[] getPrimitiveData()
     121:121:public int[] getUnsignedData()
 org.cowboycoders.ant.messages.data.ExtendedAcknowledgedDataMessage:
-    45:45:public java.lang.Integer getRxTimeStamp()
-    50:50:public java.lang.Byte getRssiMeasurementType()
-    55:55:public java.lang.Byte getRssiThresholdConfig()
-    60:60:public java.lang.Byte getRssiValue()
-    65:65:public java.lang.Integer getDeviceNumber()
-    70:70:public java.lang.Byte getDeviceType()
-    75:75:public java.lang.Byte getTransmissionType()
-org.cowboycoders.ant.messages.data.ExtendedBroadcastDataMessage:
-    45:45:public java.lang.Integer getRxTimeStamp()
-    50:50:public java.lang.Byte getRssiMeasurementType()
-    55:55:public java.lang.Byte getRssiThresholdConfig()
-    60:60:public java.lang.Byte getRssiValue()
-    65:65:public java.lang.Integer getDeviceNumber()
-    70:70:public java.lang.Byte getDeviceType()
-    75:75:public java.lang.Byte getTransmissionType()
-org.cowboycoders.ant.messages.data.ExtendedBroadcastDataMessageTest
-org.cowboycoders.ant.messages.data.ExtendedBurstDataMessage:
     48:48:public java.lang.Integer getRxTimeStamp()
     53:53:public java.lang.Byte getRssiMeasurementType()
     58:58:public java.lang.Byte getRssiThresholdConfig()
@@ -4055,28 +4141,83 @@ org.cowboycoders.ant.messages.data.ExtendedBurstDataMessage:
     68:68:public java.lang.Integer getDeviceNumber()
     73:73:public java.lang.Byte getDeviceType()
     78:78:public java.lang.Byte getTransmissionType()
+    82:83:public void setChannelId(org.cowboycoders.ant.ChannelId)
+    86:92:public org.cowboycoders.ant.ChannelId getChannelId()
+    97:98:public void setDeviceNumber(int)
+    102:104:public void setDeviceType(int)
+    109:110:public void setTransmissionType(int)
+    115:117:public void setPairingFlag(boolean)
+    121:121:public java.lang.Boolean isPairingFlagSet()
+org.cowboycoders.ant.messages.data.ExtendedBroadcastDataMessage:
+    49:49:public java.lang.Integer getRxTimeStamp()
+    54:54:public java.lang.Byte getRssiMeasurementType()
+    59:59:public java.lang.Byte getRssiThresholdConfig()
+    64:64:public java.lang.Byte getRssiValue()
+    69:69:public java.lang.Integer getDeviceNumber()
+    74:74:public java.lang.Byte getDeviceType()
+    79:79:public java.lang.Byte getTransmissionType()
+    83:84:public void setChannelId(org.cowboycoders.ant.ChannelId)
+    87:93:public org.cowboycoders.ant.ChannelId getChannelId()
+    98:99:public void setDeviceNumber(int)
+    103:105:public void setDeviceType(int)
+    110:111:public void setTransmissionType(int)
+    115:117:public void setPairingFlag(boolean)
+    121:121:public java.lang.Boolean isPairingFlagSet()
+org.cowboycoders.ant.messages.data.ExtendedBroadcastDataMessageTest
+org.cowboycoders.ant.messages.data.ExtendedBurstDataMessage:
+    51:51:public java.lang.Integer getRxTimeStamp()
+    56:56:public java.lang.Byte getRssiMeasurementType()
+    61:61:public java.lang.Byte getRssiThresholdConfig()
+    66:66:public java.lang.Byte getRssiValue()
+    71:71:public java.lang.Integer getDeviceNumber()
+    76:76:public java.lang.Byte getDeviceType()
+    81:81:public java.lang.Byte getTransmissionType()
+    85:86:public void setChannelId(org.cowboycoders.ant.ChannelId)
+    89:95:public org.cowboycoders.ant.ChannelId getChannelId()
+    100:101:public void setDeviceNumber(int)
+    105:107:public void setDeviceType(int)
+    112:113:public void setTransmissionType(int)
+    117:119:public void setPairingFlag(boolean)
+    123:123:public java.lang.Boolean isPairingFlagSet()
 org.cowboycoders.ant.messages.data.LegacyExtendedAcknowledgedDataMessage:
-    45:45:public java.lang.Integer getDeviceNumber()
-    50:50:public java.lang.Byte getDeviceType()
-    55:55:public java.lang.Byte getTransmissionType()
-    60:62:public void setDeviceNumber(int)
-    66:68:public void setDeviceType(int)
-    73:75:public void setTransmissionType(int)
-org.cowboycoders.ant.messages.data.LegacyExtendedBroadcastDataMessage:
-    45:45:public java.lang.Integer getDeviceNumber()
-    50:50:public java.lang.Byte getDeviceType()
-    55:55:public java.lang.Byte getTransmissionType()
-    60:62:public void setDeviceNumber(int)
-    66:68:public void setDeviceType(int)
-    73:75:public void setTransmissionType(int)
+    46:46:public java.lang.Integer getDeviceNumber()
+    51:51:public java.lang.Byte getDeviceType()
+    56:56:public java.lang.Byte getTransmissionType()
+    61:63:public void setDeviceNumber(int)
+    67:69:public void setDeviceType(int)
+    74:76:public void setTransmissionType(int)
+    79:83:public void setChannelId(org.cowboycoders.ant.ChannelId)
+    88:94:public org.cowboycoders.ant.ChannelId getChannelId()
+    100:101:public void setPairingFlag(boolean)
+    105:105:public java.lang.Boolean isPairingFlagSet()
+org.cowboycoders.ant.messages.data.LegacyExtendedBroadcastDataMessage
 org.cowboycoders.ant.messages.data.LegacyExtendedBroadcastDataMessageTest
 org.cowboycoders.ant.messages.data.LegacyExtendedBurstDataMessage:
-    45:45:public java.lang.Integer getDeviceNumber()
-    50:50:public java.lang.Byte getDeviceType()
-    55:55:public java.lang.Byte getTransmissionType()
-    60:62:public void setDeviceNumber(int)
-    66:68:public void setDeviceType(int)
-    73:75:public void setTransmissionType(int)
+    46:46:public java.lang.Integer getDeviceNumber()
+    51:51:public java.lang.Byte getDeviceType()
+    56:56:public java.lang.Byte getTransmissionType()
+    61:63:public void setDeviceNumber(int)
+    67:69:public void setDeviceType(int)
+    74:76:public void setTransmissionType(int)
+    80:84:public void setChannelId(org.cowboycoders.ant.ChannelId)
+    89:95:public org.cowboycoders.ant.ChannelId getChannelId()
+    100:101:public void setPairingFlag(boolean)
+    105:105:public java.lang.Boolean isPairingFlagSet()
+org.cowboycoders.ant.messages.nonstandard.CombinedBurst:
+    85:85:public java.lang.Byte[] getData()
+    93:93:public int[] getUnsignedData()
+    114:117:public java.lang.Integer getRxTimeStamp()
+    122:125:public java.lang.Byte getRssiMeasurementType()
+    130:133:public java.lang.Byte getRssiThresholdConfig()
+    138:141:public java.lang.Byte getRssiValue()
+    146:149:public java.lang.Integer getDeviceNumber()
+    154:157:public java.lang.Byte getDeviceType()
+    162:165:public java.lang.Byte getTransmissionType()
+    173:173:public boolean isExtended()
+    284:290:public org.cowboycoders.ant.ChannelId getChannelId()
+    295:298:public java.lang.Boolean isPairingFlagSet()
+org.cowboycoders.ant.messages.nonstandard.CombinedBurst$Builder:
+    275:275:public boolean isBuilding()
 org.cowboycoders.ant.messages.notifications.SerialErrorMessage:
     61:61:public byte getErrorNumber()
     69:70:public boolean wasSyncByteMissing()
@@ -4095,24 +4236,68 @@ org.cowboycoders.ant.messages.notifications.StartupMessageTest
 org.cowboycoders.ant.messages.responses.Capability
 org.cowboycoders.ant.messages.responses.CapabilityCategory
 org.cowboycoders.ant.messages.responses.CapabilityResponse:
+    private static synthetic int[] $SWITCH_TABLE$org$cowboycoders$ant$messages$responses$CapabilityCategory
     74:100:public java.util.List getCapabilitiesList(org.cowboycoders.ant.messages.responses.CapabilityCategory)
     109:114:public boolean hasCapability(org.cowboycoders.ant.messages.responses.Capability)
-org.cowboycoders.ant.messages.responses.CapabilityResponse$1
+    38:38:static synthetic int[] $SWITCH_TABLE$org$cowboycoders$ant$messages$responses$CapabilityCategory()
 org.cowboycoders.ant.messages.responses.CapabilityTest
 org.cowboycoders.ant.messages.responses.ChannelStatusResponse:
-    private static final byte STATE_MASK
-    private static final byte NETWORK_NUMBER_MASK
-    private static final byte CHANNEL_TYPE_MASK
-    105:106:public org.cowboycoders.ant.messages.responses.ChannelStatusResponse$State getState()
+    private static final int STATE_MASK
+    private static final int NETWORK_NUMBER_MASK
+    private static final int CHANNEL_TYPE_MASK
     113:113:public int getNetworkNumber()
     120:135:public org.cowboycoders.ant.messages.ChannelType getChannelType()
-org.cowboycoders.ant.messages.responses.ChannelStatusResponse$State
+    139:140:private void setStatusByte(int)
+    143:147:public static void main(java.lang.String[])
+org.cowboycoders.ant.messages.responses.ResponseExceptionFactory:
+    94:95:public void throwOnError(org.cowboycoders.ant.messages.responses.Response)
 org.cowboycoders.ant.messages.responses.SerialNumberResponse:
     60:60:public int getSerialNumber()
 org.cowboycoders.ant.messages.responses.VersionResponse:
     private static final byte VERSION_STRING_LENGTH
     61:65:public java.lang.String getVersionString()
 org.cowboycoders.ant.messages.responses.VersionResponseTest
+org.cowboycoders.ant.messages.responses.exceptions.ChannelClosedException:
+    40:41:public ChannelClosedException(java.lang.String,java.lang.Throwable)
+    44:45:public ChannelClosedException(java.lang.String)
+    48:49:public ChannelClosedException(java.lang.Throwable)
+org.cowboycoders.ant.messages.responses.exceptions.ChannelIdNotSetException:
+    40:41:public ChannelIdNotSetException(java.lang.String,java.lang.Throwable)
+    44:45:public ChannelIdNotSetException(java.lang.String)
+    48:49:public ChannelIdNotSetException(java.lang.Throwable)
+org.cowboycoders.ant.messages.responses.exceptions.ChannelStateException:
+    41:42:public ChannelStateException(java.lang.String,java.lang.Throwable)
+    45:46:public ChannelStateException(java.lang.String)
+    49:50:public ChannelStateException(java.lang.Throwable)
+org.cowboycoders.ant.messages.responses.exceptions.ChannelsStillOpenException:
+    41:42:public ChannelsStillOpenException(java.lang.String,java.lang.Throwable)
+    45:46:public ChannelsStillOpenException(java.lang.String)
+    49:50:public ChannelsStillOpenException(java.lang.Throwable)
+org.cowboycoders.ant.messages.responses.exceptions.InvalidListIdException:
+    41:42:public InvalidListIdException(java.lang.String,java.lang.Throwable)
+    45:46:public InvalidListIdException(java.lang.String)
+    49:50:public InvalidListIdException(java.lang.Throwable)
+org.cowboycoders.ant.messages.responses.exceptions.InvalidMessageException:
+    40:41:public InvalidMessageException(java.lang.String,java.lang.Throwable)
+    44:45:public InvalidMessageException(java.lang.String)
+    48:49:public InvalidMessageException(java.lang.Throwable)
+org.cowboycoders.ant.messages.responses.exceptions.InvalidNetworkException:
+    42:44:public InvalidNetworkException(java.lang.String,java.lang.Throwable)
+    47:49:public InvalidNetworkException(java.lang.String)
+    52:54:public InvalidNetworkException(java.lang.Throwable)
+org.cowboycoders.ant.messages.responses.exceptions.InvalidParameterException:
+    40:41:public InvalidParameterException(java.lang.String,java.lang.Throwable)
+    44:45:public InvalidParameterException(java.lang.String)
+    48:49:public InvalidParameterException(java.lang.Throwable)
+org.cowboycoders.ant.messages.responses.exceptions.MessageLengthException:
+    40:41:public MessageLengthException(java.lang.String,java.lang.Throwable)
+    44:45:public MessageLengthException(java.lang.String)
+    48:49:public MessageLengthException(java.lang.Throwable)
+org.cowboycoders.ant.messages.responses.exceptions.TransmissionInScanModeException:
+    40:41:public TransmissionInScanModeException(java.lang.String,java.lang.Throwable)
+    44:45:public TransmissionInScanModeException(java.lang.String)
+    48:49:public TransmissionInScanModeException(java.lang.Throwable)
+org.cowboycoders.ant.temp.ArrayListVsPrimitiveArray
 org.cowboycoders.ant.temp.BushidoBrakeHacking
 org.cowboycoders.ant.temp.BushidoBrakeModel
 org.cowboycoders.ant.temp.BushidoBrakeModel$1
@@ -4123,59 +4308,96 @@ org.cowboycoders.ant.temp.BushidoBrakeModel$5
 org.cowboycoders.ant.temp.BushidoBrakeModel$6
 org.cowboycoders.ant.temp.BushidoBrakeModel$7
 org.cowboycoders.ant.temp.BushidoBrakeModel$8
-org.cowboycoders.ant.temp.BushidoBrakeModel$CalibrationState
 org.cowboycoders.ant.temp.BushidoBrakeTest
 org.cowboycoders.ant.temp.BushidoBrakeTest$1
 org.cowboycoders.ant.temp.BushidoBrakeTest$2
 org.cowboycoders.ant.temp.BushidoBrakeTest$3
 org.cowboycoders.ant.temp.BushidoBrakeTest$4
+org.cowboycoders.ant.temp.BushidoBrakeTest$5
+org.cowboycoders.ant.temp.BushidoBrakeTest$6
+org.cowboycoders.ant.temp.BushidoBrakeTest$7
+org.cowboycoders.ant.temp.BushidoBrakeTest$8
+org.cowboycoders.ant.temp.BushidoBrakeTest$9
 org.cowboycoders.ant.temp.BushidoBrakeTest$Listener
+org.cowboycoders.ant.temp.PowerModel
+org.cowboycoders.ant.temp.PowerModel$1
+org.cowboycoders.ant.temp.SimpleSpeedLogger
 org.cowboycoders.ant.tests.AnTest
 org.cowboycoders.ant.tests.AnTest$WaitForMessageOpts
 org.cowboycoders.ant.tests.Dave
 org.cowboycoders.ant.tests.TestQueue
 org.cowboycoders.ant.tests.TestQueue$1
+org.cowboycoders.ant.utils.AbstractFixedSizeQueue:
+    31:31:protected java.util.LinkedList getQueue()
+    35:35:protected int getMaxSize()
 org.cowboycoders.ant.utils.AndroidUtils:
     15:15:private AndroidUtils()
 org.cowboycoders.ant.utils.AntLoggerImpl
 org.cowboycoders.ant.utils.ArrayUtils:
-    3:3:public ArrayUtils()
-    16:20:public static java.lang.Byte[] intsToBytes(int[])
-org.cowboycoders.ant.utils.BigIntUtils
+    23:23:public ArrayUtils()
+    36:53:public static varargs java.lang.Object[] joinArray(java.lang.Object[][])
+    57:62:public static void main(java.lang.String[])
+org.cowboycoders.ant.utils.BigIntUtils:
+    32:32:private BigIntUtils()
+    40:43:public static java.math.BigInteger convertUnsignedByte(byte)
+    47:47:public static java.math.BigInteger convertByte(byte)
+    51:51:public static java.math.BigInteger convertShort(short)
+    55:58:public static java.math.BigInteger convertUnsignedShort(short)
+    66:69:public static java.math.BigInteger convertUnsignedInt(int)
+    73:73:public static java.math.BigInteger convertLong(long)
+    77:80:public static java.math.BigInteger convertUnsignedLong(long)
+    84:86:public static byte[] toByteArrayLittleEndian(java.math.BigInteger)
+    90:103:public static byte[] toByteArrayUnsigned(java.math.BigInteger)
+    107:109:public static byte[] toByteArrayLittleEndianUnsigned(java.math.BigInteger)
+    113:114:public static java.math.BigInteger newLittleEndian(byte[])
+    181:187:public static byte[] clipToByteArrayLittleEndian(java.math.BigInteger,int)
 org.cowboycoders.ant.utils.BitUtils:
     36:46:public static int getMaxBitIndex(int)
     75:77:private BitUtils()
 org.cowboycoders.ant.utils.BitUtilsTest
-org.cowboycoders.ant.utils.BurstMessageSequenceGenerator
-org.cowboycoders.ant.utils.ByteMerger:
-    37:39:private ByteMerger()
-    89:91:public static java.util.List msbSplit(java.lang.Integer,int)
-    100:102:public static java.lang.Integer msbMerge(java.util.List)
+org.cowboycoders.ant.utils.BurstMessageSequenceGenerator:
+    31:32:public void reset()
 org.cowboycoders.ant.utils.ByteUtils:
-    7:7:private ByteUtils()
-    20:25:public static java.lang.Byte[] boxArray(byte[])
-    29:34:public static byte[] unboxArray(java.lang.Byte[])
-    38:43:public static byte[] reverseArray(byte[])
+    28:28:private ByteUtils()
+    41:46:public static java.lang.Byte[] boxArray(byte[])
+    50:55:public static byte[] unboxArray(java.lang.Byte[])
+    68:83:public static varargs byte[] joinArray(byte[][])
+    96:100:public static java.lang.Byte[] intsToBytes(int[])
+    104:104:public static boolean arrayStartsWith(java.lang.Byte[],java.lang.Byte[])
+    108:113:public static boolean arrayStartsWith(byte[],byte[])
+    117:128:public static void main(java.lang.String[])
+    177:179:public static java.util.List msbSplit(java.lang.Integer,int)
+    188:190:public static java.lang.Integer msbMerge(java.util.List)
+    200:224:public static java.util.List splitByteArray(byte[],int)
+org.cowboycoders.ant.utils.ChannelMessageSender:
+    public abstract void sendMessage(org.cowboycoders.ant.messages.ChannelMessage)
+org.cowboycoders.ant.utils.Containable
+org.cowboycoders.ant.utils.EnqueuedMessageSender:
+    private static final long DEFAULT_TIMEOUT_DURATION
+    69:71:public void sendMessage(org.cowboycoders.ant.messages.ChannelMessage)
 org.cowboycoders.ant.utils.Filter
-org.cowboycoders.ant.utils.FilterUtils
-org.cowboycoders.ant.utils.IntUtils
+org.cowboycoders.ant.utils.FixedSizeLifo
+org.cowboycoders.ant.utils.FixedSizeQueue:
+    public abstract java.lang.Object displace(java.lang.Object)
+org.cowboycoders.ant.utils.IntUtils:
+    25:25:private IntUtils()
+    33:33:public static java.lang.Long unsignedIntToLong(int)
+org.cowboycoders.ant.utils.IterationUtils
 org.cowboycoders.ant.utils.ListUtils:
     27:29:private ListUtils()
 org.cowboycoders.ant.utils.MiscUtils
 org.cowboycoders.ant.utils.MiscUtilsTest
-org.cowboycoders.ant.utils.SharedBuffer:
-    40:41:public synchronized void setClearable(boolean)
-    44:44:public boolean isClearable()
-    52:54:public synchronized boolean clear()
-    61:61:public int getLength()
-    85:89:public SharedBuffer(int)
+org.cowboycoders.ant.utils.SharedBuffer
+org.cowboycoders.ant.utils.SimplePidLogger
 org.cowboycoders.ant.utils.TestUtils
 org.cowboycoders.ant.utils.TimestampContainer
-org.cowboycoders.ant.utils.TimestampQueryable:
-    public abstract long getTimestamp()
+org.cowboycoders.ant.utils.TimestampQueryable
 org.cowboycoders.ant.utils.ValidationUtils:
     23:25:private ValidationUtils()
 org.cowboycoders.cyclisimo.BaseOverlay
+org.cowboycoders.cyclisimo.BikeEditActivity:
+    public static final java.lang.String EXTRA_NEW_BIKE
+    public static final java.lang.String EXTRA_BIKE
 org.cowboycoders.cyclisimo.BuildConfig
 org.cowboycoders.cyclisimo.ChartValueSeries:
     private static final float STROKE_WIDTH
@@ -4196,7 +4418,7 @@ org.cowboycoders.cyclisimo.ChartView:
     private static final int BORDER
     private static final int SPACER
     private static final int Y_AXIS_OFFSET
-    1102:1102:public boolean isMetricUnits()
+    1121:1121:public boolean isMetricUnits()
 org.cowboycoders.cyclisimo.ColoredPath
 org.cowboycoders.cyclisimo.Constants
 org.cowboycoders.cyclisimo.CourseListActivity:
@@ -4205,7 +4427,7 @@ org.cowboycoders.cyclisimo.CourseListActivity:
 org.cowboycoders.cyclisimo.CourseSetupActivity:
     private static final java.lang.String TAG
 org.cowboycoders.cyclisimo.DummyOverlay:
-    44:45:public void update()
+    63:64:public void update()
 org.cowboycoders.cyclisimo.ImportActivity:
     public static final java.lang.String EXTRA_IMPORT_ALL
     private static final int DIALOG_PROGRESS_ID
@@ -4218,8 +4440,8 @@ org.cowboycoders.cyclisimo.MapOverlay:
     private static final float MARKER_X_ANCHOR
     private static final float MARKER_Y_ANCHOR
     private static final int INITIAL_LOCATIONS_SIZE
-    98:98:public java.util.List getWaypoints()
-    116:116:public android.content.Context getContext()
+    117:117:public java.util.List getWaypoints()
+    135:135:public android.content.Context getContext()
 org.cowboycoders.cyclisimo.MarkerDetailActivity:
     public static final java.lang.String EXTRA_MARKER_ID
 org.cowboycoders.cyclisimo.MarkerEditActivity:
@@ -4263,14 +4485,14 @@ org.cowboycoders.cyclisimo.StaticOverlay:
     private static final float MARKER_X_ANCHOR
     private static final float MARKER_Y_ANCHOR
     private static final int INITIAL_LOCATIONS_SIZE
-    54:54:public java.util.List getWaypoints()
-    63:64:public void setWaypoints(java.util.List)
-    81:82:public void setTrackPath(org.cowboycoders.cyclisimo.maps.TrackPath)
-    90:90:public java.util.ArrayList getPaths()
-    99:100:public void setPaths(java.util.ArrayList)
-    108:108:public java.util.List getLocations()
-    126:126:public boolean isShowEndMarker()
-    135:136:public void setShowEndMarker(boolean)
+    73:73:public java.util.List getWaypoints()
+    82:83:public void setWaypoints(java.util.List)
+    100:101:public void setTrackPath(org.cowboycoders.cyclisimo.maps.TrackPath)
+    109:109:public java.util.ArrayList getPaths()
+    118:119:public void setPaths(java.util.ArrayList)
+    127:127:public java.util.List getLocations()
+    145:145:public boolean isShowEndMarker()
+    154:155:public void setShowEndMarker(boolean)
 org.cowboycoders.cyclisimo.TrackController:
     private static final int ONE_SECOND
 org.cowboycoders.cyclisimo.TrackDetailActivity:
@@ -4287,6 +4509,22 @@ org.cowboycoders.cyclisimo.TrackListActivity:
     private static final java.lang.String START_GPS_KEY
     private static final int GOOGLE_PLAY_SERVICES_REQUEST_CODE
     protected static final int COURSE_SETUP_RESPONSE_CODE
+org.cowboycoders.cyclisimo.TurboTrainerListActivity:
+    131:132:private void doFinish()
+    180:180:private boolean isRecording()
+org.cowboycoders.cyclisimo.UserEditActivity:
+    public static final java.lang.String EXTRA_NEW_USER
+    public static final java.lang.String EXTRA_USER
+org.cowboycoders.cyclisimo.content.BikeInfoColumns:
+    public static final java.lang.String TABLE_NAME
+    public static final java.lang.String CONTENT_TYPE
+    public static final java.lang.String CONTENT_ITEMTYPE
+    public static final java.lang.String DEFAULT_SORT_ORDER
+    public static final java.lang.String NAME
+    public static final java.lang.String WEIGHT
+    public static final java.lang.String SHARED
+    public static final java.lang.String OWNER
+    public static final java.lang.String CREATE_TABLE
 org.cowboycoders.cyclisimo.content.ContentTypeIds
 org.cowboycoders.cyclisimo.content.CourseTrackPointsColumns:
     public static final java.lang.String TABLE_NAME
@@ -4370,6 +4608,25 @@ org.cowboycoders.cyclisimo.content.CourseWaypointsColumns:
     public static final java.lang.String MINGRADE
     public static final java.lang.String MAXGRADE
     public static final java.lang.String CREATE_TABLE
+org.cowboycoders.cyclisimo.content.CyclimsoProviderUtilsImpl:
+    156:157:public java.util.List getAllUsers()
+    182:182:public android.database.Cursor getUserCursor(java.lang.String,java.lang.String[],java.lang.String)
+    270:271:public void deleteAllBikes()
+    292:293:public java.util.List getAllBikes()
+    298:302:public java.util.List getAllSharedBikes()
+    308:311:public java.util.List getAllBikes(org.cowboycoders.cyclisimo.content.User)
+    370:370:public android.database.Cursor getBikeCursor(java.lang.String,java.lang.String[],java.lang.String)
+    413:416:public java.util.List getAllTracks(org.cowboycoders.cyclisimo.content.User)
+org.cowboycoders.cyclisimo.content.CyclismoProviderUtils:
+    public abstract java.util.List getAllUsers()
+    public abstract android.database.Cursor getUserCursor(java.lang.String,java.lang.String[],java.lang.String)
+    public abstract void deleteAllBikes()
+    public abstract java.util.List getAllBikes()
+    public abstract android.database.Cursor getBikeCursor(java.lang.String,java.lang.String[],java.lang.String)
+    public abstract void deleteAllBikes(org.cowboycoders.cyclisimo.content.User)
+    public abstract java.util.List getAllSharedBikes()
+    public abstract java.util.List getAllBikes(org.cowboycoders.cyclisimo.content.User)
+    public abstract java.util.List getAllTracks(org.cowboycoders.cyclisimo.content.User)
 org.cowboycoders.cyclisimo.content.DataSource:
     private static final int NETWORK_PROVIDER_MIN_TIME
 org.cowboycoders.cyclisimo.content.DescriptionGeneratorImpl:
@@ -4384,22 +4641,24 @@ org.cowboycoders.cyclisimo.content.MyTracksCourseProviderUtils:
     private static final int MAX_LATITUDE
     public static final java.lang.String AUTHORITY
     public static final java.lang.String TABLE_PREFIX
-    1050:1051:void setDefaultCursorBatchSize(int)
+    1069:1070:void setDefaultCursorBatchSize(int)
 org.cowboycoders.cyclisimo.content.MyTracksCourseProviderUtils$Factory
 org.cowboycoders.cyclisimo.content.MyTracksLocation:
-    55:55:public int getId()
-    59:60:public void setId(int)
+    74:74:public int getId()
+    78:79:public void setId(int)
 org.cowboycoders.cyclisimo.content.MyTracksProvider:
     static final java.lang.String DATABASE_NAME
     private static final int DATABASE_VERSION
 org.cowboycoders.cyclisimo.content.MyTracksProviderUtils:
     public static final java.lang.String AUTHORITY
 org.cowboycoders.cyclisimo.content.MyTracksProviderUtils$Factory:
-    353:353:public static org.cowboycoders.cyclisimo.content.MyTracksProviderUtils$Factory getInstance()
-    363:364:public static void overrideInstance(org.cowboycoders.cyclisimo.content.MyTracksProviderUtils$Factory)
+    374:374:public static org.cowboycoders.cyclisimo.content.MyTracksCourseProviderUtils getCourseProvider(android.content.Context)
+    382:382:public static org.cowboycoders.cyclisimo.content.MyTracksProviderUtils$Factory getInstance()
+    392:393:public static void overrideInstance(org.cowboycoders.cyclisimo.content.MyTracksProviderUtils$Factory)
+    410:410:protected org.cowboycoders.cyclisimo.content.MyTracksCourseProviderUtils newCourseUtilsForContext(android.content.Context)
 org.cowboycoders.cyclisimo.content.MyTracksProviderUtilsImpl:
     private static final int MAX_LATITUDE
-    1037:1038:void setDefaultCursorBatchSize(int)
+    1250:1251:void setDefaultCursorBatchSize(int)
 org.cowboycoders.cyclisimo.content.SearchEngine:
     private static final java.lang.String TRACK_SELECTION_QUERY
     private static final java.lang.String WAYPOINT_SELECTION_QUERY
@@ -4416,38 +4675,38 @@ org.cowboycoders.cyclisimo.content.SearchEngineProvider:
     private static final java.lang.String AUTHORITY
     private static final int MODE
 org.cowboycoders.cyclisimo.content.Sensor:
-    7:7:private Sensor()
-    10:10:public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite)
+    26:26:private Sensor()
+    29:29:public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite)
 org.cowboycoders.cyclisimo.content.Sensor$SensorData:
     public static final int STATE_FIELD_NUMBER
     public static final int VALUE_FIELD_NUMBER
-    70:70:public org.cowboycoders.cyclisimo.content.Sensor$SensorData getDefaultInstanceForType()
-    127:127:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(com.google.protobuf.ByteString)
-    133:133:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(com.google.protobuf.ByteString,com.google.protobuf.ExtensionRegistryLite)
-    138:138:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(byte[])
-    144:144:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(byte[],com.google.protobuf.ExtensionRegistryLite)
-    149:149:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(java.io.InputStream)
-    155:155:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(java.io.InputStream,com.google.protobuf.ExtensionRegistryLite)
-    160:164:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseDelimitedFrom(java.io.InputStream)
-    171:175:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseDelimitedFrom(java.io.InputStream,com.google.protobuf.ExtensionRegistryLite)
-    181:181:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(com.google.protobuf.CodedInputStream)
-    187:187:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(com.google.protobuf.CodedInputStream,com.google.protobuf.ExtensionRegistryLite)
-    192:192:public org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder newBuilderForType()
-    196:196:public org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder toBuilder()
+    89:89:public org.cowboycoders.cyclisimo.content.Sensor$SensorData getDefaultInstanceForType()
+    146:146:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(com.google.protobuf.ByteString)
+    152:152:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(com.google.protobuf.ByteString,com.google.protobuf.ExtensionRegistryLite)
+    157:157:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(byte[])
+    163:163:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(byte[],com.google.protobuf.ExtensionRegistryLite)
+    168:168:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(java.io.InputStream)
+    174:174:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(java.io.InputStream,com.google.protobuf.ExtensionRegistryLite)
+    179:183:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseDelimitedFrom(java.io.InputStream)
+    190:194:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseDelimitedFrom(java.io.InputStream,com.google.protobuf.ExtensionRegistryLite)
+    200:200:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(com.google.protobuf.CodedInputStream)
+    206:206:public static org.cowboycoders.cyclisimo.content.Sensor$SensorData parseFrom(com.google.protobuf.CodedInputStream,com.google.protobuf.ExtensionRegistryLite)
+    211:211:public org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder newBuilderForType()
+    215:215:public org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder toBuilder()
     1:1:public bridge synthetic com.google.protobuf.MessageLite$Builder newBuilderForType()
     1:1:public bridge synthetic com.google.protobuf.MessageLite getDefaultInstanceForType()
     1:1:public bridge synthetic com.google.protobuf.MessageLite$Builder toBuilder()
 org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder:
-    213:213:protected org.cowboycoders.cyclisimo.content.Sensor$SensorData internalGetResult()
-    217:222:public org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder clear()
-    230:230:public org.cowboycoders.cyclisimo.content.Sensor$SensorData getDefaultInstanceForType()
-    245:249:private org.cowboycoders.cyclisimo.content.Sensor$SensorData buildParsed()
-    307:307:public boolean hasState()
-    310:310:public org.cowboycoders.cyclisimo.content.Sensor$SensorState getState()
-    321:323:public org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder clearState()
-    328:328:public boolean hasValue()
-    331:331:public int getValue()
-    339:341:public org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder clearValue()
+    232:232:protected org.cowboycoders.cyclisimo.content.Sensor$SensorData internalGetResult()
+    236:241:public org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder clear()
+    249:249:public org.cowboycoders.cyclisimo.content.Sensor$SensorData getDefaultInstanceForType()
+    264:268:private org.cowboycoders.cyclisimo.content.Sensor$SensorData buildParsed()
+    326:326:public boolean hasState()
+    329:329:public org.cowboycoders.cyclisimo.content.Sensor$SensorState getState()
+    340:342:public org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder clearState()
+    347:347:public boolean hasValue()
+    350:350:public int getValue()
+    358:360:public org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder clearValue()
     1:1:protected bridge synthetic com.google.protobuf.GeneratedMessageLite internalGetResult()
     1:1:public bridge synthetic com.google.protobuf.MessageLite buildPartial()
     1:1:public bridge synthetic com.google.protobuf.MessageLite build()
@@ -4456,42 +4715,42 @@ org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder:
     1:1:public bridge synthetic com.google.protobuf.MessageLite getDefaultInstanceForType()
     1:1:public bridge synthetic com.google.protobuf.GeneratedMessageLite getDefaultInstanceForType()
     1:1:public bridge synthetic com.google.protobuf.MessageLite$Builder clear()
-    243:243:static synthetic org.cowboycoders.cyclisimo.content.Sensor$SensorData access$11(org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder)
+    262:262:static synthetic org.cowboycoders.cyclisimo.content.Sensor$SensorData access$11(org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder)
 org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet:
     public static final int CREATION_TIME_FIELD_NUMBER
     public static final int HEART_RATE_FIELD_NUMBER
     public static final int CADENCE_FIELD_NUMBER
     public static final int POWER_FIELD_NUMBER
     public static final int BATTERY_LEVEL_FIELD_NUMBER
-    370:370:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet getDefaultInstanceForType()
-    483:483:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(com.google.protobuf.ByteString)
-    489:489:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(com.google.protobuf.ByteString,com.google.protobuf.ExtensionRegistryLite)
-    500:500:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(byte[],com.google.protobuf.ExtensionRegistryLite)
-    505:505:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(java.io.InputStream)
-    511:511:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(java.io.InputStream,com.google.protobuf.ExtensionRegistryLite)
-    516:520:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseDelimitedFrom(java.io.InputStream)
-    527:531:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseDelimitedFrom(java.io.InputStream,com.google.protobuf.ExtensionRegistryLite)
-    537:537:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(com.google.protobuf.CodedInputStream)
-    543:543:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(com.google.protobuf.CodedInputStream,com.google.protobuf.ExtensionRegistryLite)
-    548:548:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder newBuilderForType()
+    389:389:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet getDefaultInstanceForType()
+    502:502:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(com.google.protobuf.ByteString)
+    508:508:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(com.google.protobuf.ByteString,com.google.protobuf.ExtensionRegistryLite)
+    519:519:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(byte[],com.google.protobuf.ExtensionRegistryLite)
+    524:524:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(java.io.InputStream)
+    530:530:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(java.io.InputStream,com.google.protobuf.ExtensionRegistryLite)
+    535:539:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseDelimitedFrom(java.io.InputStream)
+    546:550:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseDelimitedFrom(java.io.InputStream,com.google.protobuf.ExtensionRegistryLite)
+    556:556:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(com.google.protobuf.CodedInputStream)
+    562:562:public static org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet parseFrom(com.google.protobuf.CodedInputStream,com.google.protobuf.ExtensionRegistryLite)
+    567:567:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder newBuilderForType()
     1:1:public bridge synthetic com.google.protobuf.MessageLite$Builder newBuilderForType()
     1:1:public bridge synthetic com.google.protobuf.MessageLite getDefaultInstanceForType()
     1:1:public bridge synthetic com.google.protobuf.MessageLite$Builder toBuilder()
 org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder:
-    569:569:protected org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet internalGetResult()
-    573:578:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder clear()
-    586:586:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet getDefaultInstanceForType()
-    700:700:public boolean hasCreationTime()
-    703:703:public long getCreationTime()
-    711:713:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder clearCreationTime()
-    732:734:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder setHeartRate(org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder)
-    748:750:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder clearHeartRate()
-    769:771:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder setCadence(org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder)
-    785:787:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder clearCadence()
-    806:808:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder setPower(org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder)
-    822:824:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder clearPower()
-    843:845:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder setBatteryLevel(org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder)
-    859:861:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder clearBatteryLevel()
+    588:588:protected org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet internalGetResult()
+    592:597:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder clear()
+    605:605:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet getDefaultInstanceForType()
+    719:719:public boolean hasCreationTime()
+    722:722:public long getCreationTime()
+    730:732:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder clearCreationTime()
+    751:753:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder setHeartRate(org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder)
+    767:769:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder clearHeartRate()
+    788:790:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder setCadence(org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder)
+    804:806:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder clearCadence()
+    825:827:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder setPower(org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder)
+    841:843:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder clearPower()
+    862:864:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder setBatteryLevel(org.cowboycoders.cyclisimo.content.Sensor$SensorData$Builder)
+    878:880:public org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder clearBatteryLevel()
     1:1:protected bridge synthetic com.google.protobuf.GeneratedMessageLite internalGetResult()
     1:1:public bridge synthetic com.google.protobuf.MessageLite buildPartial()
     1:1:public bridge synthetic com.google.protobuf.MessageLite build()
@@ -4501,17 +4760,17 @@ org.cowboycoders.cyclisimo.content.Sensor$SensorDataSet$Builder:
     1:1:public bridge synthetic com.google.protobuf.GeneratedMessageLite getDefaultInstanceForType()
     1:1:public bridge synthetic com.google.protobuf.MessageLite$Builder clear()
 org.cowboycoders.cyclisimo.content.Sensor$SensorState:
-    36:36:public static com.google.protobuf.Internal$EnumLiteMap internalGetValueMap()
+    55:55:public static com.google.protobuf.Internal$EnumLiteMap internalGetValueMap()
 org.cowboycoders.cyclisimo.content.Sensor$SensorState$1:
-    42:42:public org.cowboycoders.cyclisimo.content.Sensor$SensorState findValueByNumber(int)
+    61:61:public org.cowboycoders.cyclisimo.content.Sensor$SensorState findValueByNumber(int)
     1:1:public bridge synthetic com.google.protobuf.Internal$EnumLite findValueByNumber(int)
 org.cowboycoders.cyclisimo.content.TrackDataHub:
     private static final int ONE_HOUR
-    863:863:long getSelectedTrackId()
-    873:873:int getMinRequiredAccuracy()
-    883:883:boolean isMetricUnits()
-    893:893:boolean isReportSpeed()
-    903:904:void setLastSeenLocation(android.location.Location)
+    877:877:long getSelectedTrackId()
+    887:887:int getMinRequiredAccuracy()
+    897:897:boolean isMetricUnits()
+    907:907:boolean isReportSpeed()
+    917:918:void setLastSeenLocation(android.location.Location)
 org.cowboycoders.cyclisimo.content.TrackPointsColumns:
     public static final java.lang.String TABLE_NAME
     public static final java.lang.String CONTENT_TYPE
@@ -4558,12 +4817,23 @@ org.cowboycoders.cyclisimo.content.TracksColumns:
     public static final java.lang.String MAPID
     public static final java.lang.String TABLEID
     public static final java.lang.String ICON
+    public static final java.lang.String OWNER
+    public static final java.lang.String CREATE_TABLE
+org.cowboycoders.cyclisimo.content.UserInfoColumns:
+    public static final java.lang.String TABLE_NAME
+    public static final java.lang.String CONTENT_TYPE
+    public static final java.lang.String CONTENT_ITEMTYPE
+    public static final java.lang.String DEFAULT_SORT_ORDER
+    public static final java.lang.String NAME
+    public static final java.lang.String WEIGHT
+    public static final java.lang.String CURRENT_BIKE
+    public static final java.lang.String SETTINGS
     public static final java.lang.String CREATE_TABLE
 org.cowboycoders.cyclisimo.content.Waypoint:
     public static final int TYPE_WAYPOINT
     public static final int TYPE_STATISTICS
 org.cowboycoders.cyclisimo.content.WaypointCreationRequest:
-    118:118:public java.lang.String getIconUrl()
+    137:137:public java.lang.String getIconUrl()
 org.cowboycoders.cyclisimo.content.WaypointsColumns:
     public static final java.lang.String TABLE_NAME
     public static final java.lang.String CONTENT_TYPE
@@ -4604,12 +4874,13 @@ org.cowboycoders.cyclisimo.fragments.AboutDialogFragment:
 org.cowboycoders.cyclisimo.fragments.ChartFragment:
     public static final java.lang.String TAG
     public static final java.lang.String CHART_FRAGMENT_TAG
-    813:813:org.cowboycoders.cyclisimo.ChartView getChartView()
-    818:819:void setTripStatisticsUpdater(long)
-    823:824:void setChartView(org.cowboycoders.cyclisimo.ChartView)
-    828:829:void setMetricUnits(boolean)
-    833:834:void setReportSpeed(boolean)
-    838:839:void setChartByDistance(boolean)
+    837:838:void fillDataPoint(android.location.Location,double[])
+    842:842:org.cowboycoders.cyclisimo.ChartView getChartView()
+    847:848:void setTripStatisticsUpdater(long)
+    852:853:void setChartView(org.cowboycoders.cyclisimo.ChartView)
+    857:858:void setMetricUnits(boolean)
+    862:863:void setReportSpeed(boolean)
+    867:868:void setChartByDistance(boolean)
 org.cowboycoders.cyclisimo.fragments.ChooseActivityDialogFragment:
     public static final java.lang.String CHOOSE_ACTIVITY_DIALOG_TAG
     private static final java.lang.String KEY_TRACK_ID
@@ -4620,6 +4891,8 @@ org.cowboycoders.cyclisimo.fragments.ChooseUploadServiceDialogFragment:
 org.cowboycoders.cyclisimo.fragments.ConfirmPlayDialogFragment:
     public static final java.lang.String CONFIRM_PLAY_DIALOG_TAG
     private static final java.lang.String KEY_TRACK_ID
+org.cowboycoders.cyclisimo.fragments.ConfirmationDialogFragment:
+    public static final java.lang.String TAG
 org.cowboycoders.cyclisimo.fragments.CourseSetupFragment:
     private static final java.lang.String TAG
     public static final int PICK_COURSE_REQUEST
@@ -4658,9 +4931,9 @@ org.cowboycoders.cyclisimo.fragments.MyTracksMapFragment:
     private static final int MAP_VIEW_PADDING
     private static final long COURSE_OVERLAY_REDRAW_REFRESH_PERIOD_MS
     private long redrawCourseOverlayTimestamp
-    689:692:private void reloadCourse()
-    695:698:private void reloadTrack()
-    833:848:private synchronized void redrawCourseOverlay()
+    708:711:private void reloadCourse()
+    714:717:private void reloadTrack()
+    852:867:private synchronized void redrawCourseOverlay()
 org.cowboycoders.cyclisimo.fragments.MyTracksMapFragment$9
 org.cowboycoders.cyclisimo.fragments.StatsFragment:
     public static final java.lang.String STATS_FRAGMENT_TAG
@@ -4741,9 +5014,9 @@ org.cowboycoders.cyclisimo.io.file.SaveActivity:
     private static final int DIALOG_PROGRESS_ID
     private static final int DIALOG_RESULT_ID
 org.cowboycoders.cyclisimo.io.file.TrackWriterFactory:
-    144:144:private TrackWriterFactory()
+    163:163:private TrackWriterFactory()
 org.cowboycoders.cyclisimo.io.file.TrackWriterImpl:
-    159:162:protected void runOnUiThread(java.lang.Runnable)
+    178:181:protected void runOnUiThread(java.lang.Runnable)
 org.cowboycoders.cyclisimo.io.fusiontables.SendFusionTablesAsyncTask:
     public static final java.lang.String APP_NAME_PREFIX
     private static final java.lang.String SQL_KEY
@@ -4771,26 +5044,26 @@ org.cowboycoders.cyclisimo.io.gdata.AndroidGDataClient:
     private static final boolean DEBUG
     private static final java.lang.String X_HTTP_METHOD_OVERRIDE
     private static final int MAX_REDIRECTS
-    142:149:public java.lang.String encodeUri(java.lang.String)
-    158:158:public com.google.wireless.gdata.client.QueryParams createQueryParams()
-    346:352:public java.io.InputStream getMediaEntryAsStream(java.lang.String,java.lang.String)
-    382:389:public java.io.InputStream updateEntry(java.lang.String,java.lang.String,com.google.wireless.gdata.serializer.GDataSerializer)
-    399:415:public void deleteEntry(java.lang.String,java.lang.String)
-    421:426:public java.io.InputStream updateMediaEntry(java.lang.String,java.lang.String,java.io.InputStream,java.lang.String)
+    161:168:public java.lang.String encodeUri(java.lang.String)
+    177:177:public com.google.wireless.gdata.client.QueryParams createQueryParams()
+    365:371:public java.io.InputStream getMediaEntryAsStream(java.lang.String,java.lang.String)
+    401:408:public java.io.InputStream updateEntry(java.lang.String,java.lang.String,com.google.wireless.gdata.serializer.GDataSerializer)
+    418:434:public void deleteEntry(java.lang.String,java.lang.String)
+    440:445:public java.io.InputStream updateMediaEntry(java.lang.String,java.lang.String,java.io.InputStream,java.lang.String)
 org.cowboycoders.cyclisimo.io.gdata.AndroidGDataClient$MediaPutRequestCreator
 org.cowboycoders.cyclisimo.io.gdata.GDataClientFactory:
-    32:32:private GDataClientFactory()
+    51:51:private GDataClientFactory()
 org.cowboycoders.cyclisimo.io.gdata.QueryParamsImpl
 org.cowboycoders.cyclisimo.io.gdata.docs.DocumentsClient:
     public static final java.lang.String SERVICE
 org.cowboycoders.cyclisimo.io.gdata.docs.SpreadsheetsClient:
     public static final java.lang.String SERVICE
     public static final java.lang.String SPREADSHEETS_BASE_FEED_URL
-    201:223:public com.google.wireless.gdata.data.Entry updateEntry(com.google.wireless.gdata.data.Entry,java.lang.String)
+    220:242:public com.google.wireless.gdata.data.Entry updateEntry(com.google.wireless.gdata.data.Entry,java.lang.String)
 org.cowboycoders.cyclisimo.io.gdata.docs.XmlDocsGDataParserFactory:
-    44:47:public com.google.wireless.gdata.parser.GDataParser createParser(java.io.InputStream)
+    63:66:public com.google.wireless.gdata.parser.GDataParser createParser(java.io.InputStream)
 org.cowboycoders.cyclisimo.io.gdata.maps.MapFeatureEntry:
-    30:31:public void removeAttribute(java.lang.String)
+    49:50:public void removeAttribute(java.lang.String)
 org.cowboycoders.cyclisimo.io.gdata.maps.MapsClient:
     private static final boolean DEBUG
     public static final boolean LOG_COMMUNICATION
@@ -4802,8 +5075,8 @@ org.cowboycoders.cyclisimo.io.gdata.maps.MapsClient:
     private static final java.lang.String MAP_ENTRY_ID_BEFORE_USER_ID
     private static final java.lang.String MAP_ENTRY_ID_BETWEEN_USER_ID_AND_MAP_ID
     private static final java.lang.String V2_ONLY_PARAM
-    38:38:public java.lang.String getServiceName()
-    98:98:public static java.lang.String getVersionFeed(java.lang.String,java.lang.String,java.lang.String)
+    57:57:public java.lang.String getServiceName()
+    117:117:public static java.lang.String getVersionFeed(java.lang.String,java.lang.String,java.lang.String)
 org.cowboycoders.cyclisimo.io.gdata.maps.MapsConstants
 org.cowboycoders.cyclisimo.io.gdata.maps.MapsFeature:
     public static final int MARKER
@@ -4813,20 +5086,20 @@ org.cowboycoders.cyclisimo.io.gdata.maps.MapsFeatureMetadata:
     private static final java.lang.String BLUE_DOT_URL
     private static final int DEFAULT_COLOR
     private static final int DEFAULT_FILL_COLOR
-    70:71:public void setLineWidth(int)
-    78:79:public void setFillColor(int)
+    89:90:public void setLineWidth(int)
+    97:98:public void setFillColor(int)
 org.cowboycoders.cyclisimo.io.gdata.maps.XmlMapsGDataParserFactory:
-    33:38:public com.google.wireless.gdata.parser.GDataParser createParser(java.io.InputStream)
+    52:57:public com.google.wireless.gdata.parser.GDataParser createParser(java.io.InputStream)
 org.cowboycoders.cyclisimo.io.gdata.maps.XmlMapsGDataSerializer:
     private static final java.lang.String APP_NAMESPACE
 org.cowboycoders.cyclisimo.io.maps.ChooseMapActivity:
     private static final int DIALOG_PROGRESS_ID
     private static final int DIALOG_ERROR_ID
 org.cowboycoders.cyclisimo.io.maps.ChooseMapAsyncTask:
-    220:220:boolean getCompleted()
-    229:230:void setCompleted(boolean)
-    238:239:void setCanRetry(boolean)
-    246:246:boolean getCanRetry()
+    239:239:boolean getCompleted()
+    248:249:void setCompleted(boolean)
+    257:258:void setCanRetry(boolean)
+    265:265:boolean getCanRetry()
 org.cowboycoders.cyclisimo.io.maps.SendMapsAsyncTask:
     private static final java.lang.String START_ICON_URL
     private static final java.lang.String END_ICON_URL
@@ -4836,8 +5109,8 @@ org.cowboycoders.cyclisimo.io.maps.SendMapsAsyncTask:
     static final int PROGRESS_UPLOAD_DATA_MAX
     private static final int PROGRESS_UPLOAD_WAYPOINTS
     private static final int PROGRESS_COMPLETE
-    507:507:java.lang.String getMapId()
-    517:518:void setMapsGDataConverter(org.cowboycoders.cyclisimo.io.gdata.maps.MapsGDataConverter)
+    526:526:java.lang.String getMapId()
+    536:537:void setMapsGDataConverter(org.cowboycoders.cyclisimo.io.gdata.maps.MapsGDataConverter)
 org.cowboycoders.cyclisimo.io.maps.SendMapsUtils:
     private static final java.lang.String EMPTY_TITLE
     private static final int LINE_COLOR
@@ -4858,13 +5131,13 @@ org.cowboycoders.cyclisimo.lib.R$drawable
 org.cowboycoders.cyclisimo.lib.R$string
 org.cowboycoders.cyclisimo.maps.DynamicSpeedTrackPathDescriptor:
     static final int CRITICAL_DIFFERENCE_PERCENTAGE
-    131:131:int getSpeedMargin()
-    139:139:double getAverageMovingSpeed()
-    149:150:void setAverageMovingSpeed(double)
+    150:150:int getSpeedMargin()
+    158:158:double getAverageMovingSpeed()
+    168:169:void setAverageMovingSpeed(double)
 org.cowboycoders.cyclisimo.maps.TrackPathFactory:
-    30:30:private TrackPathFactory()
+    49:49:private TrackPathFactory()
 org.cowboycoders.cyclisimo.maps.TrackPathUtils:
-    33:33:private TrackPathUtils()
+    52:52:private TrackPathUtils()
 org.cowboycoders.cyclisimo.services.ITrackRecordingService$Stub:
     private static final java.lang.String DESCRIPTOR
     static final int TRANSACTION_startNewTrack
@@ -4909,13 +5182,13 @@ org.cowboycoders.cyclisimo.services.sensors.SensorManager:
     private static final long MAX_SENSOR_STATE_AGE
     private static final int RETRY_PERIOD
 org.cowboycoders.cyclisimo.services.sensors.SensorManagerFactory:
-    31:31:private SensorManagerFactory()
+    50:50:private SensorManagerFactory()
 org.cowboycoders.cyclisimo.services.sensors.SensorUtils:
-    31:32:private SensorUtils()
-    42:44:public static int unsignedShortToInt(byte[],int)
-    55:57:public static int unsignedShortToIntLittleEndian(byte[],int)
-    70:75:public static byte getCrc8(byte[],int,int)
-    85:96:private static byte crc8PushByte(byte,byte)
+    50:51:private SensorUtils()
+    61:63:public static int unsignedShortToInt(byte[],int)
+    74:76:public static int unsignedShortToIntLittleEndian(byte[],int)
+    89:94:public static byte getCrc8(byte[],int,int)
+    104:115:private static byte crc8PushByte(byte,byte)
 org.cowboycoders.cyclisimo.services.sensors.StrideReadings
 org.cowboycoders.cyclisimo.services.sensors.ZephyrMessageParser
 org.cowboycoders.cyclisimo.services.sensors.ZephyrSensorManager
@@ -4943,16 +5216,19 @@ org.cowboycoders.cyclisimo.settings.SettingsActivity:
 org.cowboycoders.cyclisimo.settings.SharingSettingsActivity:
     private static final int DIALOG_CONFIRM_ALLOW_ACCESS_ID
 org.cowboycoders.cyclisimo.stats.DoubleBuffer:
-    87:101:public double[] getAverageAndVariance()
+    106:120:public double[] getAverageAndVariance()
 org.cowboycoders.cyclisimo.stats.TripStatisticsUpdater:
-    158:158:public double getSmoothedSpeed()
+    177:177:public double getSmoothedSpeed()
 org.cowboycoders.cyclisimo.turbo.AntHubService:
     private static final java.lang.String TAG
-    127:127:private void handleCommand(android.content.Intent)
+    146:146:private void handleCommand(android.content.Intent)
 org.cowboycoders.cyclisimo.turbo.AntLoggerImpl:
     private static final java.lang.String DIRECTORY_NAME
+org.cowboycoders.cyclisimo.turbo.SharedPrefTest
 org.cowboycoders.cyclisimo.turbo.TurboException
 org.cowboycoders.cyclisimo.turbo.TurboService:
+    private static final int DEFAULT_BIKE_WEIGHT
+    private static final int DEFAULT_USER_WEIGHT
     private static final int RESULT_ERROR
     public static final int NOTIFCATION_ID_STARTUP
     public static final int NOTIFCATION_ID_SHUTDOWN
@@ -4961,58 +5237,57 @@ org.cowboycoders.cyclisimo.util.AnalyticsUtils:
     private static final java.lang.String UA
     private static final java.lang.String PRODUCT_NAME
     private static com.google.android.apps.analytics.GoogleAnalyticsTracker tracker
-    34:34:private AnalyticsUtils()
+    53:53:private AnalyticsUtils()
 org.cowboycoders.cyclisimo.util.Api10Adapter:
-    40:45:public android.bluetooth.BluetoothSocket getBluetoothSocket(android.bluetooth.BluetoothDevice)
+    59:64:public android.bluetooth.BluetoothSocket getBluetoothSocket(android.bluetooth.BluetoothDevice)
 org.cowboycoders.cyclisimo.util.Api8Adapter:
-    55:55:public void enableStrictMode()
-    59:62:public byte[] copyByteArray(byte[],int,int)
-    78:93:public android.bluetooth.BluetoothSocket getBluetoothSocket(android.bluetooth.BluetoothDevice)
+    74:74:public void enableStrictMode()
+    78:81:public byte[] copyByteArray(byte[],int,int)
+    97:112:public android.bluetooth.BluetoothSocket getBluetoothSocket(android.bluetooth.BluetoothDevice)
 org.cowboycoders.cyclisimo.util.Api9Adapter:
-    47:56:public void enableStrictMode()
-    60:60:public byte[] copyByteArray(byte[],int,int)
+    66:75:public void enableStrictMode()
+    79:79:public byte[] copyByteArray(byte[],int,int)
 org.cowboycoders.cyclisimo.util.ApiAdapter:
     public abstract void enableStrictMode()
     public abstract byte[] copyByteArray(byte[],int,int)
     public abstract android.bluetooth.BluetoothSocket getBluetoothSocket(android.bluetooth.BluetoothDevice)
 org.cowboycoders.cyclisimo.util.ApiAdapterFactory:
-    25:25:public ApiAdapterFactory()
+    44:44:public ApiAdapterFactory()
 org.cowboycoders.cyclisimo.util.BluetoothDeviceUtils:
-    32:32:private BluetoothDeviceUtils()
+    51:51:private BluetoothDeviceUtils()
 org.cowboycoders.cyclisimo.util.ChartURLGenerator:
     private static final java.lang.String CHARTS_BASE_URL
-    37:37:private ChartURLGenerator()
+    56:56:private ChartURLGenerator()
 org.cowboycoders.cyclisimo.util.ChartsExtendedEncoder:
     private static final java.lang.String CHARTSERVER_EXTENDED_ENCODING_SEPARATOR
     private static final java.lang.String CHARTSERVER_EXTENDED_ENCODING
     private static final java.lang.String MISSING_POINT_EXTENDED_ENCODING
-    31:31:private ChartsExtendedEncoder()
+    50:50:private ChartsExtendedEncoder()
 org.cowboycoders.cyclisimo.util.DialogUtils:
-    35:35:private DialogUtils()
+    54:54:private DialogUtils()
 org.cowboycoders.cyclisimo.util.EulaUtils:
     private static final java.lang.String EULA_PREFERENCE_FILE
     private static final java.lang.String ACCEPT_EULA_PREFERENCE_KEY
     private static final java.lang.String SHOW_WELCOME_PREFERENCE_KEY
-    35:35:private EulaUtils()
-    56:58:private static boolean getValue(android.content.Context,java.lang.String,boolean)
-org.cowboycoders.cyclisimo.util.ExceptionUtils:
-    8:10:private ExceptionUtils()
+    54:54:private EulaUtils()
+    75:77:private static boolean getValue(android.content.Context,java.lang.String,boolean)
+org.cowboycoders.cyclisimo.util.ExceptionUtils
 org.cowboycoders.cyclisimo.util.FileUtils:
     static final int MAX_FAT32_PATH_LENGTH
-    33:33:private FileUtils()
+    52:52:private FileUtils()
 org.cowboycoders.cyclisimo.util.GoogleLocationUtils:
     public static final java.lang.String ACTION_GOOGLE_LOCATION_SETTINGS
     private static final java.lang.String ACTION_GOOGLE_APPS_LOCATION_SETTINGS
-    29:29:public GoogleLocationUtils()
+    48:48:public GoogleLocationUtils()
 org.cowboycoders.cyclisimo.util.IntentUtils:
     public static final java.lang.String TEXT_PLAIN_TYPE
     private static final java.lang.String BLUETOOTH_PACKAGE_NAME
     private static final java.lang.String TWITTER_PACKAGE_NAME
-    44:44:private IntentUtils()
+    63:63:private IntentUtils()
 org.cowboycoders.cyclisimo.util.ListItemUtils:
-    33:33:private ListItemUtils()
+    52:52:private ListItemUtils()
 org.cowboycoders.cyclisimo.util.LocationUtils:
-    35:35:private LocationUtils()
+    54:54:private LocationUtils()
 org.cowboycoders.cyclisimo.util.PreferencesUtils:
     public static final boolean ALLOW_ACCESS_DEFAULT
     public static final int AUTO_RESUME_TRACK_CURRENT_RETRY_DEFAULT
@@ -5066,16 +5341,19 @@ org.cowboycoders.cyclisimo.util.PreferencesUtils:
     public static final int TRACK_WIDGET_ITEM3_DEFAULT
     public static final int TRACK_WIDGET_ITEM4_DEFAULT
     public static final int VOICE_FREQUENCY_DEFAULT
-    105:105:private PreferencesUtils()
+    124:124:private PreferencesUtils()
 org.cowboycoders.cyclisimo.util.ResourceUtils:
-    34:54:public static java.lang.CharSequence readFile(android.content.Context,int)
-    91:92:private ResourceUtils()
+    53:73:public static java.lang.CharSequence readFile(android.content.Context,int)
+    110:111:private ResourceUtils()
+org.cowboycoders.cyclisimo.util.SettingsUtils:
+    public static final java.lang.String TAG
+    20:22:private SettingsUtils()
 org.cowboycoders.cyclisimo.util.StatsUtils:
-    34:34:private StatsUtils()
+    53:53:private StatsUtils()
 org.cowboycoders.cyclisimo.util.StringUtils:
-    53:53:private StringUtils()
+    72:72:private StringUtils()
 org.cowboycoders.cyclisimo.util.SystemUtils:
-    90:90:private SystemUtils()
+    109:109:private SystemUtils()
 org.cowboycoders.cyclisimo.util.TrackIconUtils:
     private static final java.lang.String AIRPLANE
     private static final java.lang.String BIKE
@@ -5085,14 +5363,14 @@ org.cowboycoders.cyclisimo.util.TrackIconUtils:
     private static final java.lang.String SKI
     private static final java.lang.String SNOW_BOARDING
     private static final java.lang.String WALK
-    41:41:private TrackIconUtils()
+    60:60:private TrackIconUtils()
 org.cowboycoders.cyclisimo.util.TrackNameUtils:
     static final java.lang.String ISO_8601_FORMAT
-    41:42:private TrackNameUtils()
+    60:61:private TrackNameUtils()
 org.cowboycoders.cyclisimo.util.UnitConversions
 org.cowboycoders.cyclisimo.util.UriUtils:
-    30:52:public static boolean matchesContentUri(android.net.Uri,android.net.Uri)
-    59:59:private UriUtils()
+    49:71:public static boolean matchesContentUri(android.net.Uri,android.net.Uri)
+    78:78:private UriUtils()
 org.cowboycoders.cyclisimo.widgets.TrackWidgetProvider:
     private static final int TWO_CELLS
     private static final int THREE_CELLS
@@ -5105,88 +5383,367 @@ org.cowboycoders.location.DecodeException
 org.cowboycoders.location.DrivingDirectionsUtils
 org.cowboycoders.location.DrivingDirectionsUtils$DirectionsQueryBuilder
 org.cowboycoders.location.LatLong:
-    19:20:public void setLatitude(double)
-    27:28:public void setLongitude(double)
-    31:33:public static org.cowboycoders.location.LatLong fromMicro(int,int)
-    37:37:public int toMicro(double)
+    38:39:public void setLatitude(double)
+    46:47:public void setLongitude(double)
+    50:52:public static org.cowboycoders.location.LatLong fromMicro(int,int)
+    56:56:public int toMicro(double)
 org.cowboycoders.location.LocationUtils:
-    10:12:private LocationUtils()
-    116:142:public static void main(java.lang.String[])
+    29:31:private LocationUtils()
+    141:159:public static void main(java.lang.String[])
 org.cowboycoders.location.PolyLineUtils
 org.cowboycoders.location.PolyLineUtilsTest
 org.cowboycoders.location.TrackedCharSequence
 org.cowboycoders.location.TrackedCharSequenceTest
+org.cowboycoders.pid.OutputControlParameters:
+    31:31:public java.lang.Double getTotalElapsedTime()
+    36:37:public void setTotalElapsedTime(java.lang.Double)
+    41:41:public java.lang.Double getPreviousError()
+    46:47:public void setPreviousError(java.lang.Double)
+    51:51:public java.lang.Double getCurrentError()
+    56:57:public void setCurrentError(java.lang.Double)
+    61:61:public java.lang.Double getTimeDelta()
+    66:67:public void setTimeDelta(java.lang.Double)
+    71:71:public java.lang.Double getErrorIntegral()
+    76:77:public void setErrorIntegral(java.lang.Double)
+    81:81:public java.lang.Double getErrorDerivative()
+    86:87:public void setErrorDerivative(java.lang.Double)
+    91:91:public java.lang.Double getSetPoint()
+    96:97:public void setSetPoint(java.lang.Double)
+    101:101:public java.lang.Double getProcessVariable()
+    106:107:public void setProcessVariable(java.lang.Double)
+org.cowboycoders.pid.PidController:
+    38:38:public double getProportionalGain()
+    46:46:public double getIntegralGain()
+    56:56:public double getDerivativeGain()
+    81:82:protected void setProcessVariableProvider(org.cowboycoders.pid.ProcessVariableProvider)
+    89:90:protected void setOutputController(org.cowboycoders.pid.OutputController)
+    93:93:protected double getLastTimeStamp()
+    97:98:protected void setLastTimeStamp(double)
+    114:115:public synchronized boolean setGainController(org.cowboycoders.pid.GainController)
+    227:230:public void registerPidUpdateLister(org.cowboycoders.pid.PidUpdateListener)
+    237:240:public void unregisterPidUpdateLister(org.cowboycoders.pid.PidUpdateListener)
+org.cowboycoders.pid.PidParameterController
+org.cowboycoders.pid.PidUpdateProvider
 org.cowboycoders.turbotrainers.AntTurboTrainer:
-    19:19:public org.cowboycoders.ant.Node getNode()
+    52:52:public org.cowboycoders.ant.Node getNode()
     public abstract void start()
-org.cowboycoders.turbotrainers.ChannelMessageSender:
-    public abstract void sendMessage(org.cowboycoders.ant.messages.ChannelMessage)
 org.cowboycoders.turbotrainers.CourseTracker:
     private static final double ACCURACY
-    74:89:public static void main(java.lang.String[])
-org.cowboycoders.turbotrainers.ExceptionHandler
-org.cowboycoders.turbotrainers.ExceptionWrapper
-org.cowboycoders.turbotrainers.ExceptionWrapper$Context
+    93:108:public static void main(java.lang.String[])
+org.cowboycoders.turbotrainers.ExceptionHandler:
+    public abstract void handleException(org.cowboycoders.turbotrainers.ExceptionWrapper)
+org.cowboycoders.turbotrainers.ExceptionWrapper:
+    private java.lang.Exception wrappedException
+    private org.cowboycoders.turbotrainers.ExceptionWrapper$Context context
+    38:38:public org.cowboycoders.turbotrainers.ExceptionWrapper$Context getContext()
+    45:46:public void setContext(org.cowboycoders.turbotrainers.ExceptionWrapper$Context)
+    52:52:public java.lang.Exception getWrappedException()
+    55:57:public ExceptionWrapper(java.lang.Exception)
+    60:61:public boolean hasContext()
+org.cowboycoders.turbotrainers.GenericTurboTrainer:
+    29:29:public org.cowboycoders.turbotrainers.Mode[] modesSupported()
+    52:52:protected java.util.Set getDataChangeListeners()
+org.cowboycoders.turbotrainers.Parameters:
+    440:442:public static void main(java.lang.String[])
+org.cowboycoders.turbotrainers.Parameters$Builder:
+    354:355:public org.cowboycoders.turbotrainers.Parameters$Builder setWindSpeed(double)
+    360:361:public org.cowboycoders.turbotrainers.Parameters$Builder setCurrentBearing(double)
+    366:367:public org.cowboycoders.turbotrainers.Parameters$Builder setWindDirectionDegrees(double)
+    372:373:public org.cowboycoders.turbotrainers.Parameters$Builder setAirDensity(double)
+    378:379:public org.cowboycoders.turbotrainers.Parameters$Builder setIncrementalDragAreaSpokes(double)
+    384:385:public org.cowboycoders.turbotrainers.Parameters$Builder setDragArea(double)
+    390:391:public org.cowboycoders.turbotrainers.Parameters$Builder setCoefficentRollingResistance(double)
+    396:397:public org.cowboycoders.turbotrainers.Parameters$Builder setMomentOfInertiaWheels(double)
+    402:403:public org.cowboycoders.turbotrainers.Parameters$Builder setOutsideRadiusTire(double)
+    429:429:public org.cowboycoders.turbotrainers.Parameters$TargetPower buildTargetPower(double)
+org.cowboycoders.turbotrainers.Parameters$Common:
+    125:125:public double getRiderWeight()
+    133:133:public double getBikeWeight()
+    141:141:public double getWindSpeed()
+    149:149:public double getCurrentBearing()
+    157:157:public double getWindDirectionDegrees()
+    165:165:public double getAirDensity()
+    173:173:public double getIncrementalDragAreaSpokes()
+    181:181:public double getDragArea()
+    190:190:public double getCoefficentRollingResistance()
+    198:198:public double getMomentOfInertiaWheels()
+    206:206:public double getOutsideRadiusTire()
+org.cowboycoders.turbotrainers.Parameters$CommonDelegate:
+    226:226:public double getRiderWeight()
+    231:231:public double getBikeWeight()
+    236:236:public double getWindSpeed()
+    241:241:public double getCurrentBearing()
+    246:246:public double getWindDirectionDegrees()
+    251:251:public double getAirDensity()
+    256:256:public double getIncrementalDragAreaSpokes()
+    261:261:public double getDragArea()
+    266:266:public double getCoefficentRollingResistance()
+    271:271:public double getMomentOfInertiaWheels()
+    276:276:public double getOutsideRadiusTire()
+org.cowboycoders.turbotrainers.Parameters$CommonParametersInterface:
+    public abstract double getTotalWeight()
+    public abstract double getRiderWeight()
+    public abstract double getBikeWeight()
+    public abstract double getWindSpeed()
+    public abstract double getCurrentBearing()
+    public abstract double getWindDirectionDegrees()
+    public abstract double getAirDensity()
+    public abstract double getIncrementalDragAreaSpokes()
+    public abstract double getDragArea()
+    public abstract double getCoefficentRollingResistance()
+    public abstract double getMomentOfInertiaWheels()
+    public abstract double getOutsideRadiusTire()
+org.cowboycoders.turbotrainers.Parameters$TargetPower:
+    private double power
+    306:308:private Parameters$TargetPower(org.cowboycoders.turbotrainers.Parameters$Common,double)
+    314:314:public double getPower()
+    1:1:public bridge synthetic double getCoefficentRollingResistance()
+    1:1:public bridge synthetic double getCurrentBearing()
+    1:1:public bridge synthetic double getDragArea()
+    1:1:public bridge synthetic double getOutsideRadiusTire()
+    1:1:public bridge synthetic double getBikeWeight()
+    1:1:public bridge synthetic double getAirDensity()
+    1:1:public bridge synthetic double getIncrementalDragAreaSpokes()
+    1:1:public bridge synthetic double getMomentOfInertiaWheels()
+    1:1:public bridge synthetic double getWindDirectionDegrees()
+    1:1:public bridge synthetic double getWindSpeed()
+    1:1:public bridge synthetic double getRiderWeight()
+    305:305:synthetic Parameters$TargetPower(org.cowboycoders.turbotrainers.Parameters$Common,double,org.cowboycoders.turbotrainers.Parameters$TargetPower)
+org.cowboycoders.turbotrainers.Parameters$TargetSlope:
+    1:1:public bridge synthetic double getCoefficentRollingResistance()
+    1:1:public bridge synthetic double getCurrentBearing()
+    1:1:public bridge synthetic double getDragArea()
+    1:1:public bridge synthetic double getOutsideRadiusTire()
+    1:1:public bridge synthetic double getBikeWeight()
+    1:1:public bridge synthetic double getAirDensity()
+    1:1:public bridge synthetic double getIncrementalDragAreaSpokes()
+    1:1:public bridge synthetic double getMomentOfInertiaWheels()
+    1:1:public bridge synthetic double getWindDirectionDegrees()
+    1:1:public bridge synthetic double getWindSpeed()
+    1:1:public bridge synthetic double getRiderWeight()
+org.cowboycoders.turbotrainers.PowerModel:
+    public static final double GRAVITATIONAL_ACCELERATION
+    37:38:public void setNegativeVelocityAllowed(boolean)
+    57:58:public void setWindSpeed(double)
+    77:78:public void setCurrentBearing(double)
+    97:98:public void setWindDirectionDegrees(double)
+    117:118:public void setAirDensity(double)
+    137:138:public void setIncrementalDragAreaSpokes(double)
+    157:158:public void setDragArea(double)
+    177:178:public void setGradientAsPercentage(double)
+    197:198:public void setCoefficentRollingResistance(double)
+    217:218:public void setTotalMass(double)
+    255:256:public void setMomentOfInertiaWheels(double)
+    275:276:public void setOutsideRadiusTire(double)
+    287:289:public double getNormalWindVelocity()
+    338:345:public double getYaw()
+    443:461:public static void main(java.lang.String[])
+org.cowboycoders.turbotrainers.PowerModel$1
+org.cowboycoders.turbotrainers.PowerModelManipulator:
+    public abstract boolean isNegativeVelocityAllowed()
+    public abstract void setNegativeVelocityAllowed(boolean)
+    public abstract double getWindSpeed()
+    public abstract void setWindSpeed(double)
+    public abstract double getCurrentBearing()
+    public abstract void setCurrentBearing(double)
+    public abstract double getWindDirectionDegrees()
+    public abstract void setWindDirectionDegrees(double)
+    public abstract double getAirDensity()
+    public abstract void setAirDensity(double)
+    public abstract double getIncrementalDragAreaSpokes()
+    public abstract void setIncrementalDragAreaSpokes(double)
+    public abstract double getDragArea()
+    public abstract void setDragArea(double)
+    public abstract double getGradientAsPercentage()
+    public abstract void setGradientAsPercentage(double)
+    public abstract double getCoefficentRollingResistance()
+    public abstract void setCoefficentRollingResistance(double)
+    public abstract double getTotalMass()
+    public abstract void setTotalMass(double)
+    public abstract double getKineticEnergy()
+    public abstract double getMomentOfInertiaWheels()
+    public abstract void setMomentOfInertiaWheels(double)
+    public abstract double getOutsideRadiusTire()
+    public abstract void setOutsideRadiusTire(double)
+    public abstract double getVelocity()
+    public abstract double getAirVelocity()
+    public abstract double getYaw()
+    public abstract void setVelocity(double)
 org.cowboycoders.turbotrainers.TooFewAntChannelsAvailableException:
-    28:30:public TooFewAntChannelsAvailableException(java.lang.String)
-    36:38:public TooFewAntChannelsAvailableException(java.lang.Throwable)
-    45:47:public TooFewAntChannelsAvailableException(java.lang.String,java.lang.Throwable)
+    47:49:public TooFewAntChannelsAvailableException(java.lang.String)
+    55:57:public TooFewAntChannelsAvailableException(java.lang.Throwable)
+    64:66:public TooFewAntChannelsAvailableException(java.lang.String,java.lang.Throwable)
+org.cowboycoders.turbotrainers.TurboBaseModel:
+    46:46:public double getHeartRate()
+    93:93:public double getCadence()
+    public abstract double getTarget()
 org.cowboycoders.turbotrainers.TurboCommunicationException:
-    16:18:public TurboCommunicationException(java.lang.String,java.lang.Throwable)
-    21:23:public TurboCommunicationException(java.lang.String)
+    35:37:public TurboCommunicationException(java.lang.String,java.lang.Throwable)
+    40:42:public TurboCommunicationException(java.lang.String)
+org.cowboycoders.turbotrainers.TurboTrainerDataHooks:
+    public abstract double onSpeedChange(double)
+    public abstract double onPowerChange(double)
+    public abstract double onCadenceChange(double)
+    public abstract double onDistanceChange(double)
 org.cowboycoders.turbotrainers.TurboTrainerInterface:
     public abstract boolean supportsSpeed()
     public abstract boolean supportsPower()
     public abstract boolean supportsCadence()
     public abstract boolean supportsHeartRate()
-    public abstract double getSlope()
-org.cowboycoders.turbotrainers.bushido.BushidoUtils:
-    4:6:private BushidoUtils()
-org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonDescriptorTest
+    public abstract org.cowboycoders.turbotrainers.Mode[] modesSupported()
+    public abstract double getTarget()
+org.cowboycoders.turbotrainers.bushido.brake.AbstractController:
+    protected static final java.lang.String ABSOLUTE_RESISTANCE_HEADING
+    protected static final java.lang.String VIRTUAL_SPEED_HEADING
+    protected static final java.lang.String ACTUAL_SPEED_HEADING
+    protected static final java.lang.String POWER_HEADING
+    protected static final java.lang.String CADENCE_HEADING
+    20:21:protected synchronized void setCsvLogger(org.cowboycoders.utils.SimpleCsvLogger)
+    47:47:public boolean isStarted()
+    111:112:public void enableLogging(java.io.File)
+    120:120:protected org.cowboycoders.utils.SimpleCsvLogger getCsvLogger(java.io.File)
+org.cowboycoders.turbotrainers.bushido.brake.BrakeModel:
+    private static final byte RESISTANCE_PACKET_IDENTIFER
+    private static final int RESISTANCE_PACKET_IDENTIFER_INDEX
+    public static final double BALANCE_MAX
+    public static final double BALANCE_MIN
+    public static final double RESISTANCE_MAX
+    public static final double RESISTANCE_MIN
+    63:63:public double getPowerLeft()
+    71:71:public double getPowerRight()
+    97:97:public long getCounter()
+    113:113:public double getResistance()
+    155:155:public double getPowerBalance()
+    177:177:public double getBrakeTemperature()
+    235:239:public static void print(byte[])
+    242:252:public static void main(java.lang.String[])
+org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake:
+    373:397:public void requestVersion(org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake$VersionRequestCallback)
+    1107:1110:public double calibrate(org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake$CallibrationCallback,long)
+    1151:1151:public boolean supportsSpeed()
+    1156:1156:public boolean supportsPower()
+    1161:1161:public boolean supportsCadence()
+    1166:1166:public boolean supportsHeartRate()
+    1180:1180:public double getTarget()
+org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake$CalibrationController:
+    private static final int RADIO_QUIET_TIMEOUT_MILLI_SECONDS
+org.cowboycoders.turbotrainers.bushido.brake.BushidoBrake$CalibrationException:
+    464:465:private BushidoBrake$CalibrationException(java.lang.String,java.lang.Throwable)
+org.cowboycoders.turbotrainers.bushido.brake.BushidoBrakeBroadcastDataListener:
+    private double speed
+    private double cadence
+    private double power
+    private double brakeTemperature
+    private double powerLeft
+    private double powerRight
+org.cowboycoders.turbotrainers.bushido.brake.ConstantResistanceController:
+    33:34:public void setAbsoluteResistance(int)
+    43:46:protected org.cowboycoders.utils.SimpleCsvLogger getCsvLogger(java.io.File)
+org.cowboycoders.turbotrainers.bushido.brake.PidBrakeController:
+    private static final int POWER_MODEL_UPDATE_PERIOD_MS
+    private static final double PID_DERIVATIVE_GAIN
+    private static final double PID_INTEGRAL_GAIN
+    private static final double PID_PROPORTIONAL_GAIN
+    private static final int STARTING_RESISTANCE
+    private static final int MIN_SLOPE_SAMPLES
+    private static final double LOW_SPEED_LIMIT
+    245:245:public org.cowboycoders.turbotrainers.PowerModelManipulator getPowerModelManipulator()
+    249:249:public org.cowboycoders.pid.PidParameterController getPidParameterController()
+    261:265:protected org.cowboycoders.utils.SimpleCsvLogger getCsvLogger(java.io.File)
+org.cowboycoders.turbotrainers.bushido.brake.SpeedResistanceMapper:
+    private static final int POWER_MODEL_UPDATE_PERIOD_MS
+    private static final int INITIAL_BRAKE_RESISTANCE
+    private static final double POLY_A
+    private static final double POLY_B
+    private static final double POLY_C
+    private static final double POLY_D
+    private static final double POLY_E
+    private static final double POLY_F
+    private static final double POLY_G
+    private static final double POLY_H
+    private static final double POLY_I
+    148:151:protected org.cowboycoders.utils.SimpleCsvLogger getCsvLogger(java.io.File)
+org.cowboycoders.turbotrainers.bushido.brake.SpeedResistanceMapperTest:
+    32:41:public void testGetBrakeResistanceFromSurfaceFit()
+org.cowboycoders.turbotrainers.bushido.brake.SpeedResistancePowerMapper:
+    private static final int POWER_MODEL_UPDATE_PERIOD_MS
+    private static final int INITIAL_BRAKE_RESISTANCE
+    private static final int MINIMUM_BRAKE_RESISTANCE
+    private static final int MAXIMUM_BRAKE_RESISTANCE
+    private static final int MINIMUM_SIMULATION_SPEED
+    private static final int MINIMUM_SIMULATION_SPEED_OVERRIDE_POWER
+    170:174:protected org.cowboycoders.utils.SimpleCsvLogger getCsvLogger(java.io.File)
+org.cowboycoders.turbotrainers.bushido.brake.SpeedResistancePowerMapperTest:
+    32:51:public void testGetBrakeResistanceFromPolynomialFit()
+org.cowboycoders.turbotrainers.bushido.brake.TargetSlopeModel:
+    26:26:public double getTarget()
+    30:45:public static void main(java.lang.String[])
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonDescriptorTest:
+    32:38:public void test_button_lookup()
+    42:46:public void test_duration_lookup()
+    50:55:public void descriptor_build()
 org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor:
-    101:101:public long getRecievedTimestamp()
+    120:120:public long getRecievedTimestamp()
 org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor$Button:
-    43:44:public void setId(int)
-    47:47:public static org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor$Button fromId(int)
-org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDispatcherTest
-org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDispatcherTest$1
+    62:63:public void setId(int)
+    66:66:public static org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDescriptor$Button fromId(int)
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDispatcherTest:
+    33:34:public void resetRecieved()
+    108:142:public void test_trigger_within_window()
+    148:182:public void test_trigger_upper()
+    188:222:public void test_trigger_lower()
+    227:261:public void test_trigger_sequence()
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDispatcherTest$1:
+    63:63:public void onRequestKeepAlive()
 org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDispatcherTest$2
 org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDispatcherTest$3
 org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDispatcherTest$4
 org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressDispatcherTest$5
-org.cowboycoders.turbotrainers.bushido.headunit.BushidoData:
-    73:73:public double getHeartRate()
-    80:81:public void setHeartRate(double)
-    87:87:public double getSpeed()
-    94:94:public double getCadence()
-    101:101:public double getPower()
-    132:132:public double getSlope()
-    160:162:public void incrementSlope(double)
-    165:166:public void incrementSlope()
-    169:171:public void decrementSlope(double)
-    174:175:public void decrementSlope()
 org.cowboycoders.turbotrainers.bushido.headunit.BushidoHeadunit:
-    323:326:public void registerButtonPressListener(org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressListener)
-    338:338:public double getSlope()
-    350:353:public void incrementSlope(double)
-    356:359:public void decrementSlope(double)
-    362:363:public void incrementSlope()
-    366:367:public void decrementSlope()
-    374:374:public double getRealDistance()
-    639:639:public org.cowboycoders.ant.messages.MessageMetaWrapper send(org.cowboycoders.ant.messages.ChannelMessage)
-    644:644:public boolean supportsSpeed()
-    649:649:public boolean supportsPower()
-    654:654:public boolean supportsCadence()
-    659:659:public boolean supportsHeartRate()
-org.cowboycoders.turbotrainers.bushido.headunit.BushidoHeadunit$3:
-    468:470:public void sendMessage(org.cowboycoders.ant.messages.ChannelMessage)
+    352:355:public void registerButtonPressListener(org.cowboycoders.turbotrainers.bushido.headunit.BushidoButtonPressListener)
+    372:372:public double getRealDistance()
+    572:572:public boolean supportsSpeed()
+    577:577:public boolean supportsPower()
+    582:582:public boolean supportsCadence()
+    587:587:public boolean supportsHeartRate()
+    611:611:public double getTarget()
 org.cowboycoders.turbotrainers.bushido.headunit.BushidoHeadunit$BushidoUpdatesListener:
-    172:172:public void onRequestKeepAlive()
+    206:206:public void onRequestKeepAlive()
 org.cowboycoders.turbotrainers.bushido.headunit.BushidoInternalListener:
     public abstract void onRequestKeepAlive()
+org.cowboycoders.turbotrainers.bushido.headunit.BushidoTargetSlopeModel:
+    private static final int SLOPE_BYTE_1
+    private static final int SLOPE_BYTE_2
+    private static final int SLOPE_MULTIPLIER
+    private static final double SLOPE_MAX
+    private static final double SLOPE_MIN
+    private static final int WEIGHT_BYTE
+    106:106:public double getTarget()
+org.cowboycoders.utils.Averager
+org.cowboycoders.utils.Constants:
+    4:6:private Constants()
+org.cowboycoders.utils.Conversions
+org.cowboycoders.utils.FixedPeriodUpdater:
+    87:107:public static void main(java.lang.String[])
+org.cowboycoders.utils.FixedPeriodUpdater$1
 org.cowboycoders.utils.IterationUtils:
-    4:4:private IterationUtils()
-org.cowboycoders.utils.TrapezoidIntegral:
-    36:42:public static void main(java.lang.String[])
+    25:25:private IterationUtils()
+    34:38:public static void operateOnAll(java.lang.Iterable,org.cowboycoders.utils.IterationOperator,org.cowboycoders.ant.utils.Filter)
+org.cowboycoders.utils.RunningAverager:
+    28:28:public java.lang.Double getLastValue()
+    45:55:public static void main(java.lang.String[])
+org.cowboycoders.utils.SimpleCsvLogger:
+    60:68:public varargs SimpleCsvLogger(java.lang.String,java.lang.String,java.lang.String[])
+    71:72:public varargs SimpleCsvLogger(java.io.File,java.lang.String[])
+    81:84:public synchronized void append(boolean)
+    92:95:public synchronized void addTime(boolean)
+    102:103:public synchronized void setComment(java.lang.CharSequence)
+    241:250:public static void main(java.lang.String[])
+org.cowboycoders.utils.SlopeTimeAverager:
+    48:48:public java.lang.Double getLastValue()
+    82:98:public static void main(java.lang.String[])
+org.cowboycoders.utils.SlopeTimeAverager$1
+org.cowboycoders.utils.TrapezoidIntegrator:
+    61:67:public static void main(java.lang.String[])
 org.teleal.android.util.FixedAndroidHandler
 org.teleal.android.util.FixedAndroidHandler$1
