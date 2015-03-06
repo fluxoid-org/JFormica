@@ -187,7 +187,7 @@ public class Node {
 	/**
 	 * flags that we did the reset, as oppose to someone else (externally)
 	 */
-	private boolean weReset;
+	private volatile boolean weReset;
 
 	public Node(AntChipInterface antchip) {
 		antChipInterface = antchip;
@@ -809,7 +809,7 @@ public class Node {
 	 * @param powerLevel
 	 *            newPowerLevel
 	 */
-	public void setTransmitPower(int powerLevel) {
+	public synchronized void setTransmitPower(int powerLevel) {
 		StandardMessage msg = new TxPowerMessage(powerLevel);
 		sendAndWaitForResponseNoError(msg);
 	}
@@ -822,7 +822,7 @@ public class Node {
 	 * @param enableRssi
 	 * @param enableTimestamps
 	 */
-	public void setLibConfig(boolean enableChannelId, boolean enableRssi,
+	public synchronized void setLibConfig(boolean enableChannelId, boolean enableRssi,
 			boolean enableTimestamps) {
 		StandardMessage msg = new LibConfigMessage(enableChannelId, enableRssi,
 				enableTimestamps);
@@ -835,7 +835,7 @@ public class Node {
 	 * 
 	 * @param enable
 	 */
-	public void enableExtendedMessages(boolean enable) {
+	public synchronized void enableExtendedMessages(boolean enable) {
 		StandardMessage msg = new EnableExtendedMessagesMessage(enable);
 		sendAndWaitForResponseNoError(msg);
 	}

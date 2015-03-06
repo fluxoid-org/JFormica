@@ -1012,7 +1012,7 @@ public class Channel {
 	 * @return {TODO : fix this link ChannelStatusResponse)} encompassing response
 	 * @throws ChannelError on timeout, if interrupted whilst waiting or status not received;
 	 */
-	public ChannelStatusResponse requestStatus() throws ChannelError {
+	public synchronized ChannelStatusResponse requestStatus() throws ChannelError {
 		
 		ChannelRequestMessage msg = new  ChannelRequestMessage(Request.CHANNEL_STATUS);
 		
@@ -1049,7 +1049,7 @@ public class Channel {
 	   * @param index the index to change
 	   * @param id {@link ChannelId} to filter
 	   */
-	  public void updateExclusionInclusionList(int index, ChannelId id) {
+	  public synchronized  void updateExclusionInclusionList(int index, ChannelId id) {
 		  	ChannelMessage msg = new AddChannelIdMessage(id.getDeviceNumber(),
 		  			id.getDeviceType(),
 		  			id.getTransmissonType(), 
@@ -1076,7 +1076,7 @@ public class Channel {
 	   * @param listSize the number of ids you want to exclude/ include
 	   * @param exclude true for blacklist, false fore white-list
 	   */
-	  public void configureExclusionInclusionList(int listSize, boolean exclude) {
+	  public synchronized  void configureExclusionInclusionList(int listSize, boolean exclude) {
 		  	ChannelMessage msg = new ConfigListIdMessage(listSize,exclude);
 			MessageCondition condition = MessageConditionFactory
 					.newResponseCondition(msg.getId(),
@@ -1166,7 +1166,7 @@ public class Channel {
 		 * Maximum powerLevel 4, minimum 0. Some chips only support up to level 3.
 		 * @param powerLevel newPowerLevel 
 		 */
-		public void setTransmitPower(int powerLevel) {
+		public synchronized void setTransmitPower(int powerLevel) {
 			ChannelMessage msg = new ChannelTxPowerMessage(powerLevel);
 			sendAndWaitForResponseNoError(msg);
 		}
@@ -1177,7 +1177,7 @@ public class Channel {
 		 * @param threshold new threshold, must be between 0 and 10. A zero value will disable, whilst
 		 * 		  larger values will find devices further away
 		 */
-		public void setProximitySearchThreshold(int threshold) {
+		public synchronized void setProximitySearchThreshold(int threshold) {
 			ChannelMessage msg = new ProximitySearchMessage(threshold);
 			sendAndWaitForResponseNoError(msg);
 		}
@@ -1190,7 +1190,7 @@ public class Channel {
 		 * @param frequency2 The secondary operating frequency offset in MHz from 2400MHz. Valid range: 0-124 Mhz
 		 * @param frequency3 The tertiary operating frequency offset in MHz from 2400MHz. Valid range: 0-124 Mhz
 		 */
-		public void configureFrequencyAgility(int frequency1, int frequency2,  int frequency3) {
+		public synchronized void configureFrequencyAgility(int frequency1, int frequency2,  int frequency3) {
 			ChannelMessage msg = new FrequencyAgilityMessage(frequency1,frequency2,frequency3);
 			sendAndWaitForResponseNoError(msg);
 		}
@@ -1200,7 +1200,7 @@ public class Channel {
 		 * Low priority search does not interrupt other channels; Support chip dependent.
 		 * @param timeout timeout in seconds / 2.5. Maximum value: 255, 0 disables.
 		 */
-		public void setLowPrioirtySearchTimeout(int timeout) {
+		public synchronized void setLowPrioirtySearchTimeout(int timeout) {
 			ChannelMessage msg = new ChannelLowPrioritySearchTimeoutMessage(timeout);
 			sendAndWaitForResponseNoError(msg);
 		}
@@ -1211,7 +1211,7 @@ public class Channel {
 		 * 
 		 * @param priority new priority. Default value: 0 ; Range: 0-255 
 		 */
-		public void setSearchPriority(int priority) {
+		public synchronized void setSearchPriority(int priority) {
 			ChannelMessage msg = new ChannelSearchPriorityMessage(priority);
 			sendAndWaitForResponseNoError(msg);
 		}
@@ -1224,7 +1224,7 @@ public class Channel {
 		 * All other channels must be closed to use this method. The channel should
 		 * be assigned and configured as a slave. 
 		 */
-		public void openInRxScanMode() {
+		public synchronized void openInRxScanMode() {
 			ChannelMessage msg = new ChannelOpenRxScanModeMessage();
 			sendAndWaitForResponseNoError(msg);
 		}
