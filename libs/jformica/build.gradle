@@ -14,7 +14,7 @@ subprojects { project ->
     apply plugin: 'license'
 
     license {
-        header rootProject.file('LICENSE')
+        header file('../LICENSE')
         // strictCheck true
     }
 }

@@ -17,10 +17,10 @@ dependencies {
     compile fileTree(dir: 'java_lib', include: '*.jar')
     testCompile fileTree(dir: 'java_lib', include: '*.jar')
     testRuntime fileTree(dir: 'config', include: '*.properties')
-    testRuntime project(':CyclismoProject:libs:jformica:jformica_core')
-    compile project(':CyclismoProject:Location')
-    compile project(':CyclismoProject:libs:jformica:jformica_core')
-    compile project(':CyclismoProject:libs:jformica:jformica_jsr80')
+    testRuntime project(':libs:jformica:jformica_core')
+    compile project(':Location')
+    compile project(':libs:jformica:jformica_core')
+    compile project(':libs:jformica:jformica_jsr80')
 }
 
 sourceSets {

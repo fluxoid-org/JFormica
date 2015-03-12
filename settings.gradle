@@ -1,4 +1,13 @@
+include ':Cyclismo:Cyclismo', ':mylibrary'
+include ':Cyclismo:CyclismoLib'
+include ':Cyclismo:CyclismoTest'
+include ':Cyclismo:google-play-services_lib'
+
 include ':Location'
 include ':JTurbo'
+
+include ':libs:aFileChooser:aFileChooser'
 include ':libs:jformica:jformica_jsr80'
+include ':libs:jformica:jformica_android'
 include ':libs:jformica:jformica_core'
+

@@ -10,7 +10,7 @@ buildscript {
 
 
 dependencies {
-    compile project(':CyclismoProject:libs:jformica:jformica_core'), fileTree(dir: 'libs', include: '**/*.jar')
+    compile project(':libs:jformica:jformica_core'), fileTree(dir: 'libs', include: '**/*.jar')
    testCompile "junit:junit:4.8.2"
 }
     
