@@ -40,3 +40,10 @@ libs/**/.gradle
 
 Cyclismo/Cyclismo/gen/*
 Cyclimso/Cyclismo/build/*
+
+log.txt
+.gradle
+gradle
+build
+gen
+bin
