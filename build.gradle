@@ -1,17 +1,61 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
         mavenCentral()
-        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.0'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
+    }
+	
+	
+}
+
+subprojects { project ->
+    logger.info('applying license to ' + project.name)
+    apply plugin: 'license'
+
+    license {
+        header file('../LICENSE')
+        // strictCheck true
     }
 }
 
 allprojects {
+    version = '0.0.5-SNAPSHOT'
     repositories {
-        jcenter()
+        mavenCentral()
     }
 
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked"
+    }
+
+    apply plugin: 'idea'
+    apply plugin: 'maven'
+
+//	apply plugin: 'maven-publish'
+//	group = 'org.cowboycoders.ant'
+//	version = '0.0.5-SNAPSHOT'
+//	publishing {
+//    	publications {
+//        	mavenJava(MavenPublication) {
+//            	from components.
+//        	}
+//    	}
+//    	repositories {
+//        	maven {
+//            	// change to point to your repo, e.g. http://my.org/repo
+//            	url "$buildDir/repo"
+//        	}
+//    	}
+//	}	
+
+	
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2'
+}
+
+
+
+ 

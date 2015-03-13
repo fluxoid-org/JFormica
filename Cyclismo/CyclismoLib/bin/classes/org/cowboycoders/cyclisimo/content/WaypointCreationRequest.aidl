@@ -1,2 +1,0 @@
-package org.cowboycoders.cyclisimo.content;
-parcelable WaypointCreationRequest;

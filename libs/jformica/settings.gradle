@@ -1,6 +1,0 @@
-include 'jformica_core', 'jformica_jsr80'
-
-
-if (!System.properties.containsKey('skip.android')) {
-    include 'jformica_android' , 'jformica_examples'
-}

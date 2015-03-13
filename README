@@ -1,12 +1,36 @@
 
-File -> import -> General -> existing projects into workspace -> choose this folder
+JFormica is an ANT+ library for java. It is designed to take some of strain away from writing ant enabled applications.
 
-clean all projects and rebuild
+Compatability: 
 
-I've included a linux x86_64 javax usb implementation. You may need to recompile/ use an alternative implementation.
+Ant+ usb stick - all operating systems with an javax.usb implementation / Android (using the wrapper for dynastream's antlib)
+Ant+ enabled phone - Android only
 
-Set environmental vars:
-ANDROID_SDK - location to your android sdk platforms directory eg /home/will/android-sdks/platforms
-CYCLISMO_ROOT - location of CyclismoProject git repo (or workspace if you copied directories)
+It is based on python-ant (https://github.com/mvillalba/python-ant) by Martín Raúl Villalba.
 
-Build in eclipse
+EXAMPLE CODE:
+
+See :
+	 https://github.com/cowboy-coders/jformica_examples
+	 https://github.com/cowboy-coders/JFormica/tree/master/jformica_examples
+
+COMPILE INSTRUCTIONS:
+
+To compile either import each folder into eclipse or compile using gradle.
+
+General notes
+
+jsr80: you should copy a jar containing a javax.usb implementation to jformica_jsr80/libs/jsr80
+android - you need to copy dynastreams antlib.jar to jformica_android/libs
+ 
+Gradle notes
+
+To compile seperately, enter the desired compoents folder and issue 'gradle build'. Doing so from the project root will attempt to build all three. Add the resulting jars to your classpath.
+
+USAGE INSTRUCTIONS:
+
+Please see:
+
+       https://github.com/cowboy-coders/JFormica/tree/master/jformica_examples
+
+
