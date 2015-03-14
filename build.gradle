@@ -5,8 +5,6 @@ buildscript {
     dependencies {
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
     }
-	
-	
 }
 
 subprojects { project ->
@@ -30,32 +28,10 @@ allprojects {
     }
 
     apply plugin: 'idea'
-    apply plugin: 'maven'
-
-//	apply plugin: 'maven-publish'
-//	group = 'org.cowboycoders.ant'
-//	version = '0.0.5-SNAPSHOT'
-//	publishing {
-//    	publications {
-//        	mavenJava(MavenPublication) {
-//            	from components.
-//        	}
-//    	}
-//    	repositories {
-//        	maven {
-//            	// change to point to your repo, e.g. http://my.org/repo
-//            	url "$buildDir/repo"
-//        	}
-//    	}
-//	}	
-
-	
+    apply plugin: 'maven'	
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.2'
 }
 
-
-
- 

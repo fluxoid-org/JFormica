@@ -12,15 +12,13 @@ buildscript {
 
 android {
     compileSdkVersion 16
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "22"
 
-//    defaultConfig {
-//        minSdkVersion 23
-//        targetSdkVersion 23
-//    }
-}
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 16
+    }
 
-android {
     sourceSets {
         main {
             manifest {
