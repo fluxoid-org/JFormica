@@ -15,10 +15,27 @@ subprojects { project ->
         header file('../LICENSE')
         // strictCheck true
     }
+
+    apply plugin: 'findbugs'
+
+    findbugs { 
+        // your findbugs configuration.
+        ignoreFailures = true 
+
+    }
+
+		tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+ }
+
 }
 
 allprojects {
     version = '0.0.5-SNAPSHOT'
+
     repositories {
         mavenCentral()
     }
