@@ -125,7 +125,7 @@ public class Channel {
 	 * The channel messaging period in seconds * 32768. Maximum messaging period
 	 * is ~2 seconds.
 	 * 
-	 * default : {@link RAW_CHANNEL_PERIOD_DEFAULT}
+	 * default : {@see RAW_CHANNEL_PERIOD_DEFAULT}
 	 * 
 	 * Raw : not converted to seconds
 	 */
@@ -172,8 +172,8 @@ public class Channel {
 	}
 
 	/**
-	 * @param isFree
-	 *            the isFree to set
+	 * @param free
+	 *            free the channel
 	 */
 	protected synchronized void setFree(boolean free) {
 		LOGGER.entering(Channel.class.getSimpleName(), "setFree");
@@ -482,7 +482,7 @@ public class Channel {
 	 * Sets network of channel and assigns it
 	 *
 	 * TODO : Fix see org.cowboycoders.ant.messages.ChannelAssignMessage
-	 * @param netKeyName TODO : document this
+	 * @param key network key to use
 	 * @param type channel type
 	 * @param extended extended assignment parameters
 	 */
@@ -534,7 +534,7 @@ public class Channel {
 	}
 
 	/**
-	 * @see org.cowboycoders.ant.messages.ChannelFrequencyMessage
+	 * @see org.cowboycoders.ant.messages.config.ChannelFrequencyMessage
 	 * @param channelFrequency
 	 */
 	public void setFrequency(int channelFrequency) {
