@@ -18,6 +18,8 @@
  */
 package org.cowboycoders.ant.utils;
 
+import org.fluxoid.utils.Filter;
+
 import java.util.ArrayList;
 import java.util.List;
 
