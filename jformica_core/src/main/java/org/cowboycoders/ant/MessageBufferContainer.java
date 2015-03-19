@@ -21,7 +21,7 @@ package org.cowboycoders.ant;
 import org.cowboycoders.ant.events.MessageCondition;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.utils.Containable;
-import org.cowboycoders.ant.utils.FixedSizeLifo;
+import org.cowboycoders.location.FixedSizeLifo;
 
 public class MessageBufferContainer<T extends Containable<? extends StandardMessage>> extends FixedSizeLifo<T> {
 

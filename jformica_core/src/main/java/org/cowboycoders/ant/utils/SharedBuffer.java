@@ -18,10 +18,12 @@
  */
 package org.cowboycoders.ant.utils;
 
+import org.cowboycoders.location.FixedSizeFifo;
+import org.cowboycoders.location.FixedSizeQueue;
+
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
 
 public class SharedBuffer<V> {
   
