@@ -18,8 +18,8 @@
  */
 package org.cowboycoders.ant.utils;
 
-import org.cowboycoders.location.FixedSizeFifo;
-import org.cowboycoders.location.FixedSizeQueue;
+import org.fluxoid.utils.FixedSizeFifo;
+import org.fluxoid.utils.FixedSizeQueue;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;

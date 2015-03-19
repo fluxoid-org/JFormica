@@ -22,7 +22,7 @@ dependencies {
     testCompile "junit:junit:4.8.2"
     testCompile 'org.mockito:mockito-all:1.9.5'
     testCompile 'net.vidageek:mirror:1.6.1'
-    compile project(':Location')
+    compile project(':FluxUtils')
     localiseLibs fileTree(dir: '$buildDir/output/lib', include: '**/*.jar')
 }
 
