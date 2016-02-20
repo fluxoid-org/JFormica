@@ -84,7 +84,7 @@ public class Node {
 
 	public final static Logger LOGGER = Logger.getLogger(EventMachine.class
 			.getName());
-	private Set<AntLogger> antLoggers = Collections
+	private final Set<AntLogger> antLoggers = Collections
 			.newSetFromMap(new WeakHashMap<AntLogger, Boolean>());
 
 	private static class TransmissionErrorCondition implements MessageCondition {
