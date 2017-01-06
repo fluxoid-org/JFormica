@@ -23,6 +23,9 @@ package org.cowboycoders.ant.events;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -31,8 +34,24 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author will
  *
  */
-public class BroadcastMessenger<V> implements MessageDispatcher<V> {
+public class ThreadedBroadcastMessenger<V> implements MessageDispatcher<V> {
 
+	private static final ExecutorService SHARED_SINGLE_THREAD_EXECUTOR = Executors
+			.newSingleThreadExecutor(new ThreadFactory() {
+				@Override
+				public Thread newThread(Runnable runnable) {
+					Thread thread = Executors.defaultThreadFactory().newThread(
+							runnable);
+					thread.setName("BroadcastMessengerThread");
+					thread.setDaemon(true);
+					return thread;
+				}
+			});
+
+	/**
+	 * Used to concurrently notify listeners
+	 */
+	ExecutorService dispatchPool;
 
 	/**
 	 * Contains all classes listening for new messages
@@ -43,6 +62,18 @@ public class BroadcastMessenger<V> implements MessageDispatcher<V> {
 	 * Used to lock {@code listeners}
 	 */
 	ReentrantReadWriteLock listenerLock = new ReentrantReadWriteLock();
+
+	/**
+	 * Messages dispatched in shared single threaded pool
+	 */
+	public ThreadedBroadcastMessenger() {
+		dispatchPool = SHARED_SINGLE_THREAD_EXECUTOR;
+	}
+
+
+	public ThreadedBroadcastMessenger(ExecutorService dispatchPool) {
+		this.dispatchPool = dispatchPool;
+	}
 
 	/**
 	 * Adds a listener
@@ -98,7 +129,13 @@ public class BroadcastMessenger<V> implements MessageDispatcher<V> {
 		try {
 			listenerLock.readLock().lock();
 			for (final BroadcastListener<V> listener : listeners) {
-				listener.receiveMessage(message);
+				;
+				dispatchPool.execute(new Runnable() {
+					@Override
+					public void run() {
+						listener.receiveMessage(message);
+					}
+				});
 			}
 		} finally {
 			listenerLock.readLock().unlock();
