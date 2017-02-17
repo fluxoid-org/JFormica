@@ -731,6 +731,7 @@ public class Node {
 			return; // throw new AntError("already stopped");
 		evm.stop();
 		antChipInterface.stop();
+    antChipInterface.unregisterStatusMessenger(mStatusMessenger);
 		running = false;
 	}
 

@@ -53,6 +53,8 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
     AntChipInterface {
 
   private static final String TAG = "AndroidAntTransceiver";
+  private final BroadcastMessenger<AntStatusUpdate> externalStatusMessenger;
+  private final BroadcastMessenger<byte[]> externalRxMessenger;
 
   /**
    * Context which controls lifetime
@@ -180,15 +182,14 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
   public AndroidAntTransceiver(Context context,
       BroadcastMessenger<byte[]> rxMessenger,
       BroadcastMessenger<AntStatusUpdate> statusMessenger) {
-    this.registerStatusMessenger(statusMessenger);
-    this.registerRxMesenger(rxMessenger);
+    this.externalStatusMessenger = statusMessenger;
+    this.externalRxMessenger = rxMessenger;
+
     this.mContext = context;
 
     mStatusMessenger = new BroadcastMessenger<AntStatusUpdate>();
 
     mStatusMessenger.addBroadcastListener(new StatusListener());
-
-    this.registerStatusMessenger(mStatusMessenger);
 
     mClaimedAntInterface = false;
 
@@ -223,6 +224,10 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
         Log.d(TAG, "Already started - ignoring request to start again");
         return true;
       }
+
+      this.registerStatusMessenger(externalStatusMessenger);
+      this.registerRxMessenger(externalRxMessenger);
+      this.registerStatusMessenger(mStatusMessenger);
 
       return startHelper();
 
@@ -928,6 +933,10 @@ public class AndroidAntTransceiver extends AbstractAntTransceiver implements
 
       setRunning(false);
       mAntReceiver.releaseService();
+
+      this.unregisterStatusMessenger(externalStatusMessenger);
+      this.unregisterRxMessenger(externalRxMessenger);
+      this.unregisterStatusMessenger(mStatusMessenger);
 
       while (mAntReceiver.isServiceConnected()) {
         Thread.sleep(100);

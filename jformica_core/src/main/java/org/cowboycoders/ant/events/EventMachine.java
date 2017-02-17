@@ -150,7 +150,6 @@ public class EventMachine  {
     this.chipInterface = chipInterface;
     this.rawMessenger = new BroadcastMessenger<byte []>();
     this.convertedMessenger = new BroadcastMessenger<StandardMessage>();
-    chipInterface.registerRxMesenger(rawMessenger);
     rawMessenger.addBroadcastListener(new EventPump());
   }
   
@@ -212,6 +211,7 @@ public class EventMachine  {
 
   public synchronized void start() {
     if (running) return;
+    chipInterface.registerRxMessenger(rawMessenger);
     chipInterface.start();
     running = true;
   }
@@ -219,6 +219,7 @@ public class EventMachine  {
   public synchronized void stop() {
     if (!running) return;
     chipInterface.stop();
+    chipInterface.unregisterRxMessenger(rawMessenger);
     running  = false;
   }
   
