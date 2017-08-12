@@ -60,13 +60,11 @@ public class BroadcastMessenger<V> implements MessageDispatcher<V> {
 	}
 
 	/**
-	 * removes a listener
-	 *
-	 * @param listener TODO: document this
+	 * @param listener to be removed
 	 */
 	@Override
 	public void removeBroadcastListener(BroadcastListener<V> listener) {
-		try {
+    try {
 			listenerLock.writeLock().lock();
 			listeners.remove(listener);
 		} finally {
@@ -96,12 +94,16 @@ public class BroadcastMessenger<V> implements MessageDispatcher<V> {
 	@Override
 	public void sendMessage(final V message) {
 		try {
-			listenerLock.readLock().lock();
-			for (final BroadcastListener<V> listener : listeners) {
+      // write lock, so BroadcastListener can remove itself in receiveMessage()
+      // body. This guarantees it will not receive any more messages.
+			listenerLock.writeLock().lock();
+      // clone, so don't modify underlying collection during iteration
+      HashSet<BroadcastListener<V>> clone = new HashSet<>(listeners);
+			for (final BroadcastListener<V> listener : clone) {
 				listener.receiveMessage(message);
 			}
 		} finally {
-			listenerLock.readLock().unlock();
+			listenerLock.writeLock().unlock();
 		}
 
 	}
