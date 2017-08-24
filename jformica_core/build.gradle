@@ -2,8 +2,6 @@ apply plugin: 'java'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-
-
 apply plugin: 'eclipse'
 
 task "create-dirs" << {
@@ -24,15 +22,16 @@ dependencies {
     testCompile "junit:junit:4.8.2"
     testCompile 'org.mockito:mockito-all:1.9.5'
     testCompile 'net.vidageek:mirror:1.6.1'
+    compile project(':FluxUtils')
     localiseLibs fileTree(dir: '$buildDir/output/lib', include: '**/*.jar')
 }
 
-task copyJarToAndroid(type: Copy, dependsOn: 'deleteAndroidJar') {
-    from 'build/libs'
-    into rootDir.getAbsolutePath() + '/jformica_android/libs'
-    include '**/jformica_core*.jar'
-
-}
+//task copyJarToAndroid(type: Copy, dependsOn: 'deleteAndroidJar') {
+//    from 'build/libs'
+//    into rootDir.getAbsolutePath() + '/jformica_android/libs'
+//    include '**/jformica_core*.jar'
+//
+//}
 
 task deleteAndroidJar {
     file(rootDir.getAbsolutePath() + '/jformica_android/libs').listFiles().findAll {it.name.startsWith('jformica_core')}.collect {if (it instanceof java.io.File) it.delete()}
@@ -46,15 +45,15 @@ task deleteAndroidJar {
 //    }
 //}
 
-gradle.taskGraph.afterTask { Task task, TaskState state ->
-    if (state.failure) {
-    }
-    else {
-        if (task.name == 'jar') {
-            tasks['copyJarToAndroid'].execute()
-        }
-    }
-}
+//gradle.taskGraph.afterTask { Task task, TaskState state ->
+//    if (state.failure) {
+//    }
+ //   else {
+ //       if (task.name == 'jar') {
+ //           tasks['copyJarToAndroid'].execute()
+ //       }
+ //   }
+//}
 
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -72,11 +71,11 @@ artifacts {
     archives javadocJar
 }
 
-task copyToLib(type: Copy) {
-    into "$buildDir/lib"
-    from configurations.testCompile
-}
-build.dependsOn(copyToLib)  
+//task copyToLib(type: Copy) {
+//    into "$buildDir/lib"
+//    from configurations.testCompile
+//}
+//build.dependsOn(copyToLib)  
 
 eclipse {
   project {

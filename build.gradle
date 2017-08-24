@@ -3,10 +3,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.13.+', 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
     }
-	
-	
 }
 
 subprojects { project ->
@@ -14,13 +12,30 @@ subprojects { project ->
     apply plugin: 'license'
 
     license {
-        header rootProject.file('LICENSE')
+        header file('../LICENSE')
         // strictCheck true
     }
+
+    apply plugin: 'findbugs'
+
+    findbugs { 
+        // your findbugs configuration.
+        ignoreFailures = true 
+
+    }
+
+		tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+ }
+
 }
 
 allprojects {
     version = '0.0.5-SNAPSHOT'
+
     repositories {
         mavenCentral()
     }
@@ -30,32 +45,10 @@ allprojects {
     }
 
     apply plugin: 'idea'
-    apply plugin: 'maven'
-
-//	apply plugin: 'maven-publish'
-//	group = 'org.cowboycoders.ant'
-//	version = '0.0.5-SNAPSHOT'
-//	publishing {
-//    	publications {
-//        	mavenJava(MavenPublication) {
-//            	from components.
-//        	}
-//    	}
-//    	repositories {
-//        	maven {
-//            	// change to point to your repo, e.g. http://my.org/repo
-//            	url "$buildDir/repo"
-//        	}
-//    	}
-//	}	
-
-	
+    apply plugin: 'maven'	
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.1'
+    gradleVersion = '2.2'
 }
 
-
-
- 

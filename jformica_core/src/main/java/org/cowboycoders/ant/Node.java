@@ -84,7 +84,7 @@ public class Node {
 
 	public final static Logger LOGGER = Logger.getLogger(EventMachine.class
 			.getName());
-	private Set<AntLogger> antLoggers = Collections
+	private final Set<AntLogger> antLoggers = Collections
 			.newSetFromMap(new WeakHashMap<AntLogger, Boolean>());
 
 	private static class TransmissionErrorCondition implements MessageCondition {
@@ -92,7 +92,7 @@ public class Node {
 		private StandardMessage transmittedMessage;
 
 		/**
-		 * Throws an {@link RumtimeException} if an error is raised trying to
+		 * Throws an {@see RumtimeException} if an error is raised trying to
 		 * send message
 		 * 
 		 * @param msg
@@ -731,6 +731,7 @@ public class Node {
 			return; // throw new AntError("already stopped");
 		evm.stop();
 		antChipInterface.stop();
+    antChipInterface.unregisterStatusMessenger(mStatusMessenger);
 		running = false;
 	}
 
@@ -758,7 +759,7 @@ public class Node {
 	}
 
 /**
-   * Registers an event listener. To remove user {@link Node#removeRxListener(BroadcastListener));
+   * Registers an event listener. To remove user {@link Node#removeRxListener(BroadcastListener)}
    * @param handler event handler
    */
 	public void registerEventHandler(NodeEventHandler handler) {
@@ -818,9 +819,9 @@ public class Node {
 	 * Request extra info in extended message bytes. Not all chips support all
 	 * of the options (especially rssi) if any.
 	 * 
-	 * @param enableChannelId
-	 * @param enableRssi
-	 * @param enableTimestamps
+	 * @param enableChannelId request channel ids
+	 * @param enableRssi request rssi info
+	 * @param enableTimestamps request timestamps
 	 */
 	public synchronized void setLibConfig(boolean enableChannelId, boolean enableRssi,
 			boolean enableTimestamps) {
