@@ -1,0 +1,54 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
+    }
+}
+
+subprojects { project ->
+    logger.info('applying license to ' + project.name)
+    apply plugin: 'license'
+
+    license {
+        header file('../LICENSE')
+        // strictCheck true
+    }
+
+    apply plugin: 'findbugs'
+
+    findbugs { 
+        // your findbugs configuration.
+        ignoreFailures = true 
+
+    }
+
+		tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+ }
+
+}
+
+allprojects {
+    version = '0.0.5-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked"
+    }
+
+    apply plugin: 'idea'
+    apply plugin: 'maven'	
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2'
+}
+

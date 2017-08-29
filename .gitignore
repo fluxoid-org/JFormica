@@ -1,0 +1,17 @@
+*~
+*.class
+*/build
+.gradle/*
+local.settings
+*.jar
+.idea
+*.iml
+*.iws
+*.ipr
+jformica_android/gen
+**/.settings
+*.project
+*.classpath
+
+out/*
+gen
