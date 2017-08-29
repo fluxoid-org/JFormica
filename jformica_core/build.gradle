@@ -4,7 +4,7 @@ targetCompatibility = 1.7
 
 apply plugin: 'eclipse'
 
-task "create-dirs" << {
+task "create-dirs" {
    sourceSets*.java.srcDirs*.each { it.mkdirs() }
    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
 }
