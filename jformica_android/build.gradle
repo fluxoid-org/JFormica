@@ -19,6 +19,7 @@ android {
         minSdkVersion 8
         targetSdkVersion 16
     }
+}
 
 android {
     sourceSets {
