@@ -1,21 +1,25 @@
+
 buildscript {
     repositories {
         mavenCentral()
     }
-    dependencies {
-        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
-    }
+}
+
+plugins {
+    id "com.github.hierynomus.license" version "0.14.0"
 }
 
 subprojects { project ->
-    logger.info('applying license to ' + project.name)
-    apply plugin: 'license'
+    // only on direct descendents
+    if (project.projectDir.getAbsolutePath().startsWith(rootProject.projectDir.getAbsolutePath())) {
+           logger.info('applying license to ' + project.name)
+	   apply plugin: 'license'
 
-    license {
-        header file('../LICENSE')
-        // strictCheck true
+    	   license {
+               header new File(rootProject.projectDir, "LICENSE")
+	       ignoreFailures = true
+	   }
     }
-
     apply plugin: 'findbugs'
 
     findbugs { 
@@ -24,7 +28,7 @@ subprojects { project ->
 
     }
 
-		tasks.withType(FindBugs) {
+tasks.withType(FindBugs) {
     reports {
         xml.enabled = false
         html.enabled = true
@@ -49,6 +53,6 @@ allprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.2'
+    gradleVersion = '4.1'
 }
 

@@ -1,8 +1,10 @@
+**/#*
 *~
 *.class
 */build
 .gradle/*
 local.settings
+local.properties
 *.jar
 .idea
 *.iml
