@@ -7,19 +7,20 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.3'
     }
 }
 
 android {
     compileSdkVersion 16
-    buildToolsVersion "24"
+    buildToolsVersion "25"
 
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 16
     }
 
+android {
     sourceSets {
         main {
             manifest {
@@ -27,6 +28,7 @@ android {
             }
             java {
                 srcDir 'src'
+                exclude 'some/unwanted/package/**'
             }
             res {
                 srcDir 'res'
@@ -38,8 +40,20 @@ android {
                 srcDir 'src'
             }
         }
+        test {
+            java {
+                srcDir 'tests/src'
+            }
+        }
     }
 }
+
+android {
+    lintOptions {
+        abortOnError false
+    }
+}
+
 
 dependencies {
     compile project(':jformica_core'), fileTree(dir: 'libs', include: '**/*.jar')
