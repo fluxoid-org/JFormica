@@ -15,3 +15,5 @@ jformica_android/gen
 
 out/*
 gen
+build/**
+local.properties
