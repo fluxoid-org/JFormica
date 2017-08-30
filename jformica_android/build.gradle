@@ -5,9 +5,10 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
+	google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0-beta2'
     }
 }
 
@@ -57,7 +58,8 @@ android {
 
 
 dependencies {
-    compile project(':jformica_core'), fileTree(dir: 'libs', include: '**/*.jar')
+    implementation project(':jformica_core')
+    compileOnly fileTree(dir: 'libs', include: '**/*.jar')
 }
 
 findbugs {
