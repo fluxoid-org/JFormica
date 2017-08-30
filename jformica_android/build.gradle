@@ -13,7 +13,7 @@ buildscript {
 }
 
 android {
-    compileSdkVersion 16
+    compileSdkVersion 19
     buildToolsVersion "25"
 
     defaultConfig {
