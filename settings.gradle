@@ -12,6 +12,10 @@ if (localFile.canRead()) {
     }
 }
 
+if (findProject(":FluxUtils") == null) {
+   throw new GradleException("please make a local.properties defining fluxutils_dir")
+}
+
 if (!System.properties.containsKey('skip.android')) {
     include 'jformica_android' , 'jformica_examples'
 }
