@@ -8,6 +8,10 @@ buildscript {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 
 dependencies {
     compile project(':jformica_core'), fileTree(dir: 'libs', include: '**/*.jar')

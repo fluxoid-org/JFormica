@@ -9,6 +9,10 @@ task "create-dirs" {
    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
 }
 
+repositories {
+   mavenCentral()
+}
+
 configurations {
    localiseLibs
 }
