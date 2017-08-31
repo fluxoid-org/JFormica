@@ -25,6 +25,10 @@ android - you need to copy dynastreams antlib.jar to jformica_android/libs
  
 Gradle notes
 
+You need to create a file called local.properties in the root directory of this repository defining fluxutils_dir. This should point to root of the FluxUtils repository, e.g:
+
+fluxutils_dir=/home/fluxoid/code/CyclismoProject/Cyclismo/libs/FluxUtils
+
 To compile seperately, enter the desired compoents folder and issue 'gradle build'. Doing so from the project root will attempt to build all three. Add the resulting jars to your classpath.
 
 USAGE INSTRUCTIONS:

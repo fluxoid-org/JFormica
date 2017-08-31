@@ -19,6 +19,7 @@
 package org.cowboycoders.ant.interfaces;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.locks.Lock;
@@ -31,13 +32,13 @@ public abstract class AbstractAntTransceiver implements AntChipInterface  {
   /**
    * Messengers to inform when rxRecieved
    */
-  private Set<BroadcastMessenger<byte[]>> mRxMessengers = Collections.newSetFromMap(new WeakHashMap<BroadcastMessenger<byte[]>,Boolean>());
+  private Set<BroadcastMessenger<byte[]>> mRxMessengers = new HashSet<>();
   
 
   /**
    * messengers to inform when chip status changes
    */
-  private Set<BroadcastMessenger<AntStatusUpdate>> mStatusMessengers = Collections.newSetFromMap(new WeakHashMap<BroadcastMessenger<AntStatusUpdate>,Boolean>());
+  private Set<BroadcastMessenger<AntStatusUpdate>> mStatusMessengers = new HashSet<>();
   
   private final Lock messengerLock = new ReentrantLock();
   
@@ -75,7 +76,7 @@ public abstract class AbstractAntTransceiver implements AntChipInterface  {
    * keep a reference as stored in a weak list
    */
   @Override
-  public void registerRxMesenger(BroadcastMessenger<byte[]> rxMessenger) {
+  public void registerRxMessenger(BroadcastMessenger<byte[]> rxMessenger) {
     if(rxMessenger == null) {
       return;
     }
@@ -87,6 +88,19 @@ public abstract class AbstractAntTransceiver implements AntChipInterface  {
     }
     
     
+  }
+
+  @Override
+  public void unregisterRxMessenger(BroadcastMessenger<byte[]> rxMessenger) {
+    if(rxMessenger == null) {
+      return;
+    }
+    try {
+      messengerLock.lock();
+      this.mRxMessengers.remove(rxMessenger);
+    } finally {
+      messengerLock.unlock();
+    }
   }
 
   /**
@@ -105,6 +119,21 @@ public abstract class AbstractAntTransceiver implements AntChipInterface  {
       messengerLock.unlock();
     }
   }
+
+  @Override
+  public void unregisterStatusMessenger(BroadcastMessenger<AntStatusUpdate> statusMessenger) {
+    if(statusMessenger == null) {
+      return;
+    }
+
+    try {
+      messengerLock.lock();
+      this.mStatusMessengers.remove(statusMessenger);
+    } finally {
+      messengerLock.unlock();
+    }
+  }
+
   
   protected void broadcastStatus(AntStatus status, Object optionalArg) {
     try {

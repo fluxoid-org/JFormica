@@ -39,7 +39,7 @@ import com.example.jformica_hrmexample.R;
 
 public class MainActivity extends Activity {
   public static String TAG = "Formica Hrm Ex";
-
+  private static final NetworkKey ANT_SPORT = new NetworkKey (0xB9,0xA5,0x21,0xFB,0xBD,0x72,0xC3,0x45);
   private Channel channel;
   private Node node;
   private Handler handler = new Handler();
@@ -119,7 +119,6 @@ public class MainActivity extends Activity {
 
             NetworkKey key = new NetworkKey(0xB9, 0xA5, 0x21, 0xFB, 0xBD, 0x72,
                 0xC3, 0x45);
-            key.setName("N:ANT+");
 
             node.registerStatusListener(MainActivity.this.listener);
 
@@ -136,14 +135,12 @@ public class MainActivity extends Activity {
 
             node.reset();
 
-            node.setNetworkKey(0, key);
-
             MainActivity.this.channel = node.getFreeChannel();
 
             channel.setName("C:HRM");
 
             SlaveChannelType channelType = new SlaveChannelType();
-            channel.assign("N:ANT+", channelType);
+            channel.assign(ANT_SPORT, channelType);
 
             channel.registerRxListener(new Listener(),
                 BroadcastDataMessage.class);

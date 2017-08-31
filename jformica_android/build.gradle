@@ -1,13 +1,25 @@
-apply plugin: 'android'
+apply plugin: 'com.android.library'
+apply plugin: 'findbugs'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+	google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.0-beta2'
+    }
+}
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.0.2"
+    compileSdkVersion 19
+    buildToolsVersion "25"
 
-//    defaultConfig {
-//        minSdkVersion 23
-//        targetSdkVersion 23
-//    }
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 16
+    }
 }
 
 android {
@@ -38,8 +50,46 @@ android {
     }
 }
 
+android {
+    lintOptions {
+        abortOnError false
+    }
+}
 
 
 dependencies {
-    compile project(':jformica_core'), fileTree(dir: 'libs', include: '**/*.jar')
+    implementation project(':jformica_core')
+    compileOnly fileTree(dir: 'libs', include: '**/*.jar')
 }
+
+findbugs {
+    sourceSets = []
+    ignoreFailures = true
+}
+
+task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
+
+    description 'Run findbugs'
+    group 'verification'
+
+    classes = fileTree('build/intermediates/classes/debug/')
+    classes.exclude '**/R.class'
+    classes.exclude '**/R$*.class'   
+
+    source = fileTree('src')
+    classpath = files()
+
+    effort = 'max'
+
+    excludeFilter = file("${project.rootDir}/quality/findbugs/exclude.xml")
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+check.doLast {
+    project.tasks.getByName("findbugs").execute()
+}
+

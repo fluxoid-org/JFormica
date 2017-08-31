@@ -33,8 +33,7 @@ public class NetworkKey {
   }
 
   /**
-   * @param name of key
-   * @param key truncated to bytes
+   * @param key 8-byte network key
    */
   public NetworkKey(int[] key) {
     if (key.length > 8 || key.length < 8) {

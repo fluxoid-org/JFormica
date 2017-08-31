@@ -39,7 +39,9 @@ public interface AntChipInterface {
    *
    * @param rxMessenger to send messages to
    */
-  void registerRxMesenger(BroadcastMessenger<byte[]> rxMessenger);
+  void registerRxMessenger(BroadcastMessenger<byte[]> rxMessenger);
+
+  void unregisterRxMessenger(BroadcastMessenger<byte[]> rxMessenger);
 
   /**
    * Adds a messenger which will be informed when the chip status changes
@@ -58,6 +60,8 @@ public interface AntChipInterface {
    * @throws AntCommunicationException if message could not be sent
    */
   void send(byte[] message) throws AntCommunicationException;
+
+  void unregisterStatusMessenger(BroadcastMessenger<AntStatusUpdate> statusMessenger);
 
   /**
    * Check the ant status

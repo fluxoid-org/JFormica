@@ -84,7 +84,7 @@ public class Node {
 
 	public final static Logger LOGGER = Logger.getLogger(EventMachine.class
 			.getName());
-	private Set<AntLogger> antLoggers = Collections
+	private final Set<AntLogger> antLoggers = Collections
 			.newSetFromMap(new WeakHashMap<AntLogger, Boolean>());
 
 	private static class TransmissionErrorCondition implements MessageCondition {
@@ -92,7 +92,7 @@ public class Node {
 		private StandardMessage transmittedMessage;
 
 		/**
-		 * Throws an {@link RumtimeException} if an error is raised trying to
+		 * Throws an {@see RumtimeException} if an error is raised trying to
 		 * send message
 		 * 
 		 * @param msg
@@ -187,7 +187,7 @@ public class Node {
 	/**
 	 * flags that we did the reset, as oppose to someone else (externally)
 	 */
-	private boolean weReset;
+	private volatile boolean weReset;
 
 	public Node(AntChipInterface antchip) {
 		antChipInterface = antchip;
@@ -731,6 +731,7 @@ public class Node {
 			return; // throw new AntError("already stopped");
 		evm.stop();
 		antChipInterface.stop();
+    antChipInterface.unregisterStatusMessenger(mStatusMessenger);
 		running = false;
 	}
 
@@ -758,7 +759,7 @@ public class Node {
 	}
 
 /**
-   * Registers an event listener. To remove user {@link Node#removeRxListener(BroadcastListener));
+   * Registers an event listener. To remove user {@link Node#removeRxListener(BroadcastListener)}
    * @param handler event handler
    */
 	public void registerEventHandler(NodeEventHandler handler) {
@@ -809,7 +810,7 @@ public class Node {
 	 * @param powerLevel
 	 *            newPowerLevel
 	 */
-	public void setTransmitPower(int powerLevel) {
+	public synchronized void setTransmitPower(int powerLevel) {
 		StandardMessage msg = new TxPowerMessage(powerLevel);
 		sendAndWaitForResponseNoError(msg);
 	}
@@ -818,11 +819,11 @@ public class Node {
 	 * Request extra info in extended message bytes. Not all chips support all
 	 * of the options (especially rssi) if any.
 	 * 
-	 * @param enableChannelId
-	 * @param enableRssi
-	 * @param enableTimestamps
+	 * @param enableChannelId request channel ids
+	 * @param enableRssi request rssi info
+	 * @param enableTimestamps request timestamps
 	 */
-	public void setLibConfig(boolean enableChannelId, boolean enableRssi,
+	public synchronized void setLibConfig(boolean enableChannelId, boolean enableRssi,
 			boolean enableTimestamps) {
 		StandardMessage msg = new LibConfigMessage(enableChannelId, enableRssi,
 				enableTimestamps);
@@ -835,7 +836,7 @@ public class Node {
 	 * 
 	 * @param enable
 	 */
-	public void enableExtendedMessages(boolean enable) {
+	public synchronized void enableExtendedMessages(boolean enable) {
 		StandardMessage msg = new EnableExtendedMessagesMessage(enable);
 		sendAndWaitForResponseNoError(msg);
 	}

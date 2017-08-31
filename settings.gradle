@@ -1,5 +1,20 @@
 include 'jformica_core', 'jformica_jsr80'
 
+Properties properties = new Properties()
+
+def localFile = new File(rootProject.projectDir, 'local.properties')
+if (localFile.canRead()) {
+    properties.load(localFile.newDataInputStream())
+    def fluxutils_dir = properties.getProperty('fluxutils_dir')
+    if (fluxutils_dir != null) {
+      include ':FluxUtils'
+      project(':FluxUtils').projectDir = new File("$fluxutils_dir")
+    }
+}
+
+if (findProject(":FluxUtils") == null) {
+   throw new GradleException("please make a local.properties defining fluxutils_dir")
+}
 
 if (!System.properties.containsKey('skip.android')) {
     include 'jformica_android' , 'jformica_examples'

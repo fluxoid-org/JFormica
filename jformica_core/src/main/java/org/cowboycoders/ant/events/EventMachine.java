@@ -95,6 +95,8 @@ public class EventMachine  {
     @Override
     public void receiveMessage(StandardMessage message) {
     	
+    	//FIXME: unregister this after first success, so we don't process subsequent messages
+    	
     	try {
     		if(!condition.test(message)) return;
     	} catch (Exception e) {
@@ -106,6 +108,7 @@ public class EventMachine  {
 	    
 	    try {
 	    	messageUpdateLock.lock();
+	    	//FIXME: check flag to make sure we have sent message to node
 	    	this.wrappedMessage = wrappedMessage;
 	    	replyRecieved.signalAll();
 	    } finally {
@@ -147,7 +150,6 @@ public class EventMachine  {
     this.chipInterface = chipInterface;
     this.rawMessenger = new BroadcastMessenger<byte []>();
     this.convertedMessenger = new BroadcastMessenger<StandardMessage>();
-    chipInterface.registerRxMesenger(rawMessenger);
     rawMessenger.addBroadcastListener(new EventPump());
   }
   
@@ -209,6 +211,7 @@ public class EventMachine  {
 
   public synchronized void start() {
     if (running) return;
+    chipInterface.registerRxMessenger(rawMessenger);
     chipInterface.start();
     running = true;
   }
@@ -216,6 +219,7 @@ public class EventMachine  {
   public synchronized void stop() {
     if (!running) return;
     chipInterface.stop();
+    chipInterface.unregisterRxMessenger(rawMessenger);
     running  = false;
   }
   
