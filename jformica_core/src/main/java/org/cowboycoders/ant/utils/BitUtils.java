@@ -54,9 +54,6 @@ public class BitUtils {
    * @return the index of the left most bit (zero based), -1 if no zeros
    */
   public static int getMaxZeroBitIndex(int number) {
-    if (number < 0) {
-      throw new RuntimeException("negative numbers unsupported");
-    }
     int maxBit = -1;
     int mask = 1;
     

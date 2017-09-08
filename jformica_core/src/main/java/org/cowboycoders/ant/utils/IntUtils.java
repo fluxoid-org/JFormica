@@ -22,7 +22,9 @@ import org.cowboycoders.ant.messages.FatalMessageException;
 
 public class IntUtils {
 
-  private IntUtils(){};
+	public static final int BYTES = 4;
+
+	private IntUtils(){};
 
   /**
    * Converts an int which is being treated as unsigned to a long
@@ -49,15 +51,95 @@ public class IntUtils {
    * @return the mast / to document
    */
   public static int setMaskedBits(int wholeElement,int mask, int value) {
-		int clearMask = mask ^ (~0);
-	    int shift = BitUtils.getMaxZeroBitIndex(mask) + 1;
-	    if (shift < 0) {
-	      throw new IllegalArgumentException("value cannot be larger than mask");
-	    }
+		int clearMask = ~mask;
+	    int shift = Integer.numberOfTrailingZeros(mask);
 	    value = value << shift;
 	    wholeElement &= clearMask;
 	    wholeElement |= (mask & value);
 		return wholeElement;
   }
+
+  public static int getFromMask(int unmasked, int mask) {
+  	int masked = unmasked & mask;
+  	int shift  = Integer.numberOfTrailingZeros(mask);
+  	//System.out.printf("shift %d\n", shift);
+  	int ret = masked >>> shift;
+  	return ret;
+  }
+
+	/**
+	 * Little endian version
+	 * @param wholeElement template
+	 * @param mask where bytes are place, first byte is aligned to leftmost byte in mask
+	 * @param value to put in mask
+	 * @return template with mask bits replaced with value
+	 */
+	public static int setMaskedBitsLE(int wholeElement, int mask, int value) {
+		return setMaskedBitsLE(wholeElement, mask, value, Integer.bitCount(mask));
+	}
+
+	public static int setMaskedBitsLE(int wholeElement, int mask, int value, int numBits) {
+
+		// can we calc this directly
+		int align = getAlignOffset(numBits);
+
+		value = Integer.reverseBytes(value);;
+		//int align = 32 - Integer.numberOfTrailingZeros(value);
+		//align = align + ((8 - (align % 8)) % 8); // byte level align
+		//value = value >>> align;
+		//System.out.printf("rev: %x\n", value);
+		int clearMask = ~mask;
+		//System.out.printf("mask: %x\n", mask);
+		int shift = Integer.numberOfLeadingZeros(mask);
+		//System.out.printf("align : %x\n", align);
+		//align = 0;
+		//System.out.println("shift :" + shift);
+		value = value >>> shift - align;
+		//System.out.printf("val: %x\n", value);
+		wholeElement &= clearMask;
+		wholeElement |= (mask & value);
+		return wholeElement;
+	}
+
+	public static int getFromMaskLE(int unmasked, int mask, int numBits) {
+
+		// can we calc this directly
+		int align = getAlignOffset(numBits);
+		int masked = unmasked & mask;
+		//System.out.printf("unmasked: %x\n", unmasked);
+		//System.out.printf("masked: %x\n", masked);
+		int shift = Integer.numberOfLeadingZeros(mask);
+		//System.out.printf("shift: %d\n", shift);
+		//System.out.printf("shifted: %x\n", masked << shift - align);
+		int rev = Integer.reverseBytes(masked << shift -align);
+		//System.out.printf("rev: %x\n", rev);
+		return rev;
+	}
+
+
+
+	private static int getAlignOffset(int numBits) {
+		int max = ( 0b1 << numBits) -1;
+		int x  = Integer.reverseBytes(max);
+		return Integer.numberOfLeadingZeros(x);
+	}
+
+	public static int maxValueThatFits(int mask) {
+		return (0b1 << Integer.bitCount(mask)) -1;
+	}
+
+	public static int maxSigned(int numBits) {
+		if (numBits == 0) return 0;
+		return (0b1 << (numBits -1)) -1;
+	}
+
+	public static int maxUnsigned(int numBits) {
+		if (numBits > 32) {
+			throw new IllegalArgumentException("integer overflow");
+		}
+		if (numBits == 0) return 0;
+		if (numBits == 32) return 0xffffffff;
+		return (0b1 << (numBits)) -1;
+	}
 
 }
